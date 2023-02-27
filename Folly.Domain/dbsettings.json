@@ -1,0 +1,5 @@
+﻿{
+    "ConnectionStrings": {
+        "Folly": "Data Source = ..\\AppData\\Folly.db;"
+    }
+}

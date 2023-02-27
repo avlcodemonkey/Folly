@@ -1,3 +1,10 @@
-﻿@{
-    Layout = "_Layout";
+﻿@using Folly.Controllers;
+
+@if (ViewData[BaseController.IsPetchRequestProperty]?.ToString().ToBool() ?? false)
+{
+	Layout = null;
+}
+else
+{
+	Layout = "_Layout";
 }

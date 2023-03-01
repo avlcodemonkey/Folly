@@ -1,17 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Globalization;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using Auth0.AspNetCore.Authentication;
 using Folly.Configuration;
 using Folly.Models;
 using Folly.Resources;
 using Folly.Services;
 using Folly.Utils;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Controllers;
 
@@ -24,16 +22,20 @@ public class AccountController : BaseController
     private readonly ILanguageService LanguageService;
     private readonly IUserService UserService;
 
-    public AccountController(IAppConfiguration appConfig, IUserService userService, ILanguageService languageService) : base(appConfig)
+    public AccountController(IAppConfiguration appConfig, IUserService userService, ILanguageService languageService, ILogger<AccountController> logger) : base(appConfig, logger)
     {
         UserService = userService;
         LanguageService = languageService;
     }
 
     public async Task Login(string returnUrl = "/")
-        => await HttpContext.ChallengeAsync(AuthScheme, new AuthenticationProperties(new Dictionary<string, string> { { AuthScope, AuthProfile } }) {
-            RedirectUri = returnUrl
-        }).ConfigureAwait(true);
+    {
+        var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
+            .WithRedirectUri(returnUrl)
+            .Build();
+
+        await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
+    }
 
     [Authorize]
     public async Task Logout()

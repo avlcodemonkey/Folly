@@ -1,0 +1,42 @@
+﻿@using Folly.Resources
+@using Folly.Models
+@using Folly.Services
+@model User
+@inject IViewService ViewService
+
+<body-content>
+    <breadcrumb>
+        <breadcrumb-item label="@Users.ViewAll" controller="User" action="Index"></breadcrumb-item>
+        <breadcrumb-item label="@(Model.IsCreate ? Users.CreateUser : Users.EditUser)" controller="User" action="@Model.FormAction" route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" is-active="true"></breadcrumb-item>
+    </breadcrumb>
+
+    @if (Model.IsCreate) {
+        <toast id="contextHelp" message="@Users.ExplainCreate" type="Info" allow-close="true" />
+    }
+
+    <partial name="_Toast" />
+
+    <horizontal-form for="Model">
+        <input asp-for="Id" type="hidden" />
+
+        <form-group-input for="FirstName" autofocus="true" />
+        <form-group-input for="LastName" />
+        <form-group-input for="UserName" />
+        <form-group-input for="Email" />
+        <form-group-select for="LanguageId" options="@(await ViewService.GetLanguageList())" />
+        <div class="form-group">
+            <form-label for="RoleIds" />
+            <div class="col-8 checkbox-block">
+                @{
+                    var roles = await ViewService.GetAllRoles();
+                    foreach (var role in roles)
+                    {
+                        <form-checkbox name="RoleIds" value="@role.Id" label="@role.Name" is-checked="@Model.RoleIds?.Contains(role.Id) == true" />
+                    }
+                }
+            </div>
+        </div>
+
+        <form-buttons />
+    </horizontal-form>
+</body-content>

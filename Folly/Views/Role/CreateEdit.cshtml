@@ -1,0 +1,47 @@
+﻿@using Folly.Models
+@using Folly.Resources;
+@using Folly.Services
+@model Role
+@inject IViewService ViewService
+
+<body-content>
+    <breadcrumb>
+        <breadcrumb-item label="@Roles.ViewAll" controller="Role" action="Index"></breadcrumb-item>
+        <breadcrumb-item label="@(Model.IsCreate ? Roles.CreateRole : Roles.EditRole)" controller="Role" action="@Model.FormAction" route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" is-active="true"></breadcrumb-item>
+    </breadcrumb>
+
+    <partial name="_Toast" />
+
+    <horizontal-form for="Model">
+        <input asp-for="Id" type="hidden" />
+
+        <form-group-input for="Name" autofocus="true" />
+        <form-group-checkbox for="IsDefault" />
+        <div class="form-group">
+            <form-label for="PermissionIds" />
+            <div class="col-8 c-hand" data-toggle="@DataToggle.CollapsibleList.ToHyphenCase()">
+                @{
+                    var permissions = await ViewService.GetControllerPermissions();
+                    foreach (var controller in permissions.Keys)
+                    {
+                        <ul class="collapsible-list">
+                            <li>
+                                <form-checkbox name="Controller" label="@controller" id="@($"controller_{controller}")" />
+                                <ul class="collapsible-list">
+                                    @foreach (var permission in permissions[controller])
+                                    {
+                                        <li>
+                                            <form-checkbox name="PermissionIds" value="@permission.Id" label="@permission.ActionName" is-checked="@Model.PermissionIds?.Contains(permission.Id) == true" />
+                                        </li>
+                                    }
+                                </ul>
+                            </li>
+                        </ul>
+                    }
+                }
+            </div>
+        </div>
+
+        <form-buttons />
+    </horizontal-form>
+</body-content>

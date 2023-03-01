@@ -1,0 +1,24 @@
+﻿@using Folly.Models
+@using Folly.Resources
+@using Folly.Services
+@using Folly.Controllers
+@model UpdateAccount
+@inject IViewService ViewService
+
+<body-content>
+    <breadcrumb>
+        <breadcrumb-item label="@Account.UpdateAccount" controller="Account" action="UpdateAccount" is-active="true" />
+    </breadcrumb>
+
+    <partial name="_Toast" />
+
+    <horizontal-form controller="Account" action="UpdateAccount">
+        <form-group-input for="FirstName" autofocus="true" />
+        <form-group-input for="LastName" />
+        <form-group-input for="Email" />
+        <form-group-select for="LanguageId" options="@(await ViewService.GetLanguageList())" />
+
+        <form-buttons />
+    </horizontal-form>
+</body-content>
+

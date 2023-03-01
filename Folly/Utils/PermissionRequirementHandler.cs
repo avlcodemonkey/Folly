@@ -1,8 +1,5 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Folly.Utils;
 
@@ -10,16 +7,36 @@ public class PermissionRequirementHandler : AuthorizationHandler<PermissionRequi
 {
     protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
     {
-        var mvcContext = context.Resource as AuthorizationFilterContext;
-        var parentActionAttributes = (mvcContext.ActionDescriptor as ControllerActionDescriptor).MethodInfo
-            .GetCustomAttributes(typeof(ParentActionAttribute), true).Cast<ParentActionAttribute>().Where(x => !x.Action.IsEmpty());
-        if (parentActionAttributes.Any())
-            parentActionAttributes.SelectMany(x => x.Action.Split(',')).Where(x => !x.IsEmpty()).Each(action => {
-                if (context.User.IsInRole($"{mvcContext.RouteData.Values["Controller"]}.{action}".ToLower()))
-                    context.Succeed(requirement);
-            });
-        else if (context.User.IsInRole($"{mvcContext.RouteData.Values["Controller"]}.{mvcContext.RouteData.Values["Action"]}".ToLower()))
-            context.Succeed(requirement);
+        Endpoint endpoint = null;
+        if (context.Resource is HttpContext httpContext)
+        {
+            endpoint = httpContext.GetEndpoint();
+        }
+        else if (context.Resource is Endpoint endpoint2)
+        {
+            endpoint = endpoint2;
+        }
+
+        if (endpoint != null)
+        {
+            var actionDescriptor = endpoint.Metadata.GetMetadata<ControllerActionDescriptor>();
+            var parentActionAttributes = actionDescriptor?.MethodInfo.GetCustomAttributes(typeof(ParentActionAttribute), false).Cast<ParentActionAttribute>().Where(x => !x.Action.IsEmpty());
+
+            if (parentActionAttributes.Any())
+            {
+                parentActionAttributes.SelectMany(x => x.Action.Split(',')).Where(x => !x.IsEmpty()).Each(action => {
+                    if (context.User.IsInRole($"{actionDescriptor.ControllerName}.{action}".ToLower()))
+                    {
+                        context.Succeed(requirement);
+                    }
+                });
+            }
+            else if (context.User.IsInRole($"{actionDescriptor.ControllerName}.{actionDescriptor.ActionName}".ToLower()))
+            {
+                context.Succeed(requirement);
+            }
+        }
+
         return Task.CompletedTask;
     }
 

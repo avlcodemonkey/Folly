@@ -1,10 +1,10 @@
 ﻿@using Folly.Controllers;
 
-@if (ViewData[BaseController.IsPetchRequestProperty]?.ToString().ToBool() ?? false)
+@if (Context.Request.Headers.Any(x => x.Key == "hx-request"))
 {
-	Layout = null;
+    Layout = null;
 }
 else
 {
-	Layout = "_Layout";
+    Layout = "_Layout";
 }

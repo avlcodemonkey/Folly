@@ -1,16 +1,11 @@
-﻿using System;
-using System.Globalization;
-using System.Linq;
+﻿using System.Globalization;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Localization;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Auth0.AspNetCore.Authentication;
 using Folly.Configuration;
+using Folly.Controllers;
 using Folly.Services;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Localization;
 
 namespace Folly.Utils;
 
@@ -24,50 +19,13 @@ public static class Authentication
     /// </summary>
     public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, AppConfiguration appConfig)
     {
-        services.AddSession(x => {
-            x.Cookie.HttpOnly = true;
-            x.Cookie.Name = SessionCookieName;
-            x.Cookie.IsEssential = true;
-            x.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            x.Cookie.SameSite = SameSiteMode.Lax;
-        });
-
-        services.AddAuthentication(x => {
-            x.DefaultAuthenticateScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            x.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            x.DefaultChallengeScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        }).AddCookie(x => {
-            x.Cookie.HttpOnly = true;
-            x.Cookie.Name = AuthCookieName;
-            x.Cookie.IsEssential = true;
-            x.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-            x.Cookie.SameSite = SameSiteMode.Lax;
-        }).AddOpenIdConnect("Auth0", options => {
-            // Set the authority to your Auth0 domain
-            options.Authority = $"https://{appConfig.Auth.Domain}";
-
-            // Configure the Auth0 Client ID and Client Secret
+        services.AddAuth0WebAppAuthentication(options => {
+            options.Domain = appConfig.Auth.Domain;
             options.ClientId = appConfig.Auth.ClientId;
-            options.ClientSecret = appConfig.Auth.ClientSecret;
+            options.CallbackPath = new PathString($"/{nameof(AccountController).StripController()}/Callback");
+            options.Scope = "openid profile email";
 
-            // Set response type to code
-            options.ResponseType = OpenIdConnectResponseType.Code;
-
-            // Configure the scope
-            options.Scope.Clear();
-            options.Scope.Add("openid");
-            options.Scope.Add("profile");
-            options.Scope.Add("email");
-
-            // use Auth0's unique identifier as Identity.Name
-            options.TokenValidationParameters.NameClaimType = ClaimTypes.NameIdentifier;
-
-            options.CallbackPath = new PathString($"/{nameof(Controllers.AccountController).StripController()}/Callback");
-
-            // Configure the Claims Issuer to be Auth0
-            options.ClaimsIssuer = "Auth0";
-
-            options.Events = new OpenIdConnectEvents {
+            options.OpenIdConnectEvents = new OpenIdConnectEvents {
                 // handle the logout redirection
                 OnRedirectToIdentityProviderForSignOut = (context) => {
                     var logoutUri = $"https://{appConfig.Auth.Domain}/v2/logout?client_id={appConfig.Auth.ClientId}";
@@ -109,6 +67,11 @@ public static class Authentication
                     context.HttpContext.Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName, CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(new CultureInfo(languageCode ?? "en"))));
                 }
             };
+        });
+
+        // work around to move the Auth0 unique identifier into the Identity.Name
+        services.Configure<OpenIdConnectOptions>(Auth0Constants.AuthenticationScheme, options => {
+            options.TokenValidationParameters.NameClaimType = ClaimTypes.NameIdentifier;
         });
 
         return services;

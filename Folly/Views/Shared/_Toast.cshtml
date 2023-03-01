@@ -1,0 +1,10 @@
+﻿@using Folly.Controllers;
+
+@if (!((string)(ViewData[BaseController.MessageProperty] ?? TempData[BaseController.MessageProperty])).IsEmpty())
+{
+    <toast type="Success" message="@((string)(ViewData[BaseController.MessageProperty] ?? TempData[BaseController.MessageProperty]))" />
+}
+@if (!((string)(ViewData[BaseController.ErrorProperty] ?? TempData[BaseController.ErrorProperty])).IsEmpty())
+{
+    <toast type="Error" message="@((string)(ViewData[BaseController.ErrorProperty] ?? TempData[BaseController.ErrorProperty]))" />
+}

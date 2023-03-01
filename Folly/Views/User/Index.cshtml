@@ -1,0 +1,27 @@
+﻿@using Folly.Resources
+
+<body-content>
+    <breadcrumb>
+        <breadcrumb-item label="@Users.ViewAll" controller="User" action="Index" is-active="true" />
+    </breadcrumb>
+
+    <partial name="_Toast" />
+
+    <toolbar>
+        <authorized-button controller="User" action="Create" title="@Users.CreateUser" />
+    </toolbar>
+
+    <do-table request-url="@Url.Action("List")" id="tableUsers" template="#userTemplate" />
+
+    <do-row id="userTemplate">
+        <do-column label="@Core.Actions" field="actions" sortable="false" width="200px">
+            <do-edit-button controller="User" />
+            <do-delete-button controller="User" confirm="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)" />
+        </do-column>
+        <do-column label="@Core.Id" field="id" />
+        <do-column label="@Users.UserName" field="userName" />
+        <do-column label="@Users.FirstName" field="firstName" />
+        <do-column label="@Users.LastName" field="lastName" />
+        <do-column label="@Users.Email" field="email" />
+    </do-row>
+</body-content>

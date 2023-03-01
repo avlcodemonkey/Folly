@@ -1,12 +1,10 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Folly.Configuration;
+﻿using Folly.Configuration;
 using Folly.Models;
 using Folly.Resources;
 using Folly.Services;
 using Folly.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Controllers;
 
@@ -41,7 +39,7 @@ public class RoleController : BaseController
         return Index();
     }
 
-    public RoleController(IAppConfiguration appConfig, IRoleService roleService, IPermissionService permissionService) : base(appConfig)
+    public RoleController(IAppConfiguration appConfig, IRoleService roleService, IPermissionService permissionService, ILogger<RoleController> logger) : base(appConfig, logger)
     {
         RoleService = roleService;
         PermissionService = permissionService;

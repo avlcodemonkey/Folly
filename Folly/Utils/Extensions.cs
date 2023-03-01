@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+﻿using System.Data;
 using System.Linq.Expressions;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
-using Microsoft.AspNetCore.Http;
+using Folly.Models;
+using Folly.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.Caching.Memory;
-using Folly.Models;
-using Folly.Utils;
 
 namespace Folly;
 
@@ -129,7 +125,7 @@ public static class Extensions
     /// </summary>
     /// <param name="value">String to check.</param>
     /// <returns>True if string is not null or empty.</returns>
-    public static bool IsEmpty(this string value) => string.IsNullOrWhiteSpace(value);
+    public static bool IsEmpty(this string? value) => string.IsNullOrWhiteSpace(value);
 
     /// <summary>
     /// Check if a string contains any of the private keywords.

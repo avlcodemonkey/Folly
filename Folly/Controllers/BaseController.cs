@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using Folly.Configuration;
+﻿using Folly.Configuration;
 using Folly.Resources;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Controllers
 {
@@ -9,6 +8,7 @@ namespace Folly.Controllers
     {
         protected const string IDParameter = "id";
         protected IAppConfiguration AppConfig { get; set; }
+        protected ILogger<Controller> Logger { get; set; }
 
         protected int ID { get; set; }
         public const string ErrorProperty = "Error";
@@ -16,9 +16,10 @@ namespace Folly.Controllers
         public const string MessageProperty = "Message";
         public const string TitleProperty = "Title";
 
-        public BaseController(IAppConfiguration appConfig)
+        public BaseController(IAppConfiguration appConfig, ILogger<Controller> logger)
         {
             AppConfig = appConfig;
+            Logger = logger;
         }
 
         public IActionResult Data(object data) => Ok(data);

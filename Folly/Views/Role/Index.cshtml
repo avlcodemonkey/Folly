@@ -1,0 +1,26 @@
+﻿@using Folly.Resources
+
+<body-content>
+    <breadcrumb>
+        <breadcrumb-item label="@Roles.ViewAll" controller="Role" action="Index" is-active="true" />
+    </breadcrumb>
+
+    <partial name="_Toast" />
+
+    <toolbar>
+        <authorized-button controller="Role" action="Create" title="@Roles.CreateRole" />
+        <authorized-button controller="Role" action="RefreshPermissions" title="@Roles.RefreshPermissions" confirm="@Roles.ConfirmRefreshPermissions" />
+    </toolbar>
+
+    <do-table request-url="@Url.Action("List")" id="tableRoles" template="#roleTemplate" />
+
+    <do-row id="roleTemplate">
+        <do-column label="@Core.Actions" field="actions" sortable="false" width="200px">
+            <do-edit-button controller="Role" />
+            <do-delete-button controller="Role" confirm="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)" />
+            <do-copy-button controller="Role" prompt="@Roles.CopyBody" />
+        </do-column>
+        <do-column label="@Core.Id" field="id" />
+        <do-column label="@Roles.Name" field="name" />
+    </do-row>
+</body-content>

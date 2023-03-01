@@ -1,12 +1,10 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using Folly.Configuration;
+﻿using Folly.Configuration;
 using Folly.Models;
 using Folly.Resources;
 using Folly.Services;
 using Folly.Utils;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Controllers;
 
@@ -41,7 +39,7 @@ public class UserController : BaseController
         return Index();
     }
 
-    public UserController(IAppConfiguration appConfig, IUserService userService, ILanguageService languageService) : base(appConfig)
+    public UserController(IAppConfiguration appConfig, IUserService userService, ILanguageService languageService, ILogger<UserController> logger) : base(appConfig, logger)
     {
         UserService = userService;
         LanguageService = languageService;

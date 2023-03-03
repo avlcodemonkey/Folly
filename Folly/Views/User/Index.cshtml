@@ -11,17 +11,11 @@
         <authorized-button controller="User" action="Create" title="@Users.CreateUser" />
     </toolbar>
 
-    <do-table request-url="@Url.Action("List")" id="tableUsers" template="#userTemplate" />
-
-    <do-row id="userTemplate">
-        <do-column label="@Core.Actions" field="actions" sortable="false" width="200px">
-            <do-edit-button controller="User" />
-            <do-delete-button controller="User" confirm="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)" />
-        </do-column>
-        <do-column label="@Core.Id" field="id" />
-        <do-column label="@Users.UserName" field="userName" />
-        <do-column label="@Users.FirstName" field="firstName" />
-        <do-column label="@Users.LastName" field="lastName" />
-        <do-column label="@Users.Email" field="email" />
-    </do-row>
+    <lit-table key="tableUsers" src="@Url.Action("List", "User")" row-key="id" add-url="@Url.Action("Create")" edit-url="@Url.Action("Edit", new { id = "${id}" })" delete-url="@Url.Action("Edit", new { id = "${id}" })">
+        <lit-table-header property="id">@Core.Id</lit-table-header>
+        <lit-table-header property="userName">@Users.UserName</lit-table-header>
+        <lit-table-header property="firstName">@Users.FirstName</lit-table-header>
+        <lit-table-header property="lastName">@Users.LastName</lit-table-header>
+        <lit-table-header property="email">@Users.Email</lit-table-header>
+    </lit-table>
 </body-content>

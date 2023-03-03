@@ -12,7 +12,6 @@ namespace Folly.Controllers
 
         protected int ID { get; set; }
         public const string ErrorProperty = "Error";
-        public const string IsPetchRequestProperty = "IsPetchRequest";
         public const string MessageProperty = "Message";
         public const string TitleProperty = "Title";
 

@@ -39,10 +39,7 @@ builder.Services.AddAuthorization(options => {
 builder.Services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
 
 builder.Services.AddDataProtection();
-builder.Services.AddAntiforgery(options => {
-    options.HeaderName = "X-XSRF-TOKEN";
-    options.Cookie.Name = AppConstants.AntiforgeryCookieName;
-});
+builder.Services.AddAntiforgery();
 
 builder.Services.AddSingleton(new MemoryCache(new MemoryCacheOptions()));
 

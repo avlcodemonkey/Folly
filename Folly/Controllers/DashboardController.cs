@@ -5,12 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Controllers;
 
-[Authorize(Policy = PermissionRequirementHandler.PolicyName), Petch]
+[Authorize(Policy = PermissionRequirementHandler.PolicyName)]
 public class DashboardController : BaseController
 {
-    public DashboardController(IAppConfiguration appConfig, ILogger<DashboardController> logger) : base(appConfig, logger)
-    {
-    }
+    public DashboardController(IAppConfiguration appConfig, ILogger<DashboardController> logger) : base(appConfig, logger) { }
 
     public IActionResult Index() => View("Index");
 }

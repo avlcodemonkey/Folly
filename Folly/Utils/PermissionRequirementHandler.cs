@@ -45,6 +45,5 @@ public class PermissionRequirementHandler : AuthorizationHandler<PermissionRequi
 
 public class PermissionRequirement : IAuthorizationRequirement
 {
-    public PermissionRequirement()
-    { }
+    public PermissionRequirement() { }
 }

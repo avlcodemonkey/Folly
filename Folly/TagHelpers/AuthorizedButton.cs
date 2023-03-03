@@ -51,8 +51,6 @@ public class AuthorizedButtonTagHelper : BaseTagHelper
         output.Content.Append(Title);
 
         var classList = new List<string> { "btn", "mr-2" };
-        if (!Target.IsEmpty())
-            classList.Add("petch-no-follow");
         classList.Add(Class.ToCssClass());
         output.Attributes.Add("class", classList.Join(" "));
 

@@ -13,12 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Controllers;
 
-[Petch]
 public class AccountController : BaseController
 {
-    private const string AuthProfile = "profile";
-    private const string AuthScheme = "Auth0";
-    private const string AuthScope = "scope";
     private readonly ILanguageService LanguageService;
     private readonly IUserService UserService;
 
@@ -40,7 +36,7 @@ public class AccountController : BaseController
     [Authorize]
     public async Task Logout()
     {
-        await HttpContext.SignOutAsync(AuthScheme, new AuthenticationProperties {
+        await HttpContext.SignOutAsync(Auth0Constants.AuthenticationScheme, new AuthenticationProperties {
             RedirectUri = Url.Action(nameof(DashboardController.Index), nameof(DashboardController).StripController())
         }).ConfigureAwait(false);
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).ConfigureAwait(false);

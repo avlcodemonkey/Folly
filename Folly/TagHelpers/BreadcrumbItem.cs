@@ -31,11 +31,7 @@ public class BreadcrumbItemTagHelper : BaseTagHelper
         output.AddClass("breadcrumb-item", HtmlEncoder.Default);
         if (IsActive)
         {
-            output.Attributes.Add("data-petch-title", Label);
             HtmlHelper.ViewData[BaseController.TitleProperty] = Label;
-            var urlHelper = UrlHelperFactory.GetUrlHelper(HtmlHelper.ViewContext);
-            output.Attributes.Add("data-petch-url", urlHelper.Action(Action, Controller, RouteValues));
-            output.Attributes.Add("data-petch-method", "GET");
             output.Content.Append(Label);
 
             if (!Label.IsEmpty() && HtmlHelper.ViewContext.HttpContext.Request.Headers.Any(x => x.Key == "hx-request"))

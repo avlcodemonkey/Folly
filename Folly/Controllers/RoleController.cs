@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Controllers;
 
-[Authorize(Policy = PermissionRequirementHandler.PolicyName), Petch]
+[Authorize(Policy = PermissionRequirementHandler.PolicyName)]
 public class RoleController : BaseController
 {
     private readonly IPermissionService PermissionService;

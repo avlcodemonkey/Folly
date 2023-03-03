@@ -8,9 +8,7 @@ namespace Folly.Controllers
 {
     public class ErrorController : BaseController
     {
-        public ErrorController(IAppConfiguration appConfig, ILogger<ErrorController> logger) : base(appConfig, logger)
-        {
-        }
+        public ErrorController(IAppConfiguration appConfig, ILogger<ErrorController> logger) : base(appConfig, logger) { }
 
         public IActionResult Index(string code = null)
         {

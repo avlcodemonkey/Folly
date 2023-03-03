@@ -21,7 +21,6 @@ public class AuthorizedMenuItemTagHelper : BaseTagHelper
     public bool ForceReload { get; set; } = false;
     public bool? HasAccess { get; set; }
     public FollyIcon Icon { get; set; }
-    public bool IsPetch { get; set; } = true;
     public string Title { get; set; }
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
@@ -44,8 +43,6 @@ public class AuthorizedMenuItemTagHelper : BaseTagHelper
         a.Attributes.Add("data-method", "GET");
         a.Attributes.Add("title", Title);
         a.Attributes.AddIf("data-reload", "true", ForceReload);
-        if (!IsPetch)
-            a.AddCssClass("petch-no-follow");
 
         var i = new TagBuilder("i");
         i.AddCssClass("pr");

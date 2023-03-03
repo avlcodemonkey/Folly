@@ -15,11 +15,6 @@
             }
             <authorized-menu-item controller="Role" action="Index" title="@Roles.MenuItem" icon="Key" />
             <authorized-menu-item controller="User" action="Index" title="@Users.MenuItem" icon="Users" />
-            @if (User.HasAccess("Profiler", "Dashboard"))
-            {
-                <li class="divider"></li>
-                <authorized-menu-item controller="Account" action="ToggleProfiling" title="@Core.ToggleProfiling" icon="Bug" force-reload="true" has-access="true" />
-            }
             <li class="divider"></li>
             <authorized-menu-item controller="Account" action="ToggleContextHelp" title="@Core.ToggleHelp" icon="Help" force-reload="true" />
             <authorized-menu-item controller="Account" action="UpdateAccount" title="@Account.UpdateAccount" icon="User" />

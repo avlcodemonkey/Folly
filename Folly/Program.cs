@@ -60,15 +60,6 @@ builder.Services.AddMvc(options => {
         configure.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     });
 
-builder.Services.AddMiniProfiler(options => {
-    //options.RouteBasePath = "/folly.profiler";
-    options.SqlFormatter = new StackExchange.Profiling.SqlFormatters.InlineFormatter();
-    options.PopupMaxTracesToShow = 10;
-    options.ResultsAuthorize = request => request.HttpContext.User.HasAccess("Profiler", "Dashboard");
-    options.ResultsListAuthorize = request => request.HttpContext.User.HasAccess("Profiler", "Dashboard");
-    options.UserIdProvider = request => request.HttpContext.User.Identity?.Name;
-}).AddEntityFramework();
-
 var app = builder.Build();
 
 // force all requests to https
@@ -124,8 +115,6 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
-
-app.UseMiniProfiler();
 
 app.MapControllerRoute("parentChild", "{controller}/{action}/{parentId:int}/{id:int}");
 app.MapControllerRoute("default", $"{{controller={nameof(DashboardController).StripController()}}}/{{action={nameof(DashboardController.Index)}}}/{{id:int?}}");

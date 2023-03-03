@@ -439,24 +439,6 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Profiling has been disabled. Profiler will be hidden after hitting the reload button..
-        /// </summary>
-        public static string ProfilingDisabled {
-            get {
-                return ResourceManager.GetString("ProfilingDisabled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Profiling has been enabled. You&apos;ll see details in the bottom left corner of the screen after hitting the reload button..
-        /// </summary>
-        public static string ProfilingEnabled {
-            get {
-                return ResourceManager.GetString("ProfilingEnabled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Request {0}:{1} from IP {2} has been blocked, quota {3}/{4} exceeded by {5}. Blocked by rule {6}, TraceIdentifier {7}.
         /// </summary>
         public static string RateLoggerWarning {
@@ -534,15 +516,6 @@ namespace Folly.Resources {
         public static string ToggleHelp {
             get {
                 return ResourceManager.GetString("ToggleHelp", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Toggle Profiling.
-        /// </summary>
-        public static string ToggleProfiling {
-            get {
-                return ResourceManager.GetString("ToggleProfiling", resourceCulture);
             }
         }
         

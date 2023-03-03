@@ -20,10 +20,5 @@
 				@RenderBody()
 			</div>
 		</div>
-
-		@if (User.HasAccess("Profiler", "Dashboard") && Context.WantsProfiling())
-		{
-			<mini-profiler position="RenderPosition.BottomLeft" />
-		}
 	</body>
 </html>

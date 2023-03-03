@@ -53,13 +53,6 @@ public class AccountController : BaseController
         return View("ToggleContextHelp", new Help(HttpContext.Session));
     }
 
-    [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName), ParentAction(nameof(UpdateAccount))]
-    public IActionResult ToggleProfiling()
-    {
-        HttpContext.Session.ToggleSetting(Profiling.SettingName);
-        return View("ToggleProfiling", new Profiling(HttpContext.Session));
-    }
-
     [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName)]
     public async Task<IActionResult> UpdateAccount()
     {

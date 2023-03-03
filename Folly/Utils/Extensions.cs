@@ -238,11 +238,4 @@ public static class Extensions
     /// <param name="httpContext">Current request context.</param>
     /// <returns>True if user enabled help, else false.</returns>
     public static bool WantsHelp(this HttpContext httpContext) => httpContext.Session.GetString(Help.SettingName).ToBool();
-
-    /// <summary>
-    /// Check if user has profiler enabled.
-    /// </summary>
-    /// <param name="httpContext">Current request context.</param>
-    /// <returns>True if user enabled help, else false.</returns>
-    public static bool WantsProfiling(this HttpContext httpContext) => httpContext.Session.GetString(Profiling.SettingName).ToBool();
 }

@@ -41,13 +41,12 @@ public class AuthorizedMenuItemTagHelper : BaseTagHelper
         var urlHelper = UrlHelperFactory.GetUrlHelper(HtmlHelper.ViewContext);
         a.Attributes.Add("href", urlHelper.Action(Action, Controller));
         a.Attributes.Add("data-method", "GET");
-        a.Attributes.Add("title", Title);
         a.Attributes.AddIf("data-reload", "true", ForceReload);
 
         var i = new TagBuilder("i");
-        i.AddCssClass("pr");
-        i.AddCssClass("pr-lg");
-        i.AddCssClass($"pr-{Icon.ToCssClass()}");
+        i.AddCssClass("fl");
+        i.AddCssClass("fl-lg");
+        i.AddCssClass($"fl-{Icon.ToCssClass()}");
         a.InnerHtml.AppendHtml(i);
 
         var span = new TagBuilder("span");

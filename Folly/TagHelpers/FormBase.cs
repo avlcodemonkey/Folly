@@ -69,8 +69,8 @@ public class FormBaseTagHelper : BaseTagHelper
             return HtmlString.Empty;
 
         var icon = new TagBuilder("i");
-        icon.AddCssClass("pr");
-        icon.AddCssClass("pr-help");
+        icon.AddCssClass("fl");
+        icon.AddCssClass("fl-help");
 
         var button = new TagBuilder("button");
         button.AddCssClass("btn btn-secondary input-group-btn");

@@ -27,7 +27,7 @@ public class ToastTagHelper : BaseTagHelper
         var colDiv = new TagBuilder("div");
         colDiv.AddCssClass("columns");
         colDiv.AddCssClass("pl-2");
-        colDiv.AddCssClass("pr-2");
+        colDiv.AddCssClass("fl-2");
 
         var colLeftDiv = new TagBuilder("div");
         colLeftDiv.AddCssClass("col-11");
@@ -40,8 +40,8 @@ public class ToastTagHelper : BaseTagHelper
         if (AllowClose)
         {
             var iDiv = new TagBuilder("i");
-            iDiv.AddCssClass("pr");
-            iDiv.AddCssClass("pr-cancel");
+            iDiv.AddCssClass("fl");
+            iDiv.AddCssClass("fl-cancel");
             iDiv.AddCssClass("toast-dismiss");
             iDiv.Attributes.Add("data-toggle", DataToggle.Hide.ToHyphenCase());
             iDiv.Attributes.Add("data-target", $"#{Id}");

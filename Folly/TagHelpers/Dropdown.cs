@@ -77,7 +77,7 @@ public class DropdownTagHelper : BaseTagHelper
                 else
                 {
                     var i = new TagBuilder("i");
-                    i.AddCssClass($"pr pr-{x.Icon.ToCssClass()}");
+                    i.AddCssClass($"fl fl-{x.Icon.ToCssClass()}");
                     if (!x.IconExtraClasses.IsEmpty())
                         i.AddCssClass($" {x.IconExtraClasses}");
                     a.InnerHtml.AppendHtml(i);

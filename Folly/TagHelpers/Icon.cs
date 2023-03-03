@@ -14,7 +14,7 @@ public class IconTagHelper : BaseTagHelper
     {
         output.TagMode = TagMode.StartTagAndEndTag;
         output.TagName = "i";
-        output.Attributes.Add("class", $"pr pr-{Name.ToCssClass()} text-{Type}");
+        output.Attributes.Add("class", $"fl fl-{Name.ToCssClass()} text-{Type}");
         base.Process(context, output);
     }
 }

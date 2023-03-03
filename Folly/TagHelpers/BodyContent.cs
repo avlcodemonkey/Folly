@@ -10,7 +10,7 @@ public class BodyContentTagHelper : BaseTagHelper
     {
         output.TagName = "div";
         output.Attributes.Add("id", "bodyContent");
-        output.AddClass("p-5", HtmlEncoder.Default);
+        output.AddClass("p-2", HtmlEncoder.Default);
 
         base.Process(context, output);
     }

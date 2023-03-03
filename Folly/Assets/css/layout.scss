@@ -1,0 +1,94 @@
+@import "root.scss";
+
+html {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    height: 100%;
+
+    &.error-page {
+        height: auto;
+    }
+}
+
+#fullPageBody {
+    height: 100%;
+}
+
+#sidebarWrapper {
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+    overflow: auto;
+    width: 3.1rem;
+    background: #f7f7f7;
+
+    ul {
+        margin-left: 0.1rem;
+        list-style: none;
+        padding: 0;
+
+        #menuBtn a {
+            cursor: pointer;
+            padding-left: 0.8rem;
+        }
+
+        li {
+            margin-top: 0.8rem;
+
+            a {
+                display: block;
+                text-decoration: none;
+                color: var(--color-primary);
+                padding-left: 0.6rem;
+                border-color: transparent;
+
+                span {
+                    display: none;
+                    padding-left: 0.5rem;
+                }
+
+                &:hover, &:active, &:focus {
+                    color: var(--font-color);
+                }
+            }
+        }
+
+        .divider {
+            display: block;
+            position: relative;
+            border-top: 0.1rem solid var(--color-darkGrey);
+            height: 0.05rem;
+            margin: 0.8rem 1rem;
+        }
+    }
+}
+
+#contentWrapper {
+    display: inline-block;
+    vertical-align: top;
+    height: 100%;
+    width: calc(100% - 3.1rem);
+    overflow: auto;
+    background-color: white;
+}
+
+.menu-toggled {
+    #sidebarWrapper {
+        width: 24rem;
+
+        li a span {
+            display: inline;
+        }
+    }
+
+    #contentWrapper {
+        width: calc(100% - 25rem);
+    }
+}
+
+#bodyContent {
+    height: 100%;
+}

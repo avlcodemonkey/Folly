@@ -1,0 +1,19 @@
+/*! chota.css v0.8.1 | MIT License | github.com/jenil/chota */
+/* review later and see if i need all of these pieces */
+@import "chota/src/_base";
+@import "chota/src/_grid";
+@import "chota/src/_form";
+
+@import "chota/src/_nav";
+@import "chota/src/_card";
+@import "chota/src/_tab";
+@import "chota/src/_tag";
+@import "chota/src/_dropdown";
+
+@import "chota/src/_util";
+
+@import "root.scss";
+@import "layout.scss";
+@import "breadcrumbs.scss";
+@import "icons.scss";
+@import "utils.scss";

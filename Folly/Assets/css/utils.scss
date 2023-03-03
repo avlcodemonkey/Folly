@@ -1,0 +1,18 @@
+@import "root.scss";
+
+/* this should hide content in web component slots until the component is registered with the browser */
+:not(:defined) {
+    display: none;
+}
+
+.fl-lg {
+    font-size: 2rem;
+}
+
+.p-2 {
+    padding: 2rem !important;
+}
+
+.p-5 {
+    padding: 5rem !important;
+}

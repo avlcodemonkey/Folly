@@ -48,6 +48,12 @@ builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 builder.Services.AddLocalization(x => { x.ResourcesPath = "Resources"; });
 
+// enable compression only for assets
+builder.Services.AddResponseCompression(options => {
+    options.EnableForHttps = true;
+    options.MimeTypes = new List<string>() { "text/css", "application/javascript", "text/javascript", "font/woff2" };
+});
+
 // @todo break out into separate class?
 builder.Services.AddMvc(options => {
     options.Filters.Add(new RequireHttpsAttribute());
@@ -102,6 +108,8 @@ else
 }
 
 app.UseSession();
+
+app.UseResponseCompression();
 
 app.UseStaticFiles();
 

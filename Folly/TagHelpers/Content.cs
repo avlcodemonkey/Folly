@@ -10,7 +10,6 @@ public class ContentTagHelper : BaseTagHelper
     {
         output.TagName = "div";
         output.Attributes.Add("id", "content");
-        output.AddClass("p-2", HtmlEncoder.Default);
 
         base.Process(context, output);
     }

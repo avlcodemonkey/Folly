@@ -7,7 +7,7 @@ public class IconTagHelper : BaseTagHelper
 {
     public IconTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
-    public FollyIcon Name { get; set; }
+    public Icon Name { get; set; }
     public string Type { get; set; } = "primary";
 
     public override void Process(TagHelperContext context, TagHelperOutput output)

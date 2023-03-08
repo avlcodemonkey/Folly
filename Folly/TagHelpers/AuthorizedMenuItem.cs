@@ -20,7 +20,7 @@ public class AuthorizedMenuItemTagHelper : BaseTagHelper
     public string Controller { get; set; }
     public bool ForceReload { get; set; } = false;
     public bool? HasAccess { get; set; }
-    public FollyIcon Icon { get; set; }
+    public Icon Icon { get; set; }
     public string Title { get; set; }
 
     public override void Process(TagHelperContext context, TagHelperOutput output)

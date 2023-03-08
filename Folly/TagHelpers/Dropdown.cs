@@ -13,7 +13,7 @@ public class DropdownListItem
     public string Confirm { get; set; }
     public string Controller { get; set; }
     public string ExtraClasses { get; set; }
-    public FollyIcon Icon { get; set; }
+    public Icon Icon { get; set; }
     public string IconExtraClasses { get; set; }
     public string Label { get; set; }
     public HttpVerb Method { get; set; } = HttpVerb.Get;

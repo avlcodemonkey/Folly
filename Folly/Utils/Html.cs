@@ -21,7 +21,7 @@
         BtnLink
     }
 
-    public enum FollyIcon
+    public enum Icon
     {
         ArrowsCw,
         BellAlt,

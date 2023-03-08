@@ -183,7 +183,7 @@ public static class Extensions
     /// </summary>
     /// <param name="val">String value to convert.</param>
     /// <returns>Css class name string.</returns>
-    public static string ToCssClass(this FollyIcon val) => CssRegex.Replace(val.ToString(), "-$1").Trim('-').ToLower();
+    public static string ToCssClass(this Icon val) => CssRegex.Replace(val.ToString(), "-$1").Trim('-').ToLower();
 
     /// <summary>
     /// Convert the ModelStateDictionary into a string of errors a view can display.

@@ -13,7 +13,7 @@
 		<script src="/js/main.js" asp-append-version="true" defer></script>
 	</head>
 
-	<body class="sidebar-toggled" hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header">
+	<body class="sidebar-toggled" hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header" hx-indicator="#spinner">
 		<div id="sidebar">
 			<ul>
 				<li id="sidebar-button" class="cursor-pointer">
@@ -43,5 +43,6 @@
 		<div id="main">
 			@RenderBody()
 		</div>
+		<div id="spinner" class="htmx-indicator"></div>
 	</body>
 </html>

@@ -85,3 +85,42 @@ body {
 #content {
     height: 100%;
 }
+
+#spinner {
+    display: none;
+
+    &.htmx-request {
+        background: rgba(0,0,0,.3);
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: fixed;
+        z-index: 16777270;
+    }
+
+    &:after {
+        content: " ";
+        display: block;
+        width: 64px;
+        height: 64px;
+        margin: 8px;
+        border-radius: 50%;
+        border: 6px solid var(--color-primary);
+        border-color: var(--color-primary) transparent var(--color-primary) transparent;
+        animation: spinner 1.2s linear infinite;
+    }
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

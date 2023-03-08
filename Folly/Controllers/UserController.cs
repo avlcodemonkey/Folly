@@ -80,6 +80,6 @@ public class UserController : BaseController
         return View("Index");
     }
 
-    [HttpGet, ParentAction(nameof(Index))]
+    [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
     public async Task<IActionResult> List() => Ok((await UserService.GetAllUsers()).Select(x => new { x.Id, x.UserName, x.FirstName, x.LastName, x.Email }));
 }

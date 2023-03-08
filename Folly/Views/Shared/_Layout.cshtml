@@ -13,10 +13,10 @@
 		<script src="/js/main.js" asp-append-version="true" defer></script>
 	</head>
 
-	<body class="sidebar-toggled" data-base-url="@Url.Content("~")" data-lang="@(CultureInfo.CurrentCulture?.TwoLetterISOLanguageName ?? "en")" hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header">
+	<body class="sidebar-toggled" hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header">
 		<div id="sidebar">
 			<ul>
-				<li id="sidebar-button" class="cursor-pointer" data-toggle="@DataToggle.NavMenu.ToHyphenCase()">
+				<li id="sidebar-button" class="cursor-pointer">
 					<a><i class="fl fl-menu fl-lg"></i></a>
 				</li>
 
@@ -30,13 +30,13 @@
 					<authorized-menu-item controller="Role" action="Index" title="@Roles.MenuItem" icon="Key" />
 					<authorized-menu-item controller="User" action="Index" title="@Users.MenuItem" icon="Users" />
 					<li class="divider"></li>
-					<authorized-menu-item controller="Account" action="ToggleContextHelp" title="@Core.ToggleHelp" icon="Help" force-reload="true" />
+					<authorized-menu-item controller="Account" action="ToggleContextHelp" title="@Core.ToggleHelp" icon="Help" />
 					<authorized-menu-item controller="Account" action="UpdateAccount" title="@Account.UpdateAccount" icon="User" />
-					<authorized-menu-item controller="Account" action="Logout" title="@Account.Logout" icon="Logout" has-access="true" is-petch="false" />
+					<authorized-menu-item controller="Account" action="Logout" title="@Account.Logout" icon="Logout" has-access="true" hx-boost="false" />
 				}
 				else
 				{
-					<authorized-menu-item controller="Account" action="Login" title="@Account.Login" icon="Login" has-access="true" is-petch="false" />
+					<authorized-menu-item controller="Account" action="Login" title="@Account.Login" icon="Login" has-access="true" hx-boost="false" />
 				}
 			</ul>
 		</div>

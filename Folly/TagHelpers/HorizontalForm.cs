@@ -22,7 +22,6 @@ public class HorizontalFormTagHelper : BaseTagHelper
     public string Controller { get; set; }
     public object For { get; set; }
     public bool IsFullWidth { get; set; }
-    public bool IsPetch { get; set; } = true;
     public HttpVerb Method { get; set; } = HttpVerb.Post;
     public object RouteValues { get; set; }
 
@@ -42,10 +41,6 @@ public class HorizontalFormTagHelper : BaseTagHelper
         output.AddClass("container", HtmlEncoder.Default);
         output.AddClass("form-horizontal", HtmlEncoder.Default);
         output.AddClass("p-5", HtmlEncoder.Default);
-        if (!IsPetch)
-        {
-            output.AddClass("petch-no-follow", HtmlEncoder.Default);
-        }
         output.Attributes.Add("method", Method.ToString());
         output.Attributes.Add("id", $"{Action.ToLower()}{Controller.UppercaseFirst()}Form");
         output.Attributes.Add("data-confirm", Core.DiscardChanges);

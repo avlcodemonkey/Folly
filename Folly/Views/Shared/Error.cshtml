@@ -17,16 +17,7 @@
     <div class="container">
         <div class="p-2 m-2">
             <h1><i class="fl fl-emo-unhappy text-error"></i> Error</h1>
-            <p class="lead">
-                @if (!((string)ViewData[BaseController.MessageProperty]).IsEmpty())
-                {
-                    <toast id="errorPage" message="@ViewData[BaseController.MessageProperty]" type="Error" allow-close="false" />
-                }
-                else
-                {
-                    <toast id="errorPage" message="@Core.ErrorGeneric" type="Error" allow-close="false" />
-                }
-            </p>
+            <p>@(ViewData[BaseController.MessageProperty] ?? @Core.ErrorGeneric)</p>
         </div>
     </div>
 </body>

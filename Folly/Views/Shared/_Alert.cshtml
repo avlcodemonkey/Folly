@@ -1,0 +1,26 @@
+﻿@using Folly.Controllers;
+
+@{
+	string GetData(string key)
+	{
+		if (ViewData.ContainsKey(key))
+		{
+			return (ViewData[key] ?? "").ToString() ?? "";
+		}
+		if (TempData.ContainsKey(key))
+		{
+			return (TempData[key] ?? "").ToString() ?? "";
+		}
+
+		return "";
+	}
+}
+
+@if (!GetData(BaseController.MessageProperty).IsEmpty())
+{
+	<lit-alert type="success" lang="">@GetData(BaseController.MessageProperty)</lit-alert>
+}
+@if (!GetData(BaseController.ErrorProperty).IsEmpty())
+{
+	<lit-alert type="error">@GetData(BaseController.ErrorProperty)</lit-alert>
+}

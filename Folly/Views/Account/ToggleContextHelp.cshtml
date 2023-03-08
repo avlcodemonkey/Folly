@@ -6,7 +6,7 @@
         <breadcrumb-item label="@Core.ToggleHelp" controller="Account" action="ToggleContextHelp" is-active="true" />
     </breadcrumb>
 
-    <partial name="_Toast" />
+    <partial name="_Alert" />
 
-    <toast id="contextHelp" message="@(Model.IsEnabled ? Core.HelpEnabled : Core.HelpDisabled)" type="Info" allow-close="false" />
+    <lit-alert type="success" no-dismiss>@(Model.IsEnabled ? Core.HelpEnabled : Core.HelpDisabled)</lit-alert>
 </content>

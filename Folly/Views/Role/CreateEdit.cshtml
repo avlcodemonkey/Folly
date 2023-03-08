@@ -10,7 +10,7 @@
         <breadcrumb-item label="@(Model.IsCreate ? Roles.CreateRole : Roles.EditRole)" controller="Role" action="@Model.FormAction" route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" is-active="true"></breadcrumb-item>
     </breadcrumb>
 
-    <partial name="_Toast" />
+    <partial name="_Alert" />
 
     <horizontal-form for="Model">
         <input asp-for="Id" type="hidden" />

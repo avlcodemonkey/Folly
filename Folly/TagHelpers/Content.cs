@@ -1,6 +1,4 @@
-﻿using System.Text.Encodings.Web;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
-using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
@@ -10,7 +8,6 @@ public class ContentTagHelper : BaseTagHelper
     {
         output.TagName = "div";
         output.Attributes.Add("id", "content");
-
         base.Process(context, output);
     }
 }

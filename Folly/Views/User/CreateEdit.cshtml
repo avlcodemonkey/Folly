@@ -11,10 +11,10 @@
     </breadcrumb>
 
     @if (Model.IsCreate) {
-        <toast id="contextHelp" message="@Users.ExplainCreate" type="Info" allow-close="true" />
+        <lit-alert type="success">@Users.ExplainCreate</lit-alert>
     }
 
-    <partial name="_Toast" />
+    <partial name="_Alert" />
 
     <horizontal-form for="Model">
         <input asp-for="Id" type="hidden" />

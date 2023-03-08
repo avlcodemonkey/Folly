@@ -52,7 +52,7 @@ public class AccountController : BaseController
     [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName)]
     public async Task<IActionResult> UpdateAccount()
     {
-        var user = await UserService.GetUserByUsername(User.Identity.Name);
+        var user = await UserService.GetUserByUsername(User.Identity!.Name!);
         return View("UpdateAccount", new UpdateAccount(user));
     }
 

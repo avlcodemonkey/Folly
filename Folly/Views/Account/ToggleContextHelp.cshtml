@@ -1,7 +1,7 @@
 ﻿@using Folly.Resources;
 @model Folly.Models.Help
 
-<body-content>
+<content>
     <breadcrumb>
         <breadcrumb-item label="@Core.ToggleHelp" controller="Account" action="ToggleContextHelp" is-active="true" />
     </breadcrumb>
@@ -9,4 +9,4 @@
     <partial name="_Toast" />
 
     <toast id="contextHelp" message="@(Model.IsEnabled ? Core.HelpEnabled : Core.HelpDisabled)" type="Info" allow-close="false" />
-</body-content>
+</content>

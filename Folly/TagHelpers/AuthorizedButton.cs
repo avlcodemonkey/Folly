@@ -17,7 +17,7 @@ public class AuthorizedButtonTagHelper : BaseTagHelper
     }
 
     public string Action { get; set; }
-    public FollyButton Class { get; set; } = FollyButton.BtnPrimary;
+    public Button Type { get; set; } = Button.Primary;
     public string Confirm { get; set; }
     public string Controller { get; set; }
     public bool ForceReload { get; set; } = false;
@@ -32,7 +32,7 @@ public class AuthorizedButtonTagHelper : BaseTagHelper
         Contextualize();
 
         output.TagMode = TagMode.StartTagAndEndTag;
-        if (!(HasAccess ?? HttpContextAccessor.HttpContext.User.HasAccess(Controller, Action, HttpVerb.Get)))
+        if (!(HasAccess ?? HttpContextAccessor.HttpContext?.User.HasAccess(Controller, Action, HttpVerb.Get) == true))
         {
             NoRender = true;
             base.Process(context, output);
@@ -41,18 +41,24 @@ public class AuthorizedButtonTagHelper : BaseTagHelper
 
         output.TagName = "a";
         var urlHelper = UrlHelperFactory.GetUrlHelper(HtmlHelper.ViewContext);
-        output.Attributes.Add("href", urlHelper.Action(Action, Controller, RouteValues));
-        output.Attributes.Add("data-method", "GET");
-        output.Attributes.Add("title", Title);
+        var href = urlHelper.Action(Action, Controller);
+        if (RouteValues != null)
+        {
+            href = $"{href}?{RouteValues}";
+        }
+
+        output.Attributes.Add("href", href);
         output.Attributes.AddIf("target", Target, !Target.IsEmpty());
         output.Attributes.AddIf("role", Role, !Role.IsEmpty());
-        output.Attributes.AddIf("data-reload", "true", ForceReload);
-        output.Attributes.AddIf("data-confirm", Confirm, !Confirm.IsEmpty());
-        output.Content.Append(Title);
+        output.Attributes.AddIf("title", Title, !Title.IsEmpty());
 
-        var classList = new List<string> { "btn", "mr-2" };
-        classList.Add(Class.ToCssClass());
+        var classList = new List<string> {
+            "button",
+            Type.ToCssClass()
+        };
         output.Attributes.Add("class", classList.Join(" "));
+
+        output.Content.AppendHtml(output.GetChildContentAsync().Result);
 
         base.Process(context, output);
     }

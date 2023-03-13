@@ -13,12 +13,33 @@
         Tab
     }
 
-    public enum FollyButton
+    public enum Button
     {
-        BtnWarning,
-        BtnInfo,
-        BtnPrimary,
-        BtnLink
+        Primary,
+        Secondary,
+        Dark,
+        Error,
+        Success,
+        Icon,
+        IconOnly
+    }
+
+    public static class LitIconChar
+    {
+        public const string Dismiss = "&#10006;";
+        public const string Edit = "&#9998;";
+    }
+
+    public enum LitAlertType
+    {
+        Success,
+        Error
+    }
+
+    public enum LitLanguage
+    {
+        En,
+        Es
     }
 
     public enum Icon

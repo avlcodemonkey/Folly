@@ -11,7 +11,7 @@
     </breadcrumb>
 
     @if (Model.IsCreate) {
-        <lit-alert type="success">@Users.ExplainCreate</lit-alert>
+        <lit-alert type="Error" no-dismiss>@Users.ExplainCreate</lit-alert>
     }
 
     <partial name="_Alert" />

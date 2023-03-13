@@ -18,9 +18,9 @@
 
 @if (!GetData(BaseController.MessageProperty).IsEmpty())
 {
-	<lit-alert type="success" lang="">@GetData(BaseController.MessageProperty)</lit-alert>
+	<lit-alert type="Success">@GetData(BaseController.MessageProperty)</lit-alert>
 }
 @if (!GetData(BaseController.ErrorProperty).IsEmpty())
 {
-	<lit-alert type="error">@GetData(BaseController.ErrorProperty)</lit-alert>
+	<lit-alert type="Error">@GetData(BaseController.ErrorProperty)</lit-alert>
 }

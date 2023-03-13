@@ -4,9 +4,6 @@ namespace Folly.Utils;
 
 public static class Headers
 {
-    public const string AuthCookieName = ".Folly.Auth";
-    public const string SessionCookieName = ".Folly.Session";
-
     /// <summary>
     /// Harden headers to help secure app.
     /// Using HardHat (https://github.com/TerribleDev/HardHat) even though its been abandoned because it works.

@@ -17,6 +17,28 @@
     padding: 5rem !important;
 }
 
+.mr-2 {
+    padding: 2rem !important;
+}
+
 .cursor-pointer {
     cursor: pointer;
+}
+
+.button-action {
+    padding: 0.7rem;
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin-right: 0.5rem;
+    min-width: 34px;
+    justify-content: center;
+}
+
+.button + .button {
+    margin-left: 2rem;
+}
+
+.rotate45 {
+    display: block;
+    transform: rotate(-45deg);
 }

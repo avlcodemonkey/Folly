@@ -7,27 +7,48 @@
 
     <partial name="_Alert" />
 
-    <lit-table key="tableUsers" src="@Url.Action("List", "User")" row-key="id">
-        <lit-table-header property="id">@Core.Id</lit-table-header>
-        <lit-table-header property="userName">@Users.UserName</lit-table-header>
-        <lit-table-header property="firstName">@Users.FirstName</lit-table-header>
-        <lit-table-header property="lastName">@Users.LastName</lit-table-header>
-        <lit-table-header property="email">@Users.Email</lit-table-header>
+    <div class="container alpine-table" x-data="table('comments', '@Url.Action("List", "User")')" x-cloak>
+        <partial name="_AlpineTableHeader" />
 
-        <div slot="headerActions">
-            <a asp-controller="User" asp-action="Create" class="button secondary button-action" title="@Users.CreateUser"><span class="rotate45">@Html.Raw(LitIconChar.Dismiss)</span></a>
+        <div class="row">
+            <table class="col striped">
+                <thead>
+                    <tr>
+                        <th class="alpine-no-sort">
+                            <a href="@Url.Action("Create", "User")" class="button secondary button-action icon" title="@Users.CreateUser">
+                                <span class="rotate45">@Html.Raw(LitIconChar.Dismiss)</span>
+                            </a>
+                        </th>
+                        <th :class="sortClass('id')" @@click="onSortClick('id')">@Core.Id</th>
+                        <th :class="sortClass('userName')" @@click="onSortClick('userName')">@Users.UserName</th>
+                        <th :class="sortClass('firstName')" @@click="onSortClick('firstName')">@Users.FirstName</th>
+                        <th :class="sortClass('lastName')" @@click="onSortClick('lastName')">@Users.LastName</th>
+                        <th :class="sortClass('email')" @@click="onSortClick('email')">@Users.Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-show="!rows">
+                        <tr>
+                            <td colspan="6"><h1 class="text-center"><div class="spinner"></div></h1></td>
+                        </tr>
+                    </template>
+                    <template x-for="row in filteredRows" :key="row._index">
+                        <tr>
+                            <td>
+                                <a :href="`User/Edit/${row.id}`" class="button primary button-action icon" title="@Users.EditUser">@Html.Raw(LitIconChar.Edit)</a>
+                                <a :hx-delete="`User/Delete/${row.id}`" hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel" hx-confirm-content="@Core.AreYouSure" class="button dark button-action icon" title="@Core.Delete">@Html.Raw(LitIconChar.Dismiss)</a>
+                            </td>
+                            <td x-text="row.id"></td>
+                            <td x-text="row.userName"></td>
+                            <td x-text="row.firstName"></td>
+                            <td x-text="row.lastName"></td>
+                            <td x-text="row.email"></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
         </div>
 
-        <div slot="rowActions">
-            <a hx-get="User/Edit/${id}" hx-target="#main" class="button primary button-action" title="@Users.EditUser">@Html.Raw(LitIconChar.Edit)</a>
-
-            <lit-modal href="User/Delete/${id}" method="delete" type="confirm">
-                <span slot="button">
-                    <button class="button dark button-action icon" title="@Core.Delete">@Html.Raw(LitIconChar.Dismiss)</button>
-                </span>
-                <span slot="modal-header"><h4>@Core.Delete</h4></span>
-                <span slot="modal-content">@Core.AreYouSure</span>
-            </lit-modal>
-        </div>
-    </lit-table>
+        <partial name="_AlpineTableFooter" />
+    </div>
 </content>

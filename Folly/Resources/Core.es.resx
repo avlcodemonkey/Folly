@@ -273,4 +273,7 @@
   <data name="ErrorSessionInvalid" xml:space="preserve">
     <value>Esta sesión ya no es válida porque el usuario inició sesión en otro dispositivo.</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Cerca</value>
+  </data>
 </root>

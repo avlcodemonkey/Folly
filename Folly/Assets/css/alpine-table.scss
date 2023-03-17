@@ -1,0 +1,61 @@
+/* this should hide alpine content until its processed */
+[x-cloak] {
+    display: none !important;
+}
+
+.flip-horizontal {
+    transform: scaleX(-1);
+}
+
+.flip-horizontal:active {
+    transform: scaleX(-.98);
+}
+
+.arrow {
+    font-size: 2.5rem;
+    line-height: .3;
+}
+
+.spinner {
+    display: inline-block;
+    width: 80px;
+    height: 80px;
+}
+
+.spinner:after {
+    content: " ";
+    display: block;
+    width: 64px;
+    height: 64px;
+    margin: 8px;
+    border-radius: 50%;
+    border: 6px solid var(--color-primary);
+    border-color: var(--color-primary) transparent var(--color-primary) transparent;
+    animation: spinner 1.2s linear infinite;
+}
+
+@keyframes spinner {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.alpine-table th {
+    min-width: 100px;
+
+    &:not(.alpine-no-sort) {
+        cursor: pointer;
+    }
+
+    &.alpine-sort-asc::after {
+        content: ' \1f81d';
+    }
+
+    &.alpine-sort-desc::after {
+        content: ' \1f81f';
+    }
+}

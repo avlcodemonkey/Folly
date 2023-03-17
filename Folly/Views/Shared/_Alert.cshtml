@@ -1,26 +1,26 @@
 ﻿@using Folly.Controllers;
 
 @{
-	string GetData(string key)
-	{
-		if (ViewData.ContainsKey(key))
-		{
-			return (ViewData[key] ?? "").ToString() ?? "";
-		}
-		if (TempData.ContainsKey(key))
-		{
-			return (TempData[key] ?? "").ToString() ?? "";
-		}
+    string GetData(string key)
+    {
+        if (ViewData.ContainsKey(key))
+        {
+            return (ViewData[key] ?? "").ToString() ?? "";
+        }
+        if (TempData.ContainsKey(key))
+        {
+            return (TempData[key] ?? "").ToString() ?? "";
+        }
 
-		return "";
-	}
+        return "";
+    }
 }
 
 @if (!GetData(BaseController.MessageProperty).IsEmpty())
 {
-	<lit-alert type="Success">@GetData(BaseController.MessageProperty)</lit-alert>
+    <partial name="_AlpineAlert" model="new AlpineAlert { Content = GetData(BaseController.MessageProperty) }" />
 }
 @if (!GetData(BaseController.ErrorProperty).IsEmpty())
 {
-	<lit-alert type="Error">@GetData(BaseController.ErrorProperty)</lit-alert>
+    <partial name="_AlpineAlert" model="new AlpineAlert { Content = GetData(BaseController.ErrorProperty), AlertType = LitAlertType.Error }" />
 }

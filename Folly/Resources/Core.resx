@@ -285,4 +285,7 @@
   <data name="Id" xml:space="preserve">
     <value>ID</value>
   </data>
+  <data name="Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
 </root>

@@ -1,4 +1,4 @@
-:host, :root {
+:root {
     --bg-color: #fff;
     --bg-secondary-color: #f3f3f6;
     --color-primary: #3e63ad;
@@ -13,4 +13,21 @@
     --font-color: #333333;
     --font-family-sans: -apple-system, BlinkMacSystemFont, Avenir, "Avenir Next", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
+}
+
+[data-dialog] {
+    --dialog-font-family: -apple-system, BlinkMacSystemFont, Avenir, "Avenir Next", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    --dialog-font-size: 1.6rem;
+}
+
+[data-dialog="alert"] {
+    --theme-color-hue: 163;
+    --theme-color-saturation: 43%;
+    --theme-color-lightness: 42%;
+}
+
+[data-dialog="confirm"] {
+    --theme-color-hue: 268;
+    --theme-color-saturation: 22%;
+    --theme-color-lightness: 51%;
 }

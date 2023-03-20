@@ -22,5 +22,5 @@
 }
 @if (!GetData(BaseController.ErrorProperty).IsEmpty())
 {
-    <partial name="_AlpineAlert" model="new AlpineAlert { Content = GetData(BaseController.ErrorProperty), AlertType = LitAlertType.Error }" />
+    <partial name="_AlpineAlert" model="new AlpineAlert { Content = GetData(BaseController.ErrorProperty), AlertType = AlertType.Error }" />
 }

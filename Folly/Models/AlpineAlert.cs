@@ -3,5 +3,5 @@
 public record AlpineAlert
 {
     public string Content { get; init; } = "";
-    public LitAlertType AlertType { get; init; } = LitAlertType.Success;
+    public AlertType AlertType { get; init; } = AlertType.Success;
 }

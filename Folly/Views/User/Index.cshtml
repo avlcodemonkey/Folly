@@ -16,7 +16,7 @@
                     <tr>
                         <th class="alpine-no-sort">
                             <a href="@Url.Action("Create", "User")" class="button secondary button-action icon" title="@Users.CreateUser">
-                                <span class="rotate45">@Html.Raw(LitIconChar.Dismiss)</span>
+                                <span class="rotate45">@Html.Raw(IconChar.Dismiss)</span>
                             </a>
                         </th>
                         <th :class="sortClass('id')" @@click="onSortClick('id')">@Core.Id</th>

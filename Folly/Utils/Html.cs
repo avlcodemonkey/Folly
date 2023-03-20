@@ -24,22 +24,16 @@
         IconOnly
     }
 
-    public static class LitIconChar
+    public static class IconChar
     {
         public const string Dismiss = "&#10006;";
         public const string Edit = "&#9998;";
     }
 
-    public enum LitAlertType
+    public enum AlertType
     {
         Success,
         Error
-    }
-
-    public enum LitLanguage
-    {
-        En,
-        Es
     }
 
     public enum Icon

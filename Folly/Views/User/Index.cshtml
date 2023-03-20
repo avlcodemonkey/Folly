@@ -35,8 +35,10 @@
                     <template x-for="row in filteredRows" :key="row._index">
                         <tr>
                             <td>
-                                <a :href="`User/Edit/${row.id}`" class="button primary button-action icon" title="@Users.EditUser">@Html.Raw(LitIconChar.Edit)</a>
-                                <a :hx-delete="`User/Delete/${row.id}`" hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel" hx-confirm-content="@Core.AreYouSure" class="button dark button-action icon" title="@Core.Delete">@Html.Raw(LitIconChar.Dismiss)</a>
+                                <a :href="`@Url.Action("Index")/Edit/${row.id}`" class="button primary button-action icon" title="@Users.EditUser">@Html.Raw(IconChar.Edit)</a>
+                                <a :hx-delete="`@Url.Action("Index")/Delete/${row.id}`" hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel"
+                                    hx-confirm-content="@Core.AreYouSure" class="button dark button-action icon" title="@Core.Delete"
+                                >@Html.Raw(IconChar.Dismiss)</a>
                             </td>
                             <td x-text="row.id"></td>
                             <td x-text="row.userName"></td>

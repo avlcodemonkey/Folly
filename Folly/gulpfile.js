@@ -58,7 +58,7 @@ function favicon() {
 }
 
 function watchFiles() {
-    gulp.watch(paths.css + '**/*.scss', sassFiles);
+    gulp.watch([paths.css + '**/*.scss', paths.css + '**/*.css'], sassFiles);
     gulp.watch(paths.js + '**/*.js', jsFiles);
     gulp.watch(paths.font, fonts);
 }

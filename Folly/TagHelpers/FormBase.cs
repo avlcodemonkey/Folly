@@ -2,6 +2,7 @@
 using Folly.Resources;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -19,13 +20,6 @@ public class FormBaseTagHelper : BaseTagHelper
     public bool? IsRequired { get; set; }
     public string Name { get; set; }
     public string Title { get; set; }
-
-    public static TagBuilder BuildFormGroup()
-    {
-        var div = new TagBuilder("div");
-        div.AddCssClass("col-8");
-        return div;
-    }
 
     public static TagBuilder BuildInputGroup()
     {
@@ -73,15 +67,14 @@ public class FormBaseTagHelper : BaseTagHelper
         icon.AddCssClass("fl-help");
 
         var button = new TagBuilder("button");
-        button.AddCssClass("btn btn-secondary input-group-btn");
+        button.AddCssClass("button secondary icon-only");
         button.MergeAttribute("type", "button");
         button.MergeAttribute("role", "button");
-        button.MergeAttribute("data-toggle", DataToggle.ContextHelp.ToHyphenCase());
-        button.MergeAttribute("data-message", HelpText.Replace("\"", "&quot;"));
+        button.MergeAttribute("hx-get", "#");
+        button.MergeAttribute("hx-alert-content", HelpText.Replace("\"", "&quot;"));
         button.InnerHtml.AppendHtml(icon);
 
         var span = new TagBuilder("span");
-        span.AddCssClass("input-group-custom");
         span.AddCssClass("input-group-addon");
         span.InnerHtml.AppendHtml(button);
 
@@ -91,10 +84,6 @@ public class FormBaseTagHelper : BaseTagHelper
     public IHtmlContent BuildLabel(string forField = null)
     {
         var label = new TagBuilder("label");
-        label.AddCssClass("form-label");
-        label.AddCssClass("col-4");
-        if ((IsRequired.HasValue && IsRequired.Value) || (!IsRequired.HasValue && For?.Metadata.IsRequired == true))
-            label.AddCssClass("required");
         label.Attributes.Add("for", forField ?? FieldName);
         label.InnerHtml.Append(FieldTitle);
         return label;

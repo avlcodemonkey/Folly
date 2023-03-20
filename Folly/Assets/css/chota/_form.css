@@ -76,9 +76,7 @@ button {
   font-size: var(--font-size);
   line-height: 1;
   text-align: center;
-  transition: opacity 0.2s ease;
   text-decoration: none;
-  transform: scale(1);
   display: inline-block;
   cursor: pointer;
 }

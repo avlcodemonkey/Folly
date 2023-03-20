@@ -70,19 +70,17 @@ public class FormGroupAutocompleteTagHelper : FormBaseTagHelper
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
         Contextualize();
-        UseFormGroup(output);
+        UseInputGroup(output);
 
-        var div = BuildFormGroup();
         var inputGroup = BuildInputGroup();
         inputGroup.InnerHtml.AppendHtml(BuildHidden());
         inputGroup.InnerHtml.AppendHtml(BuildInput());
 
         inputGroup.InnerHtml.AppendHtml(BuildHelp());
         inputGroup.InnerHtml.AppendHtml(output.GetChildContentAsync().Result);
-        div.InnerHtml.AppendHtml(inputGroup);
 
         output.Content.AppendHtml(BuildLabel(AutoCompleteName));
-        output.Content.AppendHtml(div);
+        output.Content.AppendHtml(inputGroup);
 
         base.Process(context, output);
     }

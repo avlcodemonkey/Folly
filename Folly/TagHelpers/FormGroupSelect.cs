@@ -15,11 +15,6 @@ public class FormGroupSelectTagHelper : FormBaseTagHelper
         input.Attributes.Add("name", FieldName);
         input.Attributes.AddIf("required", "true", IsRequired == true || (!IsRequired.HasValue && For?.Metadata.IsRequired == true));
         input.Attributes.AddIf("autofocus", "true", Autofocus);
-        input.Attributes.AddIf("data-toggle", Toggle.ToHyphenCase(), Toggle.HasValue);
-        input.Attributes.AddIf("data-url", Url, !Url.IsEmpty());
-        input.Attributes.AddIf("data-params", Params, !Params.IsEmpty());
-        input.Attributes.AddIf("data-target", Target, !Target.IsEmpty());
-        input.Attributes.AddIf("data-match", Match, Match != null);
         input.Attributes.AddIf("disabled", "true", Disabled == true);
 
         var selectedValue = For?.ModelExplorer.Model?.ToString();
@@ -48,18 +43,21 @@ public class FormGroupSelectTagHelper : FormBaseTagHelper
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
         Contextualize();
-        UseFormGroup(output);
+        output.TagName = null;
+        output.TagMode = TagMode.StartTagAndEndTag;
 
         if (Options != null)
             Options = Options.Where(x => !x.Value.IsEmpty()).GroupBy(x => x.Value).Select(x => x.First());
 
-        var div = BuildFormGroup();
+        var div = new TagBuilder("div");
+        div.AddCssClass("mb-1");
+        div.InnerHtml.AppendHtml(BuildLabel());
+
         var inputGroup = BuildInputGroup();
         inputGroup.InnerHtml.AppendHtml(BuildInput());
         inputGroup.InnerHtml.AppendHtml(BuildHelp());
         div.InnerHtml.AppendHtml(inputGroup);
 
-        output.Content.AppendHtml(BuildLabel());
         output.Content.AppendHtml(div);
 
         base.Process(context, output);

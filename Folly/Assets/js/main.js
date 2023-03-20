@@ -21,6 +21,7 @@ document.body.addEventListener('alpine-table-updated', (e) => {
 
 document.body.addEventListener('htmx:confirm', async (e) => {
     const elt = e.detail.elt;
+
     if (elt.hasAttribute('hx-confirm-content')) {
         e.preventDefault();
         const result = await dialog.confirm(elt.getAttribute('hx-confirm-content'), {
@@ -31,6 +32,10 @@ document.body.addEventListener('htmx:confirm', async (e) => {
         if (result) {
             e.detail.issueRequest();
         }
+    } else if (elt.hasAttribute('hx-alert-content')) {
+        e.preventDefault();
+        await dialog.alert(elt.getAttribute('hx-alert-content'));
+        elt.focus();
     }
 });
 

@@ -18,7 +18,7 @@ public class BaseTagHelper : TagHelper
     [HtmlAttributeNotBound]
     public ViewContext ViewContext { get; set; }
 
-    public static void UseFormGroup(TagHelperOutput output)
+    public static void UseInputGroup(TagHelperOutput output)
     {
         output.TagMode = TagMode.StartTagAndEndTag;
         output.TagName = "div";

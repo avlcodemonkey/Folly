@@ -17,7 +17,7 @@ public class FormCheckboxTagHelper : BaseTagHelper
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
         Contextualize();
-        UseFormGroup(output);
+        UseInputGroup(output);
 
         var id = Id.IsEmpty() ? $"{Name}_{Value}" : Id;
         var label = new TagBuilder("label");

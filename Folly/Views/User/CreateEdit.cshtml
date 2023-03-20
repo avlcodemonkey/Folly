@@ -11,7 +11,7 @@
     </breadcrumb>
 
     @if (Model.IsCreate) {
-        <lit-alert type="Error" no-dismiss>@Users.ExplainCreate</lit-alert>
+        <partial name="_AlpineAlert" model="new AlpineAlert { Content = @Users.ExplainCreate }" />
     }
 
     <partial name="_Alert" />
@@ -24,9 +24,10 @@
         <form-group-input for="UserName" />
         <form-group-input for="Email" />
         <form-group-select for="LanguageId" options="@(await ViewService.GetLanguageList())" />
-        <div class="form-group">
+
+        <div class="mb-1">
             <form-label for="RoleIds" />
-            <div class="col-8 checkbox-block">
+            <div class="input-group">
                 @{
                     var roles = await ViewService.GetAllRoles();
                     foreach (var role in roles)
@@ -37,6 +38,6 @@
             </div>
         </div>
 
-        <form-buttons />
+        <input class="button primary" type="submit" value="@Core.Save">
     </horizontal-form>
 </content>

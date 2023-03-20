@@ -22,8 +22,8 @@ public class FormButtonsTagHelper : BaseTagHelper
         output.AddClass("form-buttons", HtmlEncoder.Default);
 
         var input = new TagBuilder("input");
-        input.AddCssClass("btn");
-        input.AddCssClass("btn-primary");
+        input.AddCssClass("button");
+        input.AddCssClass("primary");
         input.AddCssClass("mr-2");
         input.Attributes.Add("type", "submit");
         input.Attributes.Add("value", SubmitLabel);

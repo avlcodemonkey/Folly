@@ -1,0 +1,19 @@
+@import "root.scss";
+
+form {
+    input:valid {
+        border-color: var(--color-success) !important;
+    }
+
+    input:invalid {
+        border-color: var(--color-error) !important;
+    }
+
+    .input-group {
+        display: flex;
+
+        input + span.input-group-addon, select + span.input-group-addon, textarea + span.input-group-addon {
+            padding-left: 1rem;
+        }
+    }
+}

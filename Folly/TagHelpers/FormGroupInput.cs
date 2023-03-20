@@ -41,12 +41,6 @@ public class FormGroupInputTagHelper : FormBaseTagHelper
             var minLength = GetMinLength(For.ModelExplorer.Metadata.ValidatorMetadata);
             input.Attributes.AddIf("minLength", minLength.ToString(), minLength > 0);
         }
-        input.Attributes.AddIf("data-toggle", Toggle.ToHyphenCase(), Toggle.HasValue);
-        input.Attributes.AddIf("data-url", Url, !Url.IsEmpty());
-        input.Attributes.AddIf("data-params", Params, !Params.IsEmpty());
-        input.Attributes.AddIf("data-preload", "true", Preload);
-        input.Attributes.AddIf("data-target", Target, !Target.IsEmpty());
-        input.Attributes.AddIf("data-match", Match, Match != null);
 
         return input;
     }
@@ -65,16 +59,19 @@ public class FormGroupInputTagHelper : FormBaseTagHelper
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
         Contextualize();
-        UseFormGroup(output);
+        output.TagName = null;
+        output.TagMode = TagMode.StartTagAndEndTag;
 
-        var div = BuildFormGroup();
+        var div = new TagBuilder("div");
+        div.AddCssClass("mb-1");
+        div.InnerHtml.AppendHtml(BuildLabel());
+
         var inputGroup = BuildInputGroup();
         inputGroup.InnerHtml.AppendHtml(BuildInput());
         inputGroup.InnerHtml.AppendHtml(BuildHelp());
         inputGroup.InnerHtml.AppendHtml(output.GetChildContentAsync().Result);
         div.InnerHtml.AppendHtml(inputGroup);
 
-        output.Content.AppendHtml(BuildLabel());
         output.Content.AppendHtml(div);
 
         base.Process(context, output);

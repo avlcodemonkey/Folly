@@ -1,6 +1,5 @@
 ﻿using System.Text.Encodings.Web;
 using Folly.Models;
-using Folly.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.Routing;
@@ -21,7 +20,6 @@ public class HorizontalFormTagHelper : BaseTagHelper
     public string Action { get; set; }
     public string Controller { get; set; }
     public object For { get; set; }
-    public bool IsFullWidth { get; set; }
     public HttpVerb Method { get; set; } = HttpVerb.Post;
     public object RouteValues { get; set; }
 
@@ -39,32 +37,14 @@ public class HorizontalFormTagHelper : BaseTagHelper
         output.TagMode = TagMode.StartTagAndEndTag;
         output.TagName = "form";
         output.AddClass("container", HtmlEncoder.Default);
-        output.AddClass("form-horizontal", HtmlEncoder.Default);
-        output.AddClass("p-5", HtmlEncoder.Default);
         output.Attributes.Add("method", Method.ToString());
         output.Attributes.Add("id", $"{Action.ToLower()}{Controller.UppercaseFirst()}Form");
-        output.Attributes.Add("data-confirm", Core.DiscardChanges);
+
         var urlHelper = UrlHelperFactory.GetUrlHelper(HtmlHelper.ViewContext);
         output.Attributes.Add("action", urlHelper.Action(Action, Controller, RouteValues));
 
-        var col = new TagBuilder("div");
-        if (IsFullWidth)
-        {
-            col.AddCssClass("col-12");
-        }
-        else
-        {
-            col.AddCssClass("col-6");
-            col.AddCssClass("col-xl-9");
-        }
-        col.InnerHtml.AppendHtml(HtmlHelper.AntiForgeryToken());
-        col.InnerHtml.AppendHtml(output.GetChildContentAsync().Result);
-
-        var columns = new TagBuilder("div");
-        columns.AddCssClass("columns");
-        columns.InnerHtml.AppendHtml(col);
-
-        output.Content.AppendHtml(columns);
+        output.Content.AppendHtml(HtmlHelper.AntiForgeryToken());
+        output.Content.AppendHtml(output.GetChildContentAsync().Result);
 
         base.Process(context, output);
     }

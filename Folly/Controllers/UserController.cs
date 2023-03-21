@@ -16,31 +16,20 @@ public class UserController : BaseController
 
     private IActionResult CreateEditView(User model) => View("CreateEdit", model);
 
-    private async Task<User?> LoadUser(int id, bool useTempData = false)
+    private async Task<User?> LoadUser(int id)
     {
-        User model;
-        if ((model = await UserService.GetUserById(id)) != null)
-        {
+        var model = await UserService.GetUserById(id);
+        if (model != null)
             return model;
-        }
 
-        if (useTempData)
-        {
-            TempData[ErrorProperty] = Core.ErrorInvalidId;
-        }
-        else
-        {
-            ViewData[ErrorProperty] = Core.ErrorInvalidId;
-        }
+        ViewData[ErrorProperty] = Core.ErrorInvalidId;
         return null;
     }
 
     private async Task<IActionResult> Save(User model)
     {
         if (!ModelState.IsValid)
-        {
             return CreateEditView(model);
-        }
 
         await UserService.SaveUser(model);
         ViewData[MessageProperty] = Users.SuccessSavingUser;
@@ -66,9 +55,7 @@ public class UserController : BaseController
     {
         var model = await LoadUser(id);
         if (model == null)
-        {
             return Index();
-        }
 
         await UserService.DeleteUser(model);
         ViewData[MessageProperty] = Users.SuccessDeletingUser;
@@ -89,6 +76,5 @@ public class UserController : BaseController
     public IActionResult Index() => View("Index");
 
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
-    public async Task<IActionResult> List()
-        => Ok((await UserService.GetAllUsers()).Select(x => new { x.Id, x.UserName, x.FirstName, x.LastName, x.Email }));
+    public async Task<IActionResult> List() => Ok((await UserService.GetAllUsers()).Select(x => new { x.Id, x.UserName, x.FirstName, x.LastName, x.Email }));
 }

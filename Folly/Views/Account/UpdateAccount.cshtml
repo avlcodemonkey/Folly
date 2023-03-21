@@ -18,7 +18,7 @@
         <form-group-input for="Email" />
         <form-group-select for="LanguageId" options="@(await ViewService.GetLanguageList())" />
 
-        <form-buttons />
+        <input class="button primary" type="submit" value="@Core.Save">
     </horizontal-form>
 </content>
 

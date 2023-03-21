@@ -27,15 +27,13 @@
 
         <div class="mb-1">
             <form-label for="RoleIds" />
-            <div class="input-group">
-                @{
-                    var roles = await ViewService.GetAllRoles();
-                    foreach (var role in roles)
-                    {
-                        <form-checkbox name="RoleIds" value="@role.Id" label="@role.Name" is-checked="@Model.RoleIds?.Contains(role.Id) == true" />
-                    }
+            @{
+                var roles = await ViewService.GetAllRoles();
+                foreach (var role in roles)
+                {
+                    <form-checkbox name="RoleIds" value="@role.Id" label="@role.Name" is-checked="@Model.RoleIds?.Contains(role.Id) == true" />
                 }
-            </div>
+            }
         </div>
 
         <input class="button primary" type="submit" value="@Core.Save">

@@ -4,8 +4,4 @@
 }
 
 <div id="content" class="dashboard">
-    @if (!((string)ViewData[BaseController.MessageProperty]).IsEmpty())
-    {
-        <span class="hidden" data-toggle="@DataToggle.Dialog.ToHyphenCase()" data-message="@ViewData[BaseController.MessageProperty]" />
-    }
 </div>

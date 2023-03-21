@@ -17,31 +17,24 @@
 
         <form-group-input for="Name" autofocus="true" />
         <form-group-checkbox for="IsDefault" />
-        <div class="form-group">
+
+        <div class="mb-1">
             <form-label for="PermissionIds" />
-            <div class="col-8 c-hand" data-toggle="@DataToggle.CollapsibleList.ToHyphenCase()">
-                @{
-                    var permissions = await ViewService.GetControllerPermissions();
-                    foreach (var controller in permissions.Keys)
-                    {
-                        <ul class="collapsible-list">
-                            <li>
-                                <form-checkbox name="Controller" label="@controller" id="@($"controller_{controller}")" />
-                                <ul class="collapsible-list">
-                                    @foreach (var permission in permissions[controller])
-                                    {
-                                        <li>
-                                            <form-checkbox name="PermissionIds" value="@permission.Id" label="@permission.ActionName" is-checked="@Model.PermissionIds?.Contains(permission.Id) == true" />
-                                        </li>
-                                    }
-                                </ul>
-                            </li>
-                        </ul>
-                    }
+            @{
+                var permissions = await ViewService.GetControllerPermissions();
+                foreach (var controller in permissions.Keys)
+                {
+                    <details open>
+                        <summary>@controller</summary>
+                        @foreach (var permission in permissions[controller])
+                        {
+                            <form-checkbox name="PermissionIds" value="@permission.Id" label="@permission.ActionName" is-checked="@Model.PermissionIds?.Contains(permission.Id) == true" />
+                        }
+                    </details>
                 }
-            </div>
+            }
         </div>
 
-        <form-buttons />
+        <input class="button primary" type="submit" value="@Core.Save">
     </horizontal-form>
 </content>

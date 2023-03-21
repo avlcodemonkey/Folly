@@ -8,5 +8,5 @@
 
     <partial name="_Alert" />
 
-    <lit-alert type="Success" no-dismiss>@(Model.IsEnabled ? Core.HelpEnabled : Core.HelpDisabled)</lit-alert>
+    <partial name="_AlpineAlert" model="new AlpineAlert { Content = Model.IsEnabled ? Core.HelpEnabled : Core.HelpDisabled, CanDismiss = false }" />
 </content>

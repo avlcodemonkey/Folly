@@ -7,7 +7,7 @@
 
     <partial name="_Alert" />
 
-    <div class="container alpine-table" x-data="table('comments', '@Url.Action("List", "User")')" x-cloak>
+    <div class="container alpine-table" x-data="table('users', '@Url.Action("List", "User")')" x-cloak>
         <partial name="_AlpineTableHeader" />
 
         <div class="row">
@@ -15,9 +15,11 @@
                 <thead>
                     <tr>
                         <th class="alpine-no-sort">
-                            <a href="@Url.Action("Create", "User")" class="button secondary button-action icon" title="@Users.CreateUser">
-                                <span class="rotate45">@Html.Raw(IconChar.Dismiss)</span>
-                            </a>
+                            @if (User.HasAccess("User", "Create")) {
+                                <a href="@Url.Action("Create", "User")" class="button secondary button-action" title="@Users.CreateUser">
+                                    <i class="fl fl-plus"></i>
+                                </a>
+                            }
                         </th>
                         <th :class="sortClass('id')" @@click="onSortClick('id')">@Core.Id</th>
                         <th :class="sortClass('userName')" @@click="onSortClick('userName')">@Users.UserName</th>
@@ -35,10 +37,20 @@
                     <template x-for="row in filteredRows" :key="row._index">
                         <tr>
                             <td>
-                                <a :href="`@Url.Action("Index")/Edit/${row.id}`" class="button primary button-action icon" title="@Users.EditUser">@Html.Raw(IconChar.Edit)</a>
-                                <a :hx-delete="`@Url.Action("Index")/Delete/${row.id}`" hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel"
-                                    hx-confirm-content="@Core.AreYouSure" class="button dark button-action icon" title="@Core.Delete"
-                                >@Html.Raw(IconChar.Dismiss)</a>
+                                @if (User.HasAccess("User", "Edit")) {
+                                    <a class="button primary button-action" title="@Users.EditUser" :href="`@Url.Action("Index")/Edit/${row.id}`">
+                                        <i class="fl fl-edit"></i>
+                                    </a>
+                                }
+                                @if (User.HasAccess("User", "Delete"))
+                                {
+                                    <a class="button dark button-action" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
+                                    hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel"
+                                    hx-confirm-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
+                                    >
+                                        <i class="fl fl-trash"></i>
+                                    </a>
+                                }
                             </td>
                             <td x-text="row.id"></td>
                             <td x-text="row.userName"></td>

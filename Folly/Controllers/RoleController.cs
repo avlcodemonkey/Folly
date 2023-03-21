@@ -16,16 +16,13 @@ public class RoleController : BaseController
 
     private IActionResult CreateEditView(Role model) => View("CreateEdit", model);
 
-    private async Task<Role> LoadRole(int id, bool useTempData = false)
+    private async Task<Role?> LoadRole(int id)
     {
-        Role model;
-        if ((model = await RoleService.GetRoleById(id)) != null)
+        var model = await RoleService.GetRoleById(id);
+        if (model != null)
             return model;
 
-        if (useTempData)
-            TempData[ErrorProperty] = Core.ErrorInvalidId;
-        else
-            ViewData[ErrorProperty] = Core.ErrorInvalidId;
+        ViewData[ErrorProperty] = Core.ErrorInvalidId;
         return null;
     }
 
@@ -36,6 +33,7 @@ public class RoleController : BaseController
 
         await RoleService.SaveRole(model);
         ViewData[MessageProperty] = Roles.SuccessSavingRole;
+        Response.Headers.Add("hx-push-url", Url.Action(nameof(Index)));
         return Index();
     }
 
@@ -62,7 +60,7 @@ public class RoleController : BaseController
     [HttpPost, ParentAction(nameof(Edit)), ValidateAntiForgeryToken, ValidModel]
     public async Task<IActionResult> Create(Role model) => await Save(model);
 
-    [HttpDelete, AjaxRequestOnly]
+    [HttpDelete]
     public async Task<IActionResult> Delete(int id)
     {
         var model = await LoadRole(id);
@@ -85,19 +83,16 @@ public class RoleController : BaseController
     public async Task<IActionResult> Edit(Role model) => await Save(model);
 
     [HttpGet]
-    public IActionResult Index()
-    {
-        RouteData.Values.Remove(IDParameter);
-        return View("Index");
-    }
+    public IActionResult Index() => View("Index");
 
-    [HttpPost, ParentAction(nameof(Index)), AjaxRequestOnly]
-    public async Task<IActionResult> List() => Rows((await RoleService.GetAllRoles()).Select(x => new { x.Id, x.Name }));
+    [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
+    public async Task<IActionResult> List() => Ok((await RoleService.GetAllRoles()).Select(x => new { x.Id, x.Name }));
 
-    [HttpGet, AjaxRequestOnly]
+    [HttpGet]
     public async Task<IActionResult> RefreshPermissions()
     {
-        await new Permissions(PermissionService, RoleService).Register();
+        await new PermissionManager(PermissionService, RoleService).Register();
+        Response.Headers.Add("hx-replace-url", Url.Action(nameof(Index)));
         ViewData[MessageProperty] = Roles.SuccessRefreshingPermissions;
         return Index();
     }

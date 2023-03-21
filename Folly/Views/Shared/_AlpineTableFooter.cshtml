@@ -1,16 +1,16 @@
-﻿<div class="row">
+﻿<div class="row mt-1">
     <div class="col col-10-md">
-        <button class="button button-action primary flip-horizontal" title="First" :disabled="isFirstPage" @@click="onFirstPageClick">
-            <span class="arrow">&#187;</span>
+        <button class="button button-action primary" title="First" :disabled="isFirstPage" @@click="onFirstPageClick">
+            <i class="fl fl-to-start-alt"></i>
         </button>
-        <button class="button button-action primary flip-horizontal" title="Previous" :disabled="isFirstPage" @@click="onPreviousPageClick">
-            <span class="arrow">&#8250;</span>
+        <button class="button button-action primary" title="Previous" :disabled="isFirstPage" @@click="onPreviousPageClick">
+            <i class="fl fl-to-start"></i>
         </button>
         <button class="button button-action primary" title="Next" :disabled="isLastPage" @@click="onNextPageClick">
-            <span class="arrow">&#8250;</span>
+            <i class="fl fl-to-end"></i>
         </button>
         <button class="button button-action primary" title="Last" :disabled="isLastPage" @@click="onLastPageClick">
-            <span class="arrow">&#187;</span>
+            <i class="fl fl-to-end-alt"></i>
         </button>
     </div>
     <div class="col col-2-md">

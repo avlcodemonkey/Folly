@@ -24,12 +24,6 @@
         IconOnly
     }
 
-    public static class IconChar
-    {
-        public const string Dismiss = "&#10006;";
-        public const string Edit = "&#9998;";
-    }
-
     public enum AlertType
     {
         Success,

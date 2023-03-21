@@ -17,15 +17,14 @@ public class FormCheckboxTagHelper : BaseTagHelper
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {
         Contextualize();
-        UseInputGroup(output);
+        output.TagName = "div";
+        output.TagMode = TagMode.StartTagAndEndTag;
 
         var id = Id.IsEmpty() ? $"{Name}_{Value}" : Id;
         var label = new TagBuilder("label");
-        label.AddCssClass("form-checkbox");
         label.Attributes.Add("for", id);
 
         var input = new TagBuilder("input");
-        input.AddCssClass("custom-control-input-multiple");
         input.Attributes.Add("id", id);
         input.Attributes.Add("name", Name);
         input.Attributes.Add("type", "checkbox");
@@ -33,11 +32,7 @@ public class FormCheckboxTagHelper : BaseTagHelper
         input.Attributes.AddIf("checked", "true", IsChecked);
         input.Attributes.AddIf("disabled", "true", Disabled == true);
 
-        var icon = new TagBuilder("i");
-        icon.AddCssClass("form-icon");
-
         label.InnerHtml.AppendHtml(input);
-        label.InnerHtml.AppendHtml(icon);
         label.InnerHtml.Append(Label);
 
         output.Content.AppendHtml(label);

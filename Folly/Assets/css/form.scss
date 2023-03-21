@@ -16,4 +16,10 @@ form {
             padding-left: 1rem;
         }
     }
+
+    label {
+        input[type=checkbox] {
+            margin-right: 1rem;
+        }
+    }
 }

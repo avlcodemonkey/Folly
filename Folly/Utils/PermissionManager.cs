@@ -1,19 +1,17 @@
-﻿using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using System.Reflection;
 using Folly.Models;
 using Folly.Services;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Utils;
 
-public class Permissions
+public class PermissionManager
 {
     private readonly IPermissionService PermissionService;
     private readonly IRoleService RoleService;
 
-    public Permissions(IPermissionService permissionService, IRoleService roleService)
+    public PermissionManager(IPermissionService permissionService, IRoleService roleService)
     {
         PermissionService = permissionService;
         RoleService = roleService;
@@ -30,7 +28,7 @@ public class Permissions
             .SelectMany(x => x.GetMethods())
             .Where(x => x.IsPublic && !x.IsDefined(typeof(NonActionAttribute))
                  && (x.IsDefined(typeof(AuthorizeAttribute)) || (x.DeclaringType.IsDefined(typeof(AuthorizeAttribute)))) && !x.IsDefined(typeof(AllowAnonymousAttribute)) &!x.IsDefined(typeof(ParentActionAttribute)))
-            .Select(x => $"{x.DeclaringType.FullName.Split('.').Last().Replace("Controller", "")}.{x.Name}")
+            .Select(x => $"{x.DeclaringType?.FullName?.Split('.').Last().Replace("Controller", "")}.{x.Name}")
             .Distinct()
             .ToDictionary(x => x.ToLower(), x => x);
 

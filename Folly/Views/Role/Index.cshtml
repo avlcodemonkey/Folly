@@ -7,20 +7,66 @@
 
     <partial name="_Alert" />
 
-    <toolbar>
-        <authorized-button controller="Role" action="Create" title="@Roles.CreateRole" />
-        <authorized-button controller="Role" action="RefreshPermissions" title="@Roles.RefreshPermissions" confirm="@Roles.ConfirmRefreshPermissions" />
-    </toolbar>
+    <div class="container alpine-table" x-data="table('roles', '@Url.Action("List", "Role")')" x-cloak>
+        <partial name="_AlpineTableHeader" />
 
-    <do-table request-url="@Url.Action("List")" id="tableRoles" template="#roleTemplate" />
+        <div class="row">
+            <table class="col striped">
+                <thead>
+                    <tr>
+                        <th class="alpine-no-sort">
+                            @if (User.HasAccess("Role", "Create"))
+                            {
+                                <a href="@Url.Action("Create", "Role")" class="button secondary button-action" title="@Roles.CreateRole">
+                                    <i class="fl fl-plus"></i>
+                                </a>
+                            }
+                            @if (User.HasAccess("Role", "RefreshPermissions"))
+                            {
+                                <a href="@Url.Action("RefreshPermissions", "Role")" class="button dark button-action" title="@Roles.RefreshPermissions"
+                                   hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel"
+                                   hx-confirm-content="@Roles.ConfirmRefreshPermissions"
+                                >
+                                    <i class="fl fl-arrows-cw"></i>
+                                </a>
+                            }
+                        </th>
+                        <th :class="sortClass('id')" @@click="onSortClick('id')">@Core.Id</th>
+                        <th :class="sortClass('name')" @@click="onSortClick('userName')">@Roles.Name</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template x-show="!rows">
+                        <tr>
+                            <td colspan="3"><h1 class="text-center"><div class="spinner"></div></h1></td>
+                        </tr>
+                    </template>
+                    <template x-for="row in filteredRows" :key="row._index">
+                        <tr>
+                            <td>
+                                @if (User.HasAccess("Role", "Edit")) {
+                                    <a class="button primary button-action" title="@Roles.EditRole" :href="`@Url.Action("Index")/Edit/${row.id}`">
+                                        <i class="fl fl-edit"></i>
+                                    </a>
+                                }
+                                @if (User.HasAccess("Role", "Delete"))
+                                {
+                                    <a class="button dark button-action" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
+                                        hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel"
+                                        hx-confirm-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
+                                    >
+                                        <i class="fl fl-trash"></i>
+                                    </a>
+                                }
+                            </td>
+                            <td x-text="row.id"></td>
+                            <td x-text="row.name"></td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
 
-    <do-row id="roleTemplate">
-        <do-column label="@Core.Actions" field="actions" sortable="false" width="200px">
-            <do-edit-button controller="Role" />
-            <do-delete-button controller="Role" confirm="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)" />
-            <do-copy-button controller="Role" prompt="@Roles.CopyBody" />
-        </do-column>
-        <do-column label="@Core.Id" field="id" />
-        <do-column label="@Roles.Name" field="name" />
-    </do-row>
+        <partial name="_AlpineTableFooter" />
+    </div>
 </content>

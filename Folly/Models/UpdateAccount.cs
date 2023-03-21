@@ -20,14 +20,12 @@ public record UpdateAccount : BaseModel
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
     [EmailAddress(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorEmailAddress))]
     [DataType(DataType.EmailAddress, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorEmailAddressFormat))]
-    public string Email { get; init; }
+    public string Email { get; init; } = "";
 
     [Display(ResourceType = typeof(Users), Name = nameof(Users.FirstName))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
-    public string FirstName { get; init; }
-
-    public string LanguageCode { get; init; }
+    public string FirstName { get; init; } = "";
 
     [Display(ResourceType = typeof(Users), Name = nameof(Users.Language))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
@@ -36,5 +34,5 @@ public record UpdateAccount : BaseModel
     [Display(ResourceType = typeof(Users), Name = nameof(Users.LastName))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
-    public string LastName { get; init; }
+    public string LastName { get; init; } = "";
 }

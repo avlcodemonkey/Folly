@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Globalization;
+using System.Text.Json;
 using Folly;
 using Folly.Configuration;
 using Folly.Controllers;
@@ -7,9 +8,11 @@ using Folly.Services;
 using Folly.Utils;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -120,6 +123,15 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+var cultures = new List<CultureInfo> { new CultureInfo("en"), new CultureInfo("es") };
+var localizationOptions = new RequestLocalizationOptions {
+    DefaultRequestCulture = new RequestCulture("en"),
+    SupportedCultures = cultures,
+    SupportedUICultures = cultures,
+};
+localizationOptions.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider() { });
+app.UseRequestLocalization(localizationOptions);
 
 app.MapControllerRoute("parentChild", "{controller}/{action}/{parentId:int}/{id:int}");
 app.MapControllerRoute("default", $"{{controller={nameof(DashboardController).StripController()}}}/{{action={nameof(DashboardController.Index)}}}/{{id:int?}}");

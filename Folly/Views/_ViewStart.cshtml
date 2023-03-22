@@ -1,10 +1,6 @@
 ﻿@using Folly.Controllers;
+@using Folly.Utils;
 
-@if (Context.Request.Headers.Any(x => x.Key == "hx-request"))
-{
-    Layout = null;
-}
-else
-{
-    Layout = "_Layout";
+@{
+    Layout = Context.Request.Headers.Any(x => x.Key == HtmxHeaders.Request) ? null : "_Layout";
 }

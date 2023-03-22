@@ -33,7 +33,7 @@ public class RoleController : BaseController
 
         await RoleService.SaveRole(model);
         ViewData[MessageProperty] = Roles.SuccessSavingRole;
-        Response.Headers.Add("hx-push-url", Url.Action(nameof(Index)));
+        Response.Headers.Add(HtmxHeaders.PushUrl, Url.Action(nameof(Index)));
         return Index();
     }
 
@@ -92,7 +92,7 @@ public class RoleController : BaseController
     public async Task<IActionResult> RefreshPermissions()
     {
         await new PermissionManager(PermissionService, RoleService).Register();
-        Response.Headers.Add("hx-replace-url", Url.Action(nameof(Index)));
+        Response.Headers.Add(HtmxHeaders.ReplaceUrl, Url.Action(nameof(Index)));
         ViewData[MessageProperty] = Roles.SuccessRefreshingPermissions;
         return Index();
     }

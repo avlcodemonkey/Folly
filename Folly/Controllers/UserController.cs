@@ -33,7 +33,7 @@ public class UserController : BaseController
 
         await UserService.SaveUser(model);
         ViewData[MessageProperty] = Users.SuccessSavingUser;
-        Response.Headers.Add("hx-push-url", Url.Action(nameof(Index)));
+        Response.Headers.Add(HtmxHeaders.PushUrl, Url.Action(nameof(Index)));
         return Index();
     }
 

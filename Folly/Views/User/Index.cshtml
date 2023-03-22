@@ -7,62 +7,54 @@
 
     <partial name="_Alert" />
 
-    <div class="container alpine-table" x-data="table('users', '@Url.Action("List", "User")')" x-cloak>
+    <alpine-table-data id="users" src="@Url.Action("List", "User")">
         <partial name="_AlpineTableHeader" />
 
-        <div class="row">
-            <table class="col striped">
-                <thead>
-                    <tr>
-                        <th class="alpine-no-sort">
-                            @if (User.HasAccess("User", "Create")) {
-                                <a href="@Url.Action("Create", "User")" class="button secondary button-action" title="@Users.CreateUser">
-                                    <i class="fl fl-plus"></i>
-                                </a>
-                            }
-                        </th>
-                        <th :class="sortClass('id')" @@click="onSortClick('id')">@Core.Id</th>
-                        <th :class="sortClass('userName')" @@click="onSortClick('userName')">@Users.UserName</th>
-                        <th :class="sortClass('firstName')" @@click="onSortClick('firstName')">@Users.FirstName</th>
-                        <th :class="sortClass('lastName')" @@click="onSortClick('lastName')">@Users.LastName</th>
-                        <th :class="sortClass('email')" @@click="onSortClick('email')">@Users.Email</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <template x-show="!rows">
-                        <tr>
-                            <td colspan="6"><h1 class="text-center"><div class="spinner"></div></h1></td>
-                        </tr>
-                    </template>
-                    <template x-for="row in filteredRows" :key="row._index">
-                        <tr>
-                            <td>
-                                @if (User.HasAccess("User", "Edit")) {
-                                    <a class="button primary button-action" title="@Users.EditUser" :href="`@Url.Action("Index")/Edit/${row.id}`">
-                                        <i class="fl fl-edit"></i>
-                                    </a>
-                                }
-                                @if (User.HasAccess("User", "Delete"))
-                                {
-                                    <a class="button dark button-action" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
-                                    hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel"
-                                    hx-confirm-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
-                                    >
-                                        <i class="fl fl-trash"></i>
-                                    </a>
-                                }
-                            </td>
-                            <td x-text="row.id"></td>
-                            <td x-text="row.userName"></td>
-                            <td x-text="row.firstName"></td>
-                            <td x-text="row.lastName"></td>
-                            <td x-text="row.email"></td>
-                        </tr>
-                    </template>
-                </tbody>
-            </table>
-        </div>
+        <alpine-table>
+            <thead>
+                <tr>
+                    <th class="alpine-no-sort">
+                        @if (User.HasAccess("User", "Create")) {
+                            <a href="@Url.Action("Create", "User")" class="button secondary button-action" title="@Users.CreateUser">
+                                <icon name="Plus" />
+                            </a>
+                        }
+                    </th>
+                    <alpine-th property="id">@Core.Id</alpine-th>
+                    <alpine-th property="userName">@Users.UserName</alpine-th>
+                    <alpine-th property="firstName">@Users.FirstName</alpine-th>
+                    <alpine-th property="lastName">@Users.LastName</alpine-th>
+                    <alpine-th property="email">@Users.Email</alpine-th>
+                </tr>
+            </thead>
+            <tbody>
+                <alpine-spinner colspan="6" />
+                <alpine-table-row>
+                    <td>
+                        @if (User.HasAccess("User", "Edit")) {
+                            <a class="button primary button-action" title="@Users.EditUser" :href="`@Url.Action("Index")/Edit/${row.id}`">
+                                <icon name="Edit" />
+                            </a>
+                        }
+                        @if (User.HasAccess("User", "Delete"))
+                        {
+                            <a class="button dark button-action" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
+                                hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel"
+                                hx-confirm-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
+                            >
+                                <icon name="Trash" />
+                            </a>
+                        }
+                    </td>
+                    <alpine-td property="id" />
+                    <alpine-td property="userName" />
+                    <alpine-td property="firstName" />
+                    <alpine-td property="lastName" />
+                    <alpine-td property="email" />
+                </alpine-table-row>
+            </tbody>
+        </alpine-table>
 
         <partial name="_AlpineTableFooter" />
-    </div>
+    </alpine-table-data>
 </content>

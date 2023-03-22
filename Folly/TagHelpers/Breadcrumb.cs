@@ -8,7 +8,7 @@ public class BreadcrumbTagHelper : BaseTagHelper
 {
     public BreadcrumbTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
-    public override void Process(TagHelperContext context, TagHelperOutput output)
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
         Contextualize();
 
@@ -19,7 +19,8 @@ public class BreadcrumbTagHelper : BaseTagHelper
         output.TagName = "ul";
         output.Attributes.Add("id", "breadcrumb");
         output.Content.AppendHtml(li);
-        output.Content.AppendHtml(output.GetChildContentAsync().Result);
-        base.Process(context, output);
+        output.Content.AppendHtml(await output.GetChildContentAsync());
+
+        await base.ProcessAsync(context, output);
     }
 }

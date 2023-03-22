@@ -11,12 +11,14 @@ public class BaseTagHelper : TagHelper
     public BaseTagHelper() { }
 
     public BaseTagHelper(IHtmlHelper htmlHelper) => HtmlHelper = htmlHelper;
-    public IHtmlHelper HtmlHelper { get; set; }
+
+    [HtmlAttributeNotBound]
+    public IHtmlHelper? HtmlHelper { get; set; }
     public bool NoRender { get; set; }
 
     [ViewContext]
     [HtmlAttributeNotBound]
-    public ViewContext ViewContext { get; set; }
+    public ViewContext? ViewContext { get; set; }
 
     public static void UseInputGroup(TagHelperOutput output)
     {
@@ -25,7 +27,11 @@ public class BaseTagHelper : TagHelper
         output.AddClass("form-group", HtmlEncoder.Default);
     }
 
-    public void Contextualize() => (HtmlHelper as IViewContextAware).Contextualize(ViewContext);
+    public void Contextualize()
+    {
+        if (HtmlHelper != null && ViewContext != null)
+            (HtmlHelper as IViewContextAware)!.Contextualize(ViewContext);
+    }
 
     public override void Process(TagHelperContext context, TagHelperOutput output)
     {

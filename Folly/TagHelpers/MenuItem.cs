@@ -5,12 +5,12 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public class AuthorizedMenuItemTagHelper : BaseTagHelper
+public sealed class MenuItemTagHelper : BaseTagHelper
 {
     readonly IHttpContextAccessor HttpContextAccessor;
     readonly IUrlHelperFactory UrlHelperFactory;
 
-    public AuthorizedMenuItemTagHelper(IHtmlHelper htmlHelper, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory) : base(htmlHelper)
+    public MenuItemTagHelper(IHtmlHelper htmlHelper, IHttpContextAccessor httpContextAccessor, IUrlHelperFactory urlHelperFactory) : base(htmlHelper)
     {
         HttpContextAccessor = httpContextAccessor;
         UrlHelperFactory = urlHelperFactory;
@@ -22,22 +22,19 @@ public class AuthorizedMenuItemTagHelper : BaseTagHelper
     public Icon Icon { get; set; }
     public string Title { get; set; } = "";
 
-    public override void Process(TagHelperContext context, TagHelperOutput output)
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
     {
         Contextualize();
 
-        output.TagMode = TagMode.StartTagAndEndTag;
-        if (Controller.IsEmpty() || Action.IsEmpty() || HasAccess == false || HttpContextAccessor.HttpContext?.User.HasAccess(Controller!, Action!, HttpVerb.Get) != true)
+        if (string.IsNullOrWhiteSpace(Controller) || string.IsNullOrWhiteSpace(Action) || HasAccess == false || HttpContextAccessor.HttpContext?.User.HasAccess(Controller, Action, HttpVerb.Get) != true)
         {
-            NoRender = true;
-            base.Process(context, output);
+            output.SuppressOutput();
+            await base.ProcessAsync(context, output);
             return;
         }
 
-        output.TagName = "li";
-
         var a = new TagBuilder("a");
-        var urlHelper = UrlHelperFactory.GetUrlHelper(HtmlHelper.ViewContext);
+        var urlHelper = UrlHelperFactory.GetUrlHelper(HtmlHelper!.ViewContext);
         a.Attributes.Add("href", urlHelper.Action(Action, Controller));
 
         var i = new TagBuilder("i");
@@ -50,9 +47,11 @@ public class AuthorizedMenuItemTagHelper : BaseTagHelper
         span.InnerHtml.Append(Title);
         a.InnerHtml.AppendHtml(span);
 
+        output.TagName = "li";
+        output.TagMode = TagMode.StartTagAndEndTag;
         output.Content.AppendHtml(a);
-        output.Content.AppendHtml(output.GetChildContentAsync().Result);
+        output.Content.AppendHtml(await output.GetChildContentAsync());
 
-        base.Process(context, output);
+        await base.ProcessAsync(context, output);
     }
 }

@@ -80,7 +80,7 @@ export default (key, src) => ({
 
     filterData() {
         // create a new array and filter by the search query
-        const filteredData = this.searchQuery ? this.rows?.filter(this.filterArray.bind(this.searchQuery.toLowerCase())) : [...(this.rows ?? [])];
+        const filteredData = this.searchQuery ? (this.rows?.filter(this.filterArray.bind(this.searchQuery.toLowerCase())) ?? []) : [...(this.rows ?? [])];
 
         // sort the new array
         filteredData.sort(this.sortColumns?.length ? this.compare.bind(this.sortColumns) : this.defaultCompare)
@@ -220,6 +220,7 @@ export default (key, src) => ({
         } catch {
             this.rows = [];
         }
+
         this.filterData();
     },
 

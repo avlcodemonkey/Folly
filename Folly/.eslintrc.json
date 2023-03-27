@@ -1,0 +1,30 @@
+﻿{
+    /* See all the pre-defined configs here: https://www.npmjs.com/package/eslint-config-defaults */
+    "extends": [
+        "eslint:recommended",
+        "airbnb"
+    ],
+    "env": {
+        "browser": true,
+        "es6": true
+    },
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 2020
+    },
+    "rules": {
+        "indent": [ "error", 4 ],
+        "lines-between-class-members": "off",
+        "space-before-function-paren": "off",
+        "linebreak-style": [
+            "error",
+            "windows"
+        ],
+        "curly": [
+            "error",
+            "all"
+        ],
+        "max-len": [ "error", 200 ],
+        "no-underscore-dangle": "off"
+    }
+}

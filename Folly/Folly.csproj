@@ -1,11 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <TypeScriptTarget>ESNext</TypeScriptTarget>
+    <TypeScriptLib>ESNext</TypeScriptLib>
+  </PropertyGroup>
+
+  <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <TypeScriptTarget>ESNext</TypeScriptTarget>
+    <TypeScriptLib>ESNext</TypeScriptLib>
+  </PropertyGroup>
+
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ScopedCssEnabled>false</ScopedCssEnabled>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Remove=".eslintrc.json" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="Assets\css\icons.scss" />
@@ -83,6 +97,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include=".eslintrc.json" />
     <None Include="Views\Shared\Error.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\_ViewImports.cshtml" />

@@ -14,21 +14,14 @@
             <thead>
                 <tr>
                     <th class="alpine-no-sort">
-                        @if (User.HasAccess("Role", "Create"))
-                        {
-                            <a href="@Url.Action("Create", "Role")" class="button secondary button-action" title="@Roles.CreateRole">
-                                <icon name="Plus" />
-                            </a>
-                        }
-                        @if (User.HasAccess("Role", "RefreshPermissions"))
-                        {
-                            <a href="@Url.Action("RefreshPermissions", "Role")" class="button dark button-action" title="@Roles.RefreshPermissions"
-                                hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel"
-                                hx-confirm-content="@Roles.ConfirmRefreshPermissions"
-                            >
-                                <icon name="ArrowsCw" />
-                            </a>
-                        }
+                        <a asp-authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button secondary button-action" title="@Roles.CreateRole">
+                            <icon name="Plus" />
+                        </a>
+                        <a asp-authorize-roles="role.refreshpermissions" href="@Url.Action("RefreshPermissions", "Role")" class="button dark button-action" title="@Roles.RefreshPermissions"
+                            hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel" hx-confirm-content="@Roles.ConfirmRefreshPermissions"
+                        >
+                            <icon name="ArrowsCw" />
+                        </a>
                     </th>
                     <alpine-th property="id">@Core.Id</alpine-th>
                     <alpine-th property="name">@Roles.Name</alpine-th>
@@ -38,20 +31,14 @@
                 <alpine-spinner colspan="3" />
                 <alpine-table-row>
                     <td>
-                        @if (User.HasAccess("Role", "Edit")) {
-                            <a class="button primary button-action" title="@Roles.EditRole" :href="`@Url.Action("Index")/Edit/${row.id}`">
-                                <icon name="Edit" />
-                            </a>
-                        }
-                        @if (User.HasAccess("Role", "Delete"))
-                        {
-                            <a class="button dark button-action" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
-                                hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel"
-                                hx-confirm-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
-                            >
-                                <icon name="Trash" />
-                            </a>
-                        }
+                        <a asp-authorize-roles="role.edit" class="button primary button-action" title="@Roles.EditRole" :href="`@Url.Action("Index")/Edit/${row.id}`">
+                            <icon name="Edit" />
+                        </a>
+                        <a asp-authorize-roles="role.delete" class="button dark button-action" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
+                            hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel" hx-confirm-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
+                        >
+                            <icon name="Trash" />
+                        </a>
                     </td>
                     <alpine-td property="id" />
                     <alpine-td property="name" />

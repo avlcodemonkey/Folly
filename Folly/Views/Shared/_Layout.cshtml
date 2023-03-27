@@ -4,45 +4,56 @@
 
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		<title id="page-title">@(ViewData[BaseController.TitleProperty] ?? Core.Dashboard)</title>
-		<link rel="icon" href="/favicon.ico" />
-		<link rel="stylesheet" href="/css/main.css" asp-append-version="true" />
-		<script src="/js/main.js" asp-append-version="true" defer></script>
-	</head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title id="page-title">@(ViewData[BaseController.TitleProperty] ?? Core.Dashboard)</title>
+        <link rel="icon" href="/favicon.ico" />
+        <link rel="stylesheet" href="/css/main.css" asp-append-version="true" />
+        <script src="/js/main.js" asp-append-version="true" defer></script>
+    </head>
 
-	<body class="sidebar-toggled" hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header" hx-indicator="#spinner">
-		<div id="sidebar">
-			<ul>
-				<li id="sidebar-button" class="cursor-pointer">
-					<a><icon name="Menu" class="fl-lg" /></a>
-				</li>
+    <body class="sidebar-toggled" hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header" hx-indicator="#spinner">
+        <div id="sidebar">
+            <ul>
+                <li id="sidebar-button" class="cursor-pointer">
+                    <a><icon name="Menu" class="fl-lg" /></a>
+                </li>
 
-				@if (User.Identity?.IsAuthenticated == true)
-				{
-					<menu-item controller="Dashboard" action="Index" title="@Core.Dashboard" icon="Home" />
-					@if (User.HasAccess("Role", "Index") || User.HasAccess("User", "Index"))
-					{
-						<li class="divider"></li>
-					}
-					<menu-item controller="Role" action="Index" title="@Roles.MenuItem" icon="Key" />
-					<menu-item controller="User" action="Index" title="@Users.MenuItem" icon="Users" />
-					<li class="divider"></li>
-					<menu-item controller="Account" action="ToggleContextHelp" title="@Core.ToggleHelp" icon="Help" />
-					<menu-item controller="Account" action="UpdateAccount" title="@Account.UpdateAccount" icon="User" />
-					<menu-item controller="Account" action="Logout" title="@Account.Logout" icon="Logout" has-access="true" hx-boost="false" />
-				}
-				else
-				{
-					<menu-item controller="Account" action="Login" title="@Account.Login" icon="Login" has-access="true" hx-boost="false" />
-				}
-			</ul>
-		</div>
-		<div id="main">
-			@RenderBody()
-		</div>
-		<div id="spinner" class="htmx-indicator"></div>
-	</body>
+                @if (User.Identity?.IsAuthenticated == true)
+                {
+                    <li asp-authorize-roles="dashboard.index">
+                        <a asp-controller="Dashboard" asp-action="Index"><icon name="Home" class="fl-lg" /><span>@Core.Dashboard</span></a>
+                    </li>
+                    <li asp-authorize-roles="role.index, user.index" class="divider"></li>
+                    <li asp-authorize-roles="role.index">
+                        <a asp-controller="Role" asp-action="Index"><icon name="Key" class="fl-lg" /><span>@Roles.MenuItem</span></a>
+                    </li>
+                    <li asp-authorize-roles="user.index">
+                        <a asp-controller="User" asp-action="Index"><icon name="Users" class="fl-lg" /><span>@Users.MenuItem</span></a>
+                    </li>
+                    <li class="divider"></li>
+                    <li asp-authorize-roles="account.updateAccount">
+                        <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Help" class="fl-lg" /><span>@Core.ToggleHelp</span></a>
+                    </li>
+                    <li asp-authorize-roles="account.updateAccount">
+                        <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" class="fl-lg" /><span>@Account.UpdateAccount</span></a>
+                    </li>
+                    <li>
+                        <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="Logout" class="fl-lg" /><span>@Account.Logout</span></a>
+                    </li>
+                }
+                else
+                {
+                    <li>
+                        <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="Login" class="fl-lg" /><span>@Account.Login</span></a>
+                    </li>
+                }
+            </ul>
+        </div>
+        <div id="main">
+            @RenderBody()
+        </div>
+        <div id="spinner" class="htmx-indicator"></div>
+    </body>
 </html>

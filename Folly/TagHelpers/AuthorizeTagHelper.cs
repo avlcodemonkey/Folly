@@ -1,0 +1,28 @@
+﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+
+namespace Folly.TagHelpers;
+
+[HtmlTargetElement(Attributes = "asp-authorize-roles")]
+public class AuthorizeTagHelper : TagHelper
+{
+    readonly IHttpContextAccessor HttpContextAccessor;
+
+    public AuthorizeTagHelper(IHttpContextAccessor httpContextAccessor) => HttpContextAccessor = httpContextAccessor;
+
+    [HtmlAttributeName("asp-authorize-roles")]
+    public string Roles { get; set; } = "";
+
+    public override void Process(TagHelperContext context, TagHelperOutput output)
+    {
+        if (output.Attributes.TryGetAttribute("asp-authorize-roles", out var attribute))
+        {
+            output.Attributes.Remove(attribute);
+        }
+
+        var user = HttpContextAccessor.HttpContext?.User;
+        if (user == null || !Roles.Split(',').Select(x => x.Trim().ToLower()).Any(user.IsInRole))
+        {
+            output.SuppressOutput();
+        }
+    }
+}

@@ -39,6 +39,9 @@
                         >
                             <icon name="Trash" />
                         </a>
+                        <a asp-authorize-roles="role.edit" class="button primary button-action" title="@Core.Copy" :href="`@Url.Action("Index")/Copy/${row.id}`">
+                            <icon name="Clone" />
+                        </a>
                     </td>
                     <alpine-td property="id" />
                     <alpine-td property="name" />

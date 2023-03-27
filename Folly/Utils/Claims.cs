@@ -1,24 +1,25 @@
-﻿using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
+﻿using System.Security.Claims;
 using Folly.Services;
+using Microsoft.AspNetCore.Authentication;
 
 namespace Folly.Utils;
 
-public class ClaimsTransformer : IClaimsTransformation
+public sealed class ClaimsTransformer : IClaimsTransformation
 {
     private readonly IUserService UserService;
 
-    public ClaimsTransformer(IUserService userService)
-    {
-        UserService = userService;
-    }
+    public ClaimsTransformer(IUserService userService) => UserService = userService;
 
     public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal)
     {
+        if (principal.Identity == null)
+            return principal;
+
         var currentPrincipal = (ClaimsIdentity)principal.Identity;
         if (currentPrincipal.Claims.Any(x => x.Type == currentPrincipal.RoleClaimType))
+            return principal;
+
+        if (string.IsNullOrWhiteSpace(principal.Identity.Name))
             return principal;
 
         var user = await UserService.GetUserByUsername(principal.Identity.Name);

@@ -10,9 +10,9 @@ namespace Folly.Controllers
     {
         public ErrorController(IAppConfiguration appConfig, ILogger<ErrorController> logger) : base(appConfig, logger) { }
 
-        public IActionResult Index(string code = null)
+        public IActionResult Index(string? code = null)
         {
-            if (!code.IsEmpty())
+            if (!string.IsNullOrWhiteSpace(code))
                 Logger.LogError(Core.UnhandledError, code, HttpContext.Features.Get<IStatusCodeReExecuteFeature>()?.OriginalPath);
             return View("Error");
         }

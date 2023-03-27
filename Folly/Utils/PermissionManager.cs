@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Utils;
 
-public class PermissionManager
+public sealed class PermissionManager
 {
     private readonly IPermissionService PermissionService;
     private readonly IRoleService RoleService;
@@ -27,22 +27,22 @@ public class PermissionManager
             .Where(x => typeof(Controller).IsAssignableFrom(x)) //filter controllers
             .SelectMany(x => x.GetMethods())
             .Where(x => x.IsPublic && !x.IsDefined(typeof(NonActionAttribute))
-                 && (x.IsDefined(typeof(AuthorizeAttribute)) || (x.DeclaringType.IsDefined(typeof(AuthorizeAttribute)))) && !x.IsDefined(typeof(AllowAnonymousAttribute)) &!x.IsDefined(typeof(ParentActionAttribute)))
+                 && (x.IsDefined(typeof(AuthorizeAttribute)) || (x.DeclaringType!.IsDefined(typeof(AuthorizeAttribute)))) && !x.IsDefined(typeof(AllowAnonymousAttribute)) &!x.IsDefined(typeof(ParentActionAttribute)))
             .Select(x => $"{x.DeclaringType?.FullName?.Split('.').Last().Replace("Controller", "")}.{x.Name}")
             .Distinct()
             .ToDictionary(x => x.ToLower(), x => x);
 
-        actionList.Add("profiler.dashboard", "Profiler.Dashboard");
         // query all permissions from db
         var permissions = (await PermissionService.GetAll()).ToDictionary(x => $"{x.ControllerName?.Trim()}.{x.ActionName?.Trim()}".ToLower(), x => x);
 
         // save any actions not in db
-        actionList.Where(x => !permissions.ContainsKey(x.Key)).Each(async x => {
+        await actionList.Where(x => !permissions.ContainsKey(x.Key)).ToList().ForEachAsync(async x => {
             var parts = x.Value.Split('.');
             await PermissionService.Save(new Permission { ControllerName = parts[0], ActionName = parts[1] });
         });
+
         // delete any permission not in action list
-        permissions.Where(x => !actionList.ContainsKey(x.Key)).Each(async x => {
+        await permissions.Where(x => !actionList.ContainsKey(x.Key)).ToList().ForEachAsync(async x => {
             await PermissionService.Delete(x.Value.Id);
         });
 

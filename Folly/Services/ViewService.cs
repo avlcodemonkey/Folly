@@ -1,7 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using Folly.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Folly.Models;
 
 namespace Folly.Services;
 
@@ -23,7 +21,7 @@ public class ViewService : IViewService
     public async Task<Dictionary<string, List<Permission>>> GetControllerPermissions()
     {
         var controllerPermissions = new Dictionary<string, List<Permission>>();
-        (await PermissionService.GetAll()).Each(permission => {
+        (await PermissionService.GetAll()).ToList().ForEach(permission => {
             if (!controllerPermissions.ContainsKey(permission.ControllerName))
                 controllerPermissions.Add(permission.ControllerName, new List<Permission>());
             controllerPermissions[permission.ControllerName].Add(permission);

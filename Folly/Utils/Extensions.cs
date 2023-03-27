@@ -1,16 +1,13 @@
 ﻿using System.Data;
 using System.Linq.Expressions;
-using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
 using Folly.Models;
-using Folly.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.Extensions.Caching.Memory;
 
 namespace Folly;
 
@@ -20,7 +17,6 @@ public static class Extensions
     private const string XmlHttpRequest = "XMLHttpRequest";
     private static readonly Regex CaseRegex = new(@"([a-z])([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
     private static readonly Regex CssRegex = new(@"(?<!_)([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
-    private static readonly List<string> PrivateKeywords = new() { "password", "token" };
 
     /// <summary>
     /// Add an item to the dictionary if `add` is true.
@@ -53,51 +49,18 @@ public static class Extensions
     }
 
     /// <summary>
-    /// Create/fetch objects from memory cache.
-    /// </summary>
-    /// <typeparam name="T">Type of object to pull from cache.</typeparam>
-    /// <param name="cache">Memory cache instance.</param>
-    /// <param name="key">Unique key of the item.</param>
-    /// <param name="onCreate">Method to create item if it doesn't exist in cache.</param>
-    /// <returns>Item from cache or result of onCreate function.</returns>
-    public static T Cached<T>(this IMemoryCache cache, string key, Func<T> onCreate) where T : class
-    {
-        if (cache == null)
-            return onCreate();
-
-        if (!cache.TryGetValue<T>(key, out var result))
-        {
-            result = onCreate();
-            cache.Set(key, result);
-        }
-        return result;
-    }
-
-    /// <summary>
-    /// Helper for iterating over ienumerables.
+    /// Helper for iterating over lists async.
     /// </summary>
     /// <typeparam name="T">Type of item in the list.</typeparam>
     /// <param name="list">List to iterate over.</param>
-    /// <param name="action">Action to perform</param>
-    /// <returns></returns>
-    public static IEnumerable<T> Each<T>(this IEnumerable<T> list, Action<T> action)
+    /// <param name="func">Function to perform</param>
+    public static async Task ForEachAsync<T>(this List<T> list, Func<T, Task> func)
     {
-        if (list == null)
-            return list;
-        foreach (var x in list)
-            action(x);
-        return list;
+        foreach (var value in list)
+        {
+            await func(value);
+        }
     }
-
-    /// <summary>
-    /// Check if the user has access to a controller/action combo.
-    /// </summary>
-    /// <param name="claimsPrincipal">Claims principal for user.</param>
-    /// <param name="controller">Requested controller.</param>
-    /// <param name="action">Requested action.</param>
-    /// <returns>True if user has access, else false.</returns>
-    public static bool HasAccess(this ClaimsPrincipal claimsPrincipal, string controller, string action, HttpVerb method = HttpVerb.Get)
-        => new ControllerAction(controller, action, method).EffectivePermissions().Any(x => claimsPrincipal.IsInRole(x));
 
     /// <summary>
     /// Check if an integer has a value greater than zero.
@@ -126,21 +89,6 @@ public static class Extensions
     /// <param name="value">String to check.</param>
     /// <returns>True if string is not null or empty.</returns>
     public static bool IsEmpty(this string? value) => string.IsNullOrWhiteSpace(value);
-
-    /// <summary>
-    /// Check if a string contains any of the private keywords.
-    /// </summary>
-    /// <param name="value">String to search in.</param>
-    /// <returns>True if a match is found.</returns>
-    public static bool IsPrivate(this string value) => PrivateKeywords.Any(x => value.ToLower().Contains(x));
-
-    /// <summary>
-    /// Join a list of string using separator.
-    /// </summary>
-    /// <param name="value">String list to combine.</param>
-    /// <param name="separator">String to use between list items.</param>
-    /// <returns>Joined string.</returns>
-    public static string Join(this IEnumerable<string> value, string separator = ", ") => string.Join(separator, value);
 
     /// <summary>
     /// Redirect to an action, without using magic strings.

@@ -3,7 +3,7 @@
 namespace Folly.TagHelpers;
 
 [HtmlTargetElement(Attributes = "asp-authorize-roles")]
-public class AuthorizeTagHelper : TagHelper
+public sealed class AuthorizeTagHelper : TagHelper
 {
     readonly IHttpContextAccessor HttpContextAccessor;
 

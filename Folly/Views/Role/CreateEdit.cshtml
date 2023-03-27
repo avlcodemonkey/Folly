@@ -6,8 +6,10 @@
 
 <content>
     <breadcrumb>
-        <breadcrumb-item label="@Roles.ViewAll" controller="Role" action="Index"></breadcrumb-item>
-        <breadcrumb-item label="@(Model.IsCreate ? Roles.CreateRole : Roles.EditRole)" controller="Role" action="@Model.FormAction" route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" is-active="true"></breadcrumb-item>
+        <breadcrumb-item label="@Roles.ViewAll" controller="Role" action="Index" />
+        <breadcrumb-item label="@(Model.IsCreate ? Roles.CreateRole : Roles.EditRole)" controller="Role" action="@Model.FormAction"
+            route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" is-active="true"
+        />
     </breadcrumb>
 
     <partial name="_Alert" />

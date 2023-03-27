@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public class BreadcrumbTagHelper : BaseTagHelper
+public sealed class BreadcrumbTagHelper : BaseTagHelper
 {
     public BreadcrumbTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 

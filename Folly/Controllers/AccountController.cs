@@ -29,7 +29,6 @@ public class AccountController : BaseController
         var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
             .WithRedirectUri(returnUrl)
             .Build();
-
         await HttpContext.ChallengeAsync(Auth0Constants.AuthenticationScheme, authenticationProperties);
     }
 
@@ -72,5 +71,11 @@ public class AccountController : BaseController
         }
         ViewData[MessageProperty] = result;
         return View("UpdateAccount", model);
+    }
+
+    public IActionResult AccessDenied()
+    {
+        ViewData[MessageProperty] = Core.ErrorGeneric;
+        return View("Error");
     }
 }

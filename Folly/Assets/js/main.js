@@ -1,10 +1,7 @@
-﻿import htmx from './htmx.org/htmx.js';
-import Alpine from './alpinejs/index.js';
-import table from './alpine-table.js';
-import { dialog } from './dialog/index.js';
-
-window.htmx = htmx;
-window.Alpine = Alpine;
+﻿import * as htmx from './htmx.org/htmx';
+import Alpine from './alpinejs/index';
+import alpineTable from './alpine-table';
+import { dialog } from './dialog/index';
 
 document.getElementById('sidebar-button').addEventListener('click', () => {
     document.body.classList.toggle('sidebar-toggled');
@@ -16,18 +13,18 @@ document.body.addEventListener('alpine-table-updated', (e) => {
         return;
     }
 
-    window.htmx.process(e.target);
+    htmx.process(e.target);
 });
 
 document.body.addEventListener('htmx:confirm', async (e) => {
-    const elt = e.detail.elt;
+    const { elt } = e.detail;
 
     if (elt.hasAttribute('hx-confirm-content')) {
         e.preventDefault();
         const result = await dialog.confirm(elt.getAttribute('hx-confirm-content'), {
             okText: elt.getAttribute('hx-confirm-ok') ?? 'Okay',
             cancelText: elt.getAttribute('hx-confirm-cancel') ?? 'Cancel',
-            focus: 'cancel'
+            focus: 'cancel',
         });
         if (result) {
             e.detail.issueRequest();
@@ -39,6 +36,6 @@ document.body.addEventListener('htmx:confirm', async (e) => {
     }
 });
 
-Alpine.data('table', table);
+Alpine.data('table', alpineTable);
 
 Alpine.start();

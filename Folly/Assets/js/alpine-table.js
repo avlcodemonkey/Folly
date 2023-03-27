@@ -1,4 +1,6 @@
-﻿import './alpinejs/index.js';
+﻿// @ts-check
+
+import './alpinejs/index';
 
 const TableSetting = Object.freeze({
     CurrentPage: 'currentPage',
@@ -12,10 +14,10 @@ const SortOrder = Object.freeze({
     Desc: 'desc',
 });
 
-export default (key, src) => ({
+const alpineTable = (key, src) => ({
     // from html placeholder for the table
-    key: key,
-    src: src,
+    key,
+    src,
 
     // internal state
     rows: undefined,
@@ -27,6 +29,11 @@ export default (key, src) => ({
     maxPage: 0,
     searchQuery: '',
 
+    /**
+     * Retrieves value from sessionStorage.
+     * @param {string} name
+     * @returns {string | null} Value if found, or null.
+     */
     fetchSetting(name) {
         return sessionStorage.getItem(`${this.key}_${name}`);
     },
@@ -36,25 +43,32 @@ export default (key, src) => ({
     },
 
     defaultCompare(a, b) {
-        return a._index > b._index ? 1 : a._index < b._index ? -1 : 0;
+        if (a._index > b._index) {
+            return 1;
+        }
+        return a._index < b._index ? -1 : 0;
     },
 
     compare(a, b) {
         let i = 0;
         const len = this.length;
-        for (; i < len; i++) {
+        for (; i < len; i += 1) {
             const sort = this[i];
             const aa = a[sort.property];
             const bb = b[sort.property];
 
-            if (aa === null)
+            if (aa === null) {
                 return 1;
-            if (bb === null)
+            }
+            if (bb === null) {
                 return -1;
-            if (aa < bb)
+            }
+            if (aa < bb) {
                 return sort.sortOrder === SortOrder.Asc ? -1 : 1;
-            if (aa > bb)
+            }
+            if (aa > bb) {
                 return sort.sortOrder === SortOrder.Asc ? 1 : -1;
+            }
         }
         return 0;
     },
@@ -63,19 +77,19 @@ export default (key, src) => ({
      * Filter an array of objects to find objects where value contains the value of `this`.
      * @this {String} Value to search for
      * @param {Object} obj - Object to search in.
-     * @returns {bool} True if object contains `this`.
+     * @returns {boolean} True if object contains `this`.
      */
     filterArray(obj) {
         const tokens = (this || '').split(' ');
-        for (const key in obj) {
-            if (key.indexOf('_') < 0 && Object.prototype.hasOwnProperty.call(obj, key)) {
-                const objVal = (obj[key] + '').toLowerCase();
-                if (tokens.every((x) => objVal.indexOf(x) > -1)) {
+        return Array.from(Object.values(obj)).some((x) => {
+            if (x.indexOf('_') < 0 && Object.prototype.hasOwnProperty.call(obj, x)) {
+                const objVal = (`${obj[x]}`).toLowerCase();
+                if (tokens.every((y) => objVal.indexOf(y) > -1)) {
                     return true;
                 }
             }
-        }
-        return false;
+            return false;
+        });
     },
 
     filterData() {
@@ -83,7 +97,7 @@ export default (key, src) => ({
         const filteredData = this.searchQuery ? (this.rows?.filter(this.filterArray.bind(this.searchQuery.toLowerCase())) ?? []) : [...(this.rows ?? [])];
 
         // sort the new array
-        filteredData.sort(this.sortColumns?.length ? this.compare.bind(this.sortColumns) : this.defaultCompare)
+        filteredData.sort(this.sortColumns?.length ? this.compare.bind(this.sortColumns) : this.defaultCompare);
 
         // cache the total number of filtered records and max number of pages for paging
         this.filteredRowTotal = filteredData.length;
@@ -153,11 +167,11 @@ export default (key, src) => ({
 
         const index = this.sortColumns.findIndex((x) => x.property === property);
         if (index === -1) {
-            this.sortColumns.push({ property: property, sortOrder: SortOrder.Asc });
+            this.sortColumns.push({ property, sortOrder: SortOrder.Asc });
         } else if (this.sortColumns[index].sortOrder === SortOrder.Asc) {
             this.sortColumns[index].sortOrder = SortOrder.Desc;
         } else {
-            this.sortColumns = this.sortColumns.filter((x) => x.property != property);
+            this.sortColumns = this.sortColumns.filter((x) => x.property !== property);
         }
 
         this.saveSetting(TableSetting.Sort, JSON.stringify(this.sortColumns));
@@ -168,7 +182,7 @@ export default (key, src) => ({
     sortClass(property) {
         const index = property ? this.sortColumns.findIndex((x) => x.property === property) : -1;
         if (index === -1) {
-            return;
+            return '';
         }
         return this.sortColumns[index].sortOrder === SortOrder.Asc ? 'alpine-sort-asc' : 'alpine-sort-desc';
     },
@@ -213,10 +227,7 @@ export default (key, src) => ({
         try {
             this.rows = (await fetch(this.src, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
                 .then((res) => res.json()))
-                .map((x, index) => {
-                    x._index = index;
-                    return x;
-                }) ?? [];
+                .map((x, index) => ({ ...x, _index: index })) ?? [];
         } catch {
             this.rows = [];
         }
@@ -234,3 +245,5 @@ export default (key, src) => ({
         await this.fetchData();
     },
 });
+
+export default alpineTable;

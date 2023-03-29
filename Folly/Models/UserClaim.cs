@@ -1,10 +1,9 @@
-﻿namespace Folly.Models;
+namespace Folly.Models;
 
-public record UserClaim : BaseModel
-{
+public sealed record UserClaim : BaseModel {
     public int UserId { get; init; }
 
-    public string ActionName { get; init; }
+    public string ActionName { get; init; } = string.Empty;
 
-    public string ControllerName { get; init; }
+    public string ControllerName { get; init; } = string.Empty;
 }

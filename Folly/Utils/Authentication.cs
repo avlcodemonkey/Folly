@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Security.Claims;
 using Auth0.AspNetCore.Authentication;
 using Folly.Configuration;
@@ -9,13 +9,12 @@ using Microsoft.AspNetCore.Localization;
 
 namespace Folly.Utils;
 
-public static class Authentication
-{
+public static class Authentication {
+
     /// <summary>
     /// Configure authentication and session for app.
     /// </summary>
-    public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, AppConfiguration appConfig)
-    {
+    public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, AppConfiguration appConfig) {
         services.AddAuth0WebAppAuthentication(options => {
             options.Domain = appConfig.Auth.Domain;
             options.ClientId = appConfig.Auth.ClientId;
@@ -27,9 +26,8 @@ public static class Authentication
                 OnRedirectToIdentityProviderForSignOut = (context) => {
                     var logoutUri = $"https://{appConfig.Auth.Domain}/v2/logout?client_id={appConfig.Auth.ClientId}";
                     var postLogoutUri = context.Properties.RedirectUri;
-                    if (!string.IsNullOrWhiteSpace(postLogoutUri))
-                    {
-                        if (postLogoutUri.StartsWith("/"))
+                    if (!string.IsNullOrWhiteSpace(postLogoutUri)) {
+                        if (postLogoutUri.StartsWith("/", StringComparison.InvariantCultureIgnoreCase))
                             // transform to absolute
                             postLogoutUri = context.Request.Scheme + "://" + context.Request.Host + context.Request.PathBase + postLogoutUri;
                         logoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
@@ -45,15 +43,13 @@ public static class Authentication
                     var username = context.Principal?.Identity?.Name;
 
                     if (context.Principal == null || serviceProvider.GetService(typeof(IUserService)) is not UserService userService ||
-                        serviceProvider.GetService(typeof(ILanguageService)) is not LanguageService languageService || string.IsNullOrWhiteSpace(username))
-                    {
+                        serviceProvider.GetService(typeof(ILanguageService)) is not LanguageService languageService || string.IsNullOrWhiteSpace(username)) {
                         return;
                     }
 
-                    var user = await userService.GetUserByUsername(username);
+                    var user = await userService.GetUserByUserName(username);
                     var languages = await languageService.GetAll();
-                    if (user == null)
-                    {
+                    if (user == null) {
                         user = new Models.User {
                             UserName = username,
                             FirstName = context.Principal.FindFirst(ClaimTypes.Name)?.Value ?? context.Principal.FindFirst(ClaimTypes.Name)?.Value ?? "",
@@ -72,9 +68,7 @@ public static class Authentication
         });
 
         // work around to move the Auth0 unique identifier into the Identity.Name
-        services.Configure<OpenIdConnectOptions>(Auth0Constants.AuthenticationScheme, options => {
-            options.TokenValidationParameters.NameClaimType = ClaimTypes.NameIdentifier;
-        });
+        services.Configure<OpenIdConnectOptions>(Auth0Constants.AuthenticationScheme, options => options.TokenValidationParameters.NameClaimType = ClaimTypes.NameIdentifier);
 
         return services;
     }

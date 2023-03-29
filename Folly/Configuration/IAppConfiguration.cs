@@ -1,7 +1,6 @@
-﻿namespace Folly.Configuration;
+namespace Folly.Configuration;
 
-public interface IAppConfiguration
-{
+public interface IAppConfiguration {
     AuthConfiguration Auth { get; }
     DatabaseConfiguration Database { get; }
     bool IsDevelopment { get; }

@@ -1,23 +1,21 @@
-﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Folly.Resources;
 using Folly.Validators;
 
 namespace Folly.Models;
 
-public record User : BaseModel
-{
+public sealed record User : BaseModel {
     [Display(ResourceType = typeof(Users), Name = nameof(Users.Email))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
     [EmailAddress(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorEmailAddress))]
     [DataType(DataType.EmailAddress, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorEmailAddressFormat))]
-    public string Email { get; init; }
+    public string Email { get; init; } = string.Empty;
 
     [Display(ResourceType = typeof(Users), Name = nameof(Users.FirstName))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
-    public string FirstName { get; init; }
+    public string FirstName { get; init; } = string.Empty;
 
     [Display(ResourceType = typeof(Users), Name = nameof(Users.Language))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
@@ -25,16 +23,16 @@ public record User : BaseModel
 
     [Display(ResourceType = typeof(Users), Name = nameof(Users.LastName))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
-    public string LastName { get; init; }
+    public string? LastName { get; init; }
 
     [Display(ResourceType = typeof(Users), Name = nameof(Users.Roles))]
-    public IEnumerable<int> RoleIds { get; init; }
+    public IEnumerable<int>? RoleIds { get; init; }
 
     [Display(ResourceType = typeof(Users), Name = nameof(Users.UserName))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
     [IsUniqueUserName]
-    public string UserName { get; init; }
+    public string UserName { get; init; } = string.Empty;
 
     public bool? Status { get; init; }
 }

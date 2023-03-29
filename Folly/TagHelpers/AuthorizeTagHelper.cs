@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Razor.TagHelpers;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
 [HtmlTargetElement(Attributes = "asp-authorize-roles")]
 public sealed class AuthorizeTagHelper : TagHelper
 {
-    readonly IHttpContextAccessor HttpContextAccessor;
+    private readonly IHttpContextAccessor HttpContextAccessor;
 
     public AuthorizeTagHelper(IHttpContextAccessor httpContextAccessor) => HttpContextAccessor = httpContextAccessor;
 
@@ -20,7 +21,7 @@ public sealed class AuthorizeTagHelper : TagHelper
         }
 
         var user = HttpContextAccessor.HttpContext?.User;
-        if (user == null || !Roles.Split(',').Select(x => x.Trim().ToLower()).Any(user.IsInRole))
+        if (user == null || !Roles.Split(',').Select(x => x.Trim().ToLower(CultureInfo.InvariantCulture)).Any(user.IsInRole))
         {
             output.SuppressOutput();
         }

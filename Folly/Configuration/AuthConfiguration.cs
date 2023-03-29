@@ -1,8 +1,7 @@
-﻿namespace Folly.Configuration;
+namespace Folly.Configuration;
 
-public class AuthConfiguration
-{
-    public string ClientId { get; set; }
-    public string ClientSecret { get; set; }
-    public string Domain { get; set; }
+public sealed class AuthConfiguration {
+    public string ClientId { get; set; } = string.Empty;
+    public string ClientSecret { get; set; } = string.Empty;
+    public string Domain { get; set; } = string.Empty;
 }

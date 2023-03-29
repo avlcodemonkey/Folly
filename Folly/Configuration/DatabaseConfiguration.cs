@@ -1,6 +1,5 @@
-﻿namespace Folly.Configuration;
+namespace Folly.Configuration;
 
-public class DatabaseConfiguration
-{
-    public string FilePath { get; set; }
+public sealed class DatabaseConfiguration {
+    public string FilePath { get; set; } = string.Empty;
 }

@@ -1,25 +1,18 @@
-﻿using System;
-
 namespace Folly.Models;
 
-public record JavascriptError
-{
-    public string Message { get; set; }
+public sealed record JavascriptError {
+    public string Message { get; set; } = string.Empty;
 }
 
 [Serializable]
-public class JavaScriptException : Exception
-{
-    protected JavaScriptException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext) => throw new NotImplementedException();
+public class JavaScriptException : Exception {
 
-    public JavaScriptException(string message) : base(message)
-    {
-    }
+    protected JavaScriptException(System.Runtime.Serialization.SerializationInfo serializationInfo, System.Runtime.Serialization.StreamingContext streamingContext)
+        => throw new NotImplementedException();
 
-    public JavaScriptException()
-    { }
+    public JavaScriptException(string message) : base(message) { }
 
-    public JavaScriptException(string message, Exception innerException) : base(message, innerException)
-    {
-    }
+    public JavaScriptException() { }
+
+    public JavaScriptException(string message, Exception innerException) : base(message, innerException) { }
 }

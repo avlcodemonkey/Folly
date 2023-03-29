@@ -1,8 +1,9 @@
-﻿using System.Data;
+using System.Data;
 using System.Linq.Expressions;
 using System.Text;
 using System.Text.RegularExpressions;
 using Folly.Models;
+using Folly.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -11,8 +12,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly;
 
-public static class Extensions
-{
+public static class Extensions {
     private const string RequestedWithHeader = "X-Requested-With";
     private const string XmlHttpRequest = "XMLHttpRequest";
     private static readonly Regex CaseRegex = new(@"([a-z])([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
@@ -26,8 +26,7 @@ public static class Extensions
     /// <param name="value">Value to add to dictionary if true.</param>
     /// <param name="add">Add to dictionary if true.</param>
     /// <returns>Returns updated dictionary.</returns>
-    public static TagHelperAttributeList AddIf(this TagHelperAttributeList dict, string key, string value, bool add)
-    {
+    public static TagHelperAttributeList AddIf(this TagHelperAttributeList dict, string key, string value, bool add) {
         if (add)
             dict.Add(key, value);
         return dict;
@@ -41,8 +40,7 @@ public static class Extensions
     /// <param name="value">Value to add to dictionary if true.</param>
     /// <param name="add">Add to dictionary if true.</param>
     /// <returns>Returns updated dictionary.</returns>
-    public static AttributeDictionary AddIf(this AttributeDictionary dict, string key, string value, bool add)
-    {
+    public static AttributeDictionary AddIf(this AttributeDictionary dict, string key, string value, bool add) {
         if (add)
             dict.Add(key, value);
         return dict;
@@ -54,10 +52,8 @@ public static class Extensions
     /// <typeparam name="T">Type of item in the list.</typeparam>
     /// <param name="list">List to iterate over.</param>
     /// <param name="func">Function to perform</param>
-    public static async Task ForEachAsync<T>(this List<T> list, Func<T, Task> func)
-    {
-        foreach (var value in list)
-        {
+    public static async Task ForEachAsync<T>(this List<T> list, Func<T, Task> func) {
+        foreach (var value in list) {
             await func(value);
         }
     }
@@ -74,8 +70,7 @@ public static class Extensions
     /// </summary>
     /// <param name="request">Current request object.</param>
     /// <returns>True if is an ajax request, else false.</returns>
-    public static bool IsAjaxRequest(this HttpRequest request)
-    {
+    public static bool IsAjaxRequest(this HttpRequest request) {
         if (request == null)
             throw new ArgumentNullException(nameof(request));
         if (request.Headers != null)
@@ -98,8 +93,7 @@ public static class Extensions
     /// <param name="expression">Evaluates to name of action to invoke.</param>
     /// <returns>Redirect action result.</returns>
     public static IActionResult Redirect<TController>(this Controller controller, Expression<Func<TController, string>> expression, object routeValues = null)
-        where TController : Controller
-    {
+        where TController : Controller {
         if (expression.Body is not ConstantExpression constant)
             throw new ArgumentException("Expression must be a constant expression.");
         return controller.RedirectToAction(constant.Value.ToString(), typeof(TController).Name.StripController(), routeValues);
@@ -117,7 +111,7 @@ public static class Extensions
     /// </summary>
     /// <param name="val">Value to attempt to convert.</param>
     /// <returns>Bool value</returns>
-    public static bool ToBool(this string val) => val != null && (val == "1" || val.ToLower() == "true");
+    public static bool ToBool(this string? val) => val != null && (val == "1" || val.ToLower() == "true");
 
     /// <summary>
     /// Convert a button enum to a css class name.

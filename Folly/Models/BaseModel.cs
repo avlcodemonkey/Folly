@@ -1,12 +1,9 @@
-﻿using System.Runtime.Serialization;
+using System.Runtime.Serialization;
+using Folly.Utils;
 
 namespace Folly.Models;
 
-/// <summary>
-/// Base for all other models.
-/// </summary>
-public record BaseModel
-{
+public record BaseModel {
     public BaseModel() { }
 
     [IgnoreDataMember]

@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using Folly.Models;
 
 namespace Folly.Services;
 
-public interface IUserService
-{
+public interface IUserService {
     Task<bool> AddUser(User userDTO);
 
     Task<bool> DeleteUser(User userDTO);
@@ -14,11 +11,11 @@ public interface IUserService
 
     Task<IEnumerable<UserClaim>> GetClaimsByUserId(int id);
 
-    Task<User> GetCurrentUser();
+    Task<User?> GetCurrentUser();
 
     Task<User> GetUserById(int id);
 
-    Task<User> GetUserByUsername(string username);
+    Task<User> GetUserByUserName(string userName);
 
     Task<bool> SaveUser(User userDTO);
 

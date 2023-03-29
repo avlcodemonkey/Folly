@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-
 namespace Folly.Models;
 
-public class Help
-{
+public sealed class Help {
     private readonly ISession Session;
     public const string SettingName = "ContextHelp";
 

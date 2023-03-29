@@ -1,15 +1,13 @@
-﻿using HardHat;
+using HardHat;
 
 namespace Folly.Utils;
 
-public static class Headers
-{
+public static class Headers {
     /// <summary>
     /// Harden headers to help secure app.
     /// Using HardHat (https://github.com/TerribleDev/HardHat) even though its been abandoned because it works.
     /// </summary>
-    public static IApplicationBuilder UseSecureHeaders(this IApplicationBuilder app)
-    {
+    public static IApplicationBuilder UseSecureHeaders(this IApplicationBuilder app) {
         app.UseDnsPrefetch(false);
         app.UseHsts(900, true, false);
         app.UseReferrerPolicy(ReferrerPolicy.NoReferrer);

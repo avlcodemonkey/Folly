@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
@@ -19,7 +20,7 @@ public sealed class AlpineSpinnerTagHelper : TagHelper
         h1.InnerHtml.AppendHtml(div);
 
         var td = new TagBuilder("td");
-        td.Attributes.Add("colspan", Colspan.ToString());
+        td.Attributes.Add("colspan", Colspan.ToString(CultureInfo.InvariantCulture));
         td.InnerHtml.AppendHtml(h1);
 
         var tr = new TagBuilder("tr");

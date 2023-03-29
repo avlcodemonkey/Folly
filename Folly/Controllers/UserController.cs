@@ -1,4 +1,4 @@
-﻿using Folly.Configuration;
+using Folly.Configuration;
 using Folly.Models;
 using Folly.Resources;
 using Folly.Services;
@@ -9,15 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace Folly.Controllers;
 
 [Authorize(Policy = PermissionRequirementHandler.PolicyName)]
-public class UserController : BaseController
-{
+public class UserController : BaseController {
     private readonly ILanguageService LanguageService;
     private readonly IUserService UserService;
 
     private IActionResult CreateEditView(User model) => View("CreateEdit", model);
 
-    private async Task<User?> LoadUser(int id)
-    {
+    private async Task<User?> LoadUser(int id) {
         var model = await UserService.GetUserById(id);
         if (model != null)
             return model;
@@ -26,8 +24,7 @@ public class UserController : BaseController
         return null;
     }
 
-    private async Task<IActionResult> Save(User model)
-    {
+    private async Task<IActionResult> Save(User model) {
         if (!ModelState.IsValid)
             return CreateEditView(model);
 
@@ -38,8 +35,7 @@ public class UserController : BaseController
     }
 
     public UserController(IAppConfiguration appConfig, IUserService userService, ILanguageService languageService, ILogger<UserController> logger)
-        : base(appConfig, logger)
-    {
+        : base(appConfig, logger) {
         UserService = userService;
         LanguageService = languageService;
     }
@@ -51,8 +47,7 @@ public class UserController : BaseController
     public async Task<IActionResult> Create(User model) => await Save(model);
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(int id)
-    {
+    public async Task<IActionResult> Delete(int id) {
         var model = await LoadUser(id);
         if (model == null)
             return Index();
@@ -63,8 +58,7 @@ public class UserController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> Edit(int id)
-    {
+    public async Task<IActionResult> Edit(int id) {
         var model = await LoadUser(id);
         return model == null ? Index() : CreateEditView(model);
     }

@@ -1,10 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using Folly.Resources;
 
 namespace Folly.Models;
 
-public record UserRole : BaseModel
-{
+public sealed record UserRole : BaseModel {
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     public int RoleId { get; init; }
 

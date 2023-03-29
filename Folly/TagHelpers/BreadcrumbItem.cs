@@ -12,7 +12,7 @@ public sealed class BreadcrumbItemTagHelper : BaseTagHelper
 
     public string? Action { get; set; }
     public string? Controller { get; set; }
-    public bool IsActive { get; set; } = false;
+    public bool IsActive { get; set; }
     public string Label { get; set; } = "";
     public object? RouteValues { get; set; }
 

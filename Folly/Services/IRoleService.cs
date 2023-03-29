@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
 using Folly.Models;
 
 namespace Folly.Services;
 
-public interface IRoleService
-{
+public interface IRoleService {
     Task<bool> CopyRole(CopyRole copyRoleDTO);
 
     Task<bool> DeleteRole(Role roleDTO);

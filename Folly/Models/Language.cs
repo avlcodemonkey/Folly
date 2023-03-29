@@ -1,13 +1,12 @@
-﻿namespace Folly.Models;
+namespace Folly.Models;
 
 /// <summary>
 /// Represents a language that the application can be translated into. Only used for display purposes, so no model validation needed.
 /// </summary>
-public record Language : BaseModel
-{
-    public string LanguageCode { get; init; }
+public sealed record Language : BaseModel {
+    public string LanguageCode { get; init; } = string.Empty;
 
-    public string Name { get; init; }
+    public string Name { get; init; } = string.Empty;
 
-    public bool IsDefault { get; init; } = false;
+    public bool IsDefault { get; init; }
 }

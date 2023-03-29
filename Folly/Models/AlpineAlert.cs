@@ -1,8 +1,9 @@
-﻿namespace Folly.Models;
+using Folly.Utils;
 
-public record AlpineAlert
-{
-    public string Content { get; init; } = "";
+namespace Folly.Models;
+
+public sealed record AlpineAlert {
+    public string Content { get; init; } = string.Empty;
     public AlertType AlertType { get; init; } = AlertType.Success;
     public bool CanDismiss { get; init; } = true;
 }

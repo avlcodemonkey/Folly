@@ -1,4 +1,4 @@
-﻿using Folly.Configuration;
+using Folly.Configuration;
 using Folly.Models;
 using Folly.Resources;
 using Folly.Services;
@@ -9,15 +9,13 @@ using Microsoft.AspNetCore.Mvc;
 namespace Folly.Controllers;
 
 [Authorize(Policy = PermissionRequirementHandler.PolicyName)]
-public class RoleController : BaseController
-{
+public class RoleController : BaseController {
     private readonly IPermissionService PermissionService;
     private readonly IRoleService RoleService;
 
     private IActionResult CreateEditView(Role model) => View("CreateEdit", model);
 
-    private async Task<Role?> LoadRole(int id)
-    {
+    private async Task<Role?> LoadRole(int id) {
         var model = await RoleService.GetRoleById(id);
         if (model != null)
             return model;
@@ -26,8 +24,7 @@ public class RoleController : BaseController
         return null;
     }
 
-    private async Task<IActionResult> Save(Role model)
-    {
+    private async Task<IActionResult> Save(Role model) {
         if (!ModelState.IsValid)
             return CreateEditView(model);
 
@@ -37,15 +34,13 @@ public class RoleController : BaseController
         return Index();
     }
 
-    public RoleController(IAppConfiguration appConfig, IRoleService roleService, IPermissionService permissionService, ILogger<RoleController> logger) : base(appConfig, logger)
-    {
+    public RoleController(IAppConfiguration appConfig, IRoleService roleService, IPermissionService permissionService, ILogger<RoleController> logger) : base(appConfig, logger) {
         RoleService = roleService;
         PermissionService = permissionService;
     }
 
     [HttpGet, ParentAction(nameof(Edit))]
-    public async Task<IActionResult> Copy(int id)
-    {
+    public async Task<IActionResult> Copy(int id) {
         var model = await LoadRole(id);
         if (model == null)
             return Index();
@@ -54,8 +49,7 @@ public class RoleController : BaseController
     }
 
     [HttpPost, ParentAction(nameof(Edit)), ValidModel]
-    public async Task<IActionResult> Copy(CopyRole model)
-    {
+    public async Task<IActionResult> Copy(CopyRole model) {
         if (!ModelState.IsValid)
             return Index();
 
@@ -71,8 +65,7 @@ public class RoleController : BaseController
     public async Task<IActionResult> Create(Role model) => await Save(model);
 
     [HttpDelete]
-    public async Task<IActionResult> Delete(int id)
-    {
+    public async Task<IActionResult> Delete(int id) {
         var model = await LoadRole(id);
         if (model == null)
             return Index();
@@ -83,8 +76,7 @@ public class RoleController : BaseController
     }
 
     [HttpGet]
-    public async Task<IActionResult> Edit(int id)
-    {
+    public async Task<IActionResult> Edit(int id) {
         var model = await LoadRole(id);
         return model == null ? Index() : CreateEditView(model);
     }
@@ -99,8 +91,7 @@ public class RoleController : BaseController
     public async Task<IActionResult> List() => Ok((await RoleService.GetAllRoles()).Select(x => new { x.Id, x.Name }));
 
     [HttpGet]
-    public async Task<IActionResult> RefreshPermissions()
-    {
+    public async Task<IActionResult> RefreshPermissions() {
         await new PermissionManager(PermissionService, RoleService).Register();
         Response.Headers.Add(HtmxHeaders.ReplaceUrl, Url.Action(nameof(Index)));
         ViewData[MessageProperty] = Roles.SuccessRefreshingPermissions;

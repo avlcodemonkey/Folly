@@ -1,4 +1,4 @@
-﻿@using Folly.Models
+@using Folly.Models
 @using Folly.Resources;
 @using Folly.Services
 @model Role
@@ -8,20 +8,20 @@
     <breadcrumb>
         <breadcrumb-item label="@Roles.ViewAll" controller="Role" action="Index" />
         <breadcrumb-item label="@(Model.IsCreate ? Roles.CreateRole : Roles.EditRole)" controller="Role" action="@Model.FormAction"
-            route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" is-active="true"
+            route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" active="true"
         />
     </breadcrumb>
 
     <partial name="_Alert" />
 
-    <horizontal-form for="Model">
+    <form-content for="Model">
         <input asp-for="Id" type="hidden" />
 
-        <form-group-input for="Name" autofocus="true" />
-        <form-group-checkbox for="IsDefault" />
+        <input-group for="Name" autofocus="true" />
+        <checkbox-group for="IsDefault" />
 
         <div class="mb-1">
-            <form-label for="PermissionIds" />
+            <label asp-for="PermissionIds">@Roles.Permissions</label>
             @{
                 var permissions = await ViewService.GetControllerPermissions();
                 foreach (var controller in permissions.Keys)
@@ -30,7 +30,7 @@
                         <summary>@controller</summary>
                         @foreach (var permission in permissions[controller])
                         {
-                            <form-checkbox name="PermissionIds" value="@permission.Id" label="@permission.ActionName" is-checked="@Model.PermissionIds?.Contains(permission.Id) == true" />
+                            <form-checkbox name="PermissionIds" value="@permission.Id" label="@permission.ActionName" checked="@Model.PermissionIds?.Contains(permission.Id) == true" />
                         }
                     </details>
                 }
@@ -38,5 +38,5 @@
         </div>
 
         <input class="button primary" type="submit" value="@Core.Save">
-    </horizontal-form>
+    </form-content>
 </content>

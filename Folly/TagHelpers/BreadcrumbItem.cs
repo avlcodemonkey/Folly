@@ -1,4 +1,4 @@
-﻿using Folly.Controllers;
+using Folly.Controllers;
 using Folly.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -6,27 +6,23 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class BreadcrumbItemTagHelper : BaseTagHelper
-{
+public sealed class BreadcrumbItemTagHelper : BaseTagHelper {
     public BreadcrumbItemTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
     public string? Action { get; set; }
     public string? Controller { get; set; }
-    public bool IsActive { get; set; }
+    public bool Active { get; set; }
     public string Label { get; set; } = "";
     public object? RouteValues { get; set; }
 
-    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-    {
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 
-        if (IsActive)
-        {
+        if (Active) {
             HtmlHelper!.ViewData[BaseController.TitleProperty] = Label;
             output.Content.Append(Label);
 
-            if (!Label.IsEmpty() && HtmlHelper.ViewContext.HttpContext.Request.Headers.Any(x => x.Key == HtmxHeaders.Request))
-            {
+            if (!Label.IsEmpty() && HtmlHelper.ViewContext.HttpContext.Request.Headers.Any(x => x.Key == HtmxHeaders.Request)) {
                 // create a new title tag that htmx will swap out
                 var title = new TagBuilder("title");
                 title.Attributes.Add("id", "page-title");
@@ -34,9 +30,7 @@ public sealed class BreadcrumbItemTagHelper : BaseTagHelper
                 title.InnerHtml.Append(Label);
                 output.PostContent.AppendHtml(title);
             }
-        }
-        else
-        {
+        } else {
             output.Content.AppendHtml(HtmlHelper.ActionLink(Label, Action, Controller, RouteValues));
         }
 

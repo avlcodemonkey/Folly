@@ -2,7 +2,7 @@
 
 <content>
     <breadcrumb>
-        <breadcrumb-item label="@Users.ViewAll" controller="User" action="Index" is-active="true" />
+        <breadcrumb-item label="@Users.ViewAll" controller="User" action="Index" active="true" />
     </breadcrumb>
 
     <partial name="_Alert" />
@@ -14,7 +14,7 @@
             <thead>
                 <tr>
                     <th class="alpine-no-sort">
-                        <a asp-authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button secondary button-action" title="@Users.CreateUser">
+                        <a authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button secondary button-action" title="@Users.CreateUser">
                             <icon name="Plus" />
                         </a>
                     </th>
@@ -29,10 +29,10 @@
                 <alpine-spinner colspan="6" />
                 <alpine-table-row>
                     <td>
-                        <a asp-authorize-roles="user.edit" class="button primary button-action" title="@Users.EditUser" :href="`@Url.Action("Index")/Edit/${row.id}`">
+                        <a authorize-roles="user.edit" class="button primary button-action" title="@Users.EditUser" :href="`@Url.Action("Index")/Edit/${row.id}`">
                             <icon name="Edit" />
                         </a>
-                        <a asp-authorize-roles="user.delete" class="button dark button-action" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
+                        <a authorize-roles="user.delete" class="button dark button-action" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
                             hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel" hx-confirm-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
                         >
                             <icon name="Trash" />

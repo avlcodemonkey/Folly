@@ -1,17 +1,15 @@
-﻿using System.Globalization;
+using System.Globalization;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class AlpineSpinnerTagHelper : TagHelper
-{
+public sealed class AlpineSpinnerTagHelper : TagHelper {
     public AlpineSpinnerTagHelper() { }
 
     public int Colspan { get; set; } = 1;
 
-    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-    {
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         var div = new TagBuilder("div");
         div.AddCssClass("spinner");
 

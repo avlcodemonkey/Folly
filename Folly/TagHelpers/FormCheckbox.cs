@@ -1,26 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public class FormCheckboxTagHelper : BaseTagHelper
-{
+public sealed class FormCheckboxTagHelper : BaseTagHelper {
     public FormCheckboxTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
     public bool? Disabled { get; set; }
-    public string Id { get; set; }
-    public bool IsChecked { get; set; }
-    public string Label { get; set; }
-    public string Name { get; set; }
-    public string Value { get; set; }
+    public string? Id { get; set; }
+    public bool Checked { get; set; }
+    public string Label { get; set; } = "";
+    public string Name { get; set; } = "";
+    public string Value { get; set; } = "";
 
-    public override void Process(TagHelperContext context, TagHelperOutput output)
-    {
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
         output.TagName = "div";
         output.TagMode = TagMode.StartTagAndEndTag;
 
-        var id = Id.IsEmpty() ? $"{Name}_{Value}" : Id;
+        var id = string.IsNullOrWhiteSpace(Id) ? $"{Name}_{Value}" : Id;
         var label = new TagBuilder("label");
         label.Attributes.Add("for", id);
 
@@ -29,7 +27,7 @@ public class FormCheckboxTagHelper : BaseTagHelper
         input.Attributes.Add("name", Name);
         input.Attributes.Add("type", "checkbox");
         input.Attributes.Add("value", Value);
-        input.Attributes.AddIf("checked", "true", IsChecked);
+        input.Attributes.AddIf("checked", "true", Checked);
         input.Attributes.AddIf("disabled", "true", Disabled == true);
 
         label.InnerHtml.AppendHtml(input);
@@ -37,6 +35,6 @@ public class FormCheckboxTagHelper : BaseTagHelper
 
         output.Content.AppendHtml(label);
 
-        base.Process(context, output);
+        await base.ProcessAsync(context, output);
     }
 }

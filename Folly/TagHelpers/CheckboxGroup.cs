@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Html;
+using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public class FormGroupCheckboxTagHelper : FormBaseTagHelper
-{
-    IHtmlContent BuildCheckbox()
-    {
+public sealed class CheckboxGroupTagHelper : GroupBaseTagHelper {
+    private IHtmlContent BuildCheckbox() {
         var label = new TagBuilder("label");
         label.AddCssClass("form-checkbox");
         label.Attributes.Add("for", FieldName);
@@ -22,31 +20,33 @@ public class FormGroupCheckboxTagHelper : FormBaseTagHelper
         input.Attributes.AddIf("checked", "true", For?.ModelExplorer.Model?.ToString().ToBool() == true);
         input.Attributes.AddIf("disabled", "true", Disabled == true);
 
-        var icon = new TagBuilder("i");
-        icon.AddCssClass("form-icon");
-
         label.InnerHtml.AppendHtml(input);
-        label.InnerHtml.AppendHtml(icon);
-        label.InnerHtml.Append(FieldTitle);
+        if (!string.IsNullOrWhiteSpace(FieldTitle))
+            label.InnerHtml.Append(FieldTitle);
 
         return label;
     }
 
-    public FormGroupCheckboxTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
+    public CheckboxGroupTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
-    public override void Process(TagHelperContext context, TagHelperOutput output)
-    {
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
-        UseInputGroup(output);
-        IsRequired = false;
+
+        Required = false;
+
+        var div = new TagBuilder("div");
+        div.AddCssClass("mb-1");
+        div.InnerHtml.AppendHtml(BuildLabel(""));
 
         var inputGroup = BuildInputGroup();
         inputGroup.InnerHtml.AppendHtml(BuildCheckbox());
         inputGroup.InnerHtml.AppendHtml(BuildHelp());
+        div.InnerHtml.AppendHtml(inputGroup);
 
-        output.Content.AppendHtml(BuildLabel());
-        output.Content.AppendHtml(inputGroup);
+        output.TagName = null;
+        output.TagMode = TagMode.StartTagAndEndTag;
+        output.Content.AppendHtml(div);
 
-        base.Process(context, output);
+        await base.ProcessAsync(context, output);
     }
 }

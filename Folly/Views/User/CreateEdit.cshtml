@@ -1,4 +1,4 @@
-﻿@using Folly.Resources
+@using Folly.Resources
 @using Folly.Models
 @using Folly.Services
 @model User
@@ -8,7 +8,7 @@
     <breadcrumb>
         <breadcrumb-item label="@Users.ViewAll" controller="User" action="Index" />
         <breadcrumb-item label="@(Model.IsCreate ? Users.CreateUser : Users.EditUser)" controller="User" action="@Model.FormAction"
-            route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" is-active="true"
+            route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" active="true"
         />
     </breadcrumb>
 
@@ -18,26 +18,26 @@
 
     <partial name="_Alert" />
 
-    <horizontal-form for="Model">
+    <form-content for="Model">
         <input asp-for="Id" type="hidden" />
 
-        <form-group-input for="FirstName" autofocus="true" />
-        <form-group-input for="LastName" />
-        <form-group-input for="UserName" />
-        <form-group-input for="Email" />
-        <form-group-select for="LanguageId" options="@(await ViewService.GetLanguageList())" />
+        <input-group for="FirstName" autofocus="true" />
+        <input-group for="LastName" />
+        <input-group for="UserName" />
+        <input-group for="Email" />
+        <select-group for="LanguageId" options="@(await ViewService.GetLanguageList())" />
 
         <div class="mb-1">
-            <form-label for="RoleIds" />
+            <label asp-for="RoleIds">@Users.Roles</label>
             @{
                 var roles = await ViewService.GetAllRoles();
                 foreach (var role in roles)
                 {
-                    <form-checkbox name="RoleIds" value="@role.Id" label="@role.Name" is-checked="@Model.RoleIds?.Contains(role.Id) == true" />
+                    <form-checkbox name="RoleIds" value="@role.Id" label="@role.Name" checked="@Model.RoleIds?.Contains(role.Id) == true" />
                 }
             }
         </div>
 
         <input class="button primary" type="submit" value="@Core.Save">
-    </horizontal-form>
+    </form-content>
 </content>

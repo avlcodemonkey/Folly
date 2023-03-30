@@ -1,4 +1,4 @@
-﻿@using Folly.Models
+@using Folly.Models
 @using Folly.Resources;
 @using Folly.Services
 @model CopyRole
@@ -7,16 +7,16 @@
 <content>
     <breadcrumb>
         <breadcrumb-item label="@Roles.ViewAll" controller="Role" action="Index" />
-        <breadcrumb-item label="@Core.Copy" controller="Role" action="Copy" route-values="@(new { Id = Model.Id })" is-active="true" />
+        <breadcrumb-item label="@Core.Copy" controller="Role" action="Copy" route-values="@(new { Id = Model.Id })" active="true" />
     </breadcrumb>
 
     <partial name="_Alert" />
 
-    <horizontal-form controller="Role" action="Copy">
+    <form-content controller="Role" action="Copy">
         <input asp-for="Id" type="hidden" />
 
-        <form-group-input for="Prompt" autofocus="true" />
+        <input-group for="Prompt" autofocus="true" />
 
         <input class="button primary" type="submit" value="@Core.Save">
-    </horizontal-form>
+    </form-content>
 </content>

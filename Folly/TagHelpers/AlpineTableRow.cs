@@ -1,14 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class AlpineTableRowTagHelper : TagHelper
-{
+public sealed class AlpineTableRowTagHelper : TagHelper {
     public AlpineTableRowTagHelper() { }
 
-    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-    {
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         var tr = new TagBuilder("tr");
         tr.InnerHtml.AppendHtml(await output.GetChildContentAsync());
 

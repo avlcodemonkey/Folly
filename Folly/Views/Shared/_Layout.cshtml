@@ -22,21 +22,21 @@
 
                 @if (User.Identity?.IsAuthenticated == true)
                 {
-                    <li asp-authorize-roles="dashboard.index">
+                    <li authorize-roles="dashboard.index">
                         <a asp-controller="Dashboard" asp-action="Index"><icon name="Home" class="fl-lg" /><span>@Core.Dashboard</span></a>
                     </li>
-                    <li asp-authorize-roles="role.index, user.index" class="divider"></li>
-                    <li asp-authorize-roles="role.index">
+                    <li authorize-roles="role.index, user.index" class="divider"></li>
+                    <li authorize-roles="role.index">
                         <a asp-controller="Role" asp-action="Index"><icon name="Key" class="fl-lg" /><span>@Roles.MenuItem</span></a>
                     </li>
-                    <li asp-authorize-roles="user.index">
+                    <li authorize-roles="user.index">
                         <a asp-controller="User" asp-action="Index"><icon name="Users" class="fl-lg" /><span>@Users.MenuItem</span></a>
                     </li>
                     <li class="divider"></li>
-                    <li asp-authorize-roles="account.updateAccount">
+                    <li authorize-roles="account.updateAccount">
                         <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Help" class="fl-lg" /><span>@Core.ToggleHelp</span></a>
                     </li>
-                    <li asp-authorize-roles="account.updateAccount">
+                    <li authorize-roles="account.updateAccount">
                         <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" class="fl-lg" /><span>@Account.UpdateAccount</span></a>
                     </li>
                     <li>

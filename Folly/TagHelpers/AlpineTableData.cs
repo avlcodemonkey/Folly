@@ -1,21 +1,18 @@
-﻿using System.Text.Encodings.Web;
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class AlpineTableDataTagHelper : TagHelper
-{
+public sealed class AlpineTableDataTagHelper : TagHelper {
     public AlpineTableDataTagHelper() { }
 
     public string? Id { get; set; }
 
     public string? Src { get; set; }
 
-    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-    {
-        if (string.IsNullOrWhiteSpace(Id) || string.IsNullOrWhiteSpace(Src))
-        {
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
+        if (string.IsNullOrWhiteSpace(Id) || string.IsNullOrWhiteSpace(Src)) {
             output.SuppressOutput();
             await base.ProcessAsync(context, output);
             return;

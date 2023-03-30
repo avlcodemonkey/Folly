@@ -1,15 +1,13 @@
-﻿using Folly.Resources;
+using Folly.Resources;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class BreadcrumbTagHelper : BaseTagHelper
-{
+public sealed class BreadcrumbTagHelper : BaseTagHelper {
     public BreadcrumbTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
-    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
-    {
+    public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 
         var li = new TagBuilder("li");

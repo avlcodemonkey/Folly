@@ -123,6 +123,6 @@ public sealed class UserService : IUserService {
         user.Email = account.Email;
         DbContext.Users.Update(user);
 
-        return (await DbContext.SaveChangesAsync() > 0) ? string.Empty : Core.ErrorGeneric;
+        return (await DbContext.SaveChangesAsync() > 0) ? "" : Core.ErrorGeneric;
     }
 }

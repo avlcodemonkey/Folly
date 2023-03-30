@@ -172,7 +172,7 @@ public static class Extensions {
     /// </summary>
     /// <param name="value">String to update.</param>
     /// <returns>Updated string.</returns>
-    public static string UppercaseFirst(this string value) => value.IsEmpty() ? string.Empty : (char.ToUpper(value[0]) + value[1..]);
+    public static string UppercaseFirst(this string value) => value.IsEmpty() ? "" : (char.ToUpper(value[0]) + value[1..]);
 
     /// <summary>
     /// Check if user has help enabled.

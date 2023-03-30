@@ -9,7 +9,7 @@ public sealed record Role : BaseModel {
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
     [IsUniqueRoleName]
-    public string Name { get; init; } = string.Empty;
+    public string Name { get; init; } = "";
 
     [Display(ResourceType = typeof(Roles), Name = nameof(Roles.IsDefault))]
     [IsOnlyDefaultRole]

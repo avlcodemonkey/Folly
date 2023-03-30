@@ -1,7 +1,7 @@
 namespace Folly.Models;
 
 public sealed record JavascriptError {
-    public string Message { get; set; } = string.Empty;
+    public string Message { get; set; } = "";
 }
 
 [Serializable]

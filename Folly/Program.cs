@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text.Json;
 using Folly;
 using Folly.Configuration;
@@ -12,7 +12,6 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Caching.Memory;
-using Microsoft.Extensions.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,9 +35,7 @@ builder.Services.AddSession();
 builder.Services.ConfigureAuthentication(appConfig);
 
 builder.Services.AddScoped<IClaimsTransformation, ClaimsTransformer>();
-builder.Services.AddAuthorization(options => {
-    options.AddPolicy(PermissionRequirementHandler.PolicyName, policy => policy.Requirements.Add(new PermissionRequirement()));
-});
+builder.Services.AddAuthorization(options => options.AddPolicy(PermissionRequirementHandler.PolicyName, policy => policy.Requirements.Add(new PermissionRequirement())));
 builder.Services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
 
 builder.Services.AddDataProtection();
@@ -49,7 +46,7 @@ builder.Services.AddSingleton(new MemoryCache(new MemoryCacheOptions()));
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-builder.Services.AddLocalization(x => { x.ResourcesPath = "Resources"; });
+builder.Services.AddLocalization(x => x.ResourcesPath = "Resources");
 
 // enable compression only for assets
 builder.Services.AddResponseCompression(options => {
@@ -58,13 +55,9 @@ builder.Services.AddResponseCompression(options => {
 });
 
 // @todo break out into separate class?
-builder.Services.AddMvc(options => {
-    options.Filters.Add(new RequireHttpsAttribute());
-})
+builder.Services.AddMvc(options => options.Filters.Add(new RequireHttpsAttribute()))
     .AddDataAnnotationsLocalization()
-    .AddJsonOptions(configure => {
-        configure.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
-    });
+    .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
 var app = builder.Build();
 
@@ -76,38 +69,28 @@ app.UseSecureHeaders();
 
 app.UseStatusCodePagesWithReExecute($"/{nameof(ErrorController).StripController()}", "?code={0}");
 
-if (builder.Environment.IsDevelopment())
-{
+if (builder.Environment.IsDevelopment()) {
     app.UseDeveloperExceptionPage();
-}
-else
-{
-    app.UseExceptionHandler(builder => {
-        builder.Run(async context => {
-            var error = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
-            if (error != null)
-                try
-                {
-                    // @todo log error
-                    //Serilog.Log.Error(error.Error, error.Error.Message);
-                }
-                catch { }
+} else {
+    app.UseExceptionHandler(builder => builder.Run(async context => {
+        var error = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerFeature>();
+        if (error != null) {
+            try {
+                // @todo log error
+            } catch { }
+        }
 
-            if (context.Request.ContentType?.ToLower()?.Contains("json") == true)
-            {
-                context.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
-                context.Response.ContentType = "application/json";
+        if (context.Request.ContentType?.ToLower(CultureInfo.InvariantCulture)?.Contains("json") == true) {
+            context.Response.StatusCode = (int)System.Net.HttpStatusCode.InternalServerError;
+            context.Response.ContentType = "application/json";
 
-                using var writer = new StreamWriter(context.Response.Body);
-                writer.Write(JsonSerializer.Serialize(new { Error = "An unexpected error occurred." }));
-                await writer.FlushAsync().ConfigureAwait(false);
-            }
-            else
-            {
-                context.Response.Redirect($"/{nameof(ErrorController).StripController()}/{nameof(ErrorController.Index)}");
-            }
-        });
-    });
+            using var writer = new StreamWriter(context.Response.Body);
+            writer.Write(JsonSerializer.Serialize(new { Error = "An unexpected error occurred." }));
+            await writer.FlushAsync().ConfigureAwait(false);
+        } else {
+            context.Response.Redirect($"/{nameof(ErrorController).StripController()}/{nameof(ErrorController.Index)}");
+        }
+    }));
 }
 
 app.UseSession();

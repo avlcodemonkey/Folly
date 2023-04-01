@@ -7,8 +7,6 @@ using Folly.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly;
 
@@ -19,31 +17,15 @@ public static class Extensions {
     private static readonly Regex CssRegex = new(@"(?<!_)([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 
     /// <summary>
-    /// Add an item to the dictionary if `add` is true.
+    /// Merge an attribute if condition is met.
     /// </summary>
-    /// <param name="dict">Dictionary to update.</param>
-    /// <param name="key">Key to add to dictionary if true.</param>
-    /// <param name="value">Value to add to dictionary if true.</param>
-    /// <param name="add">Add to dictionary if true.</param>
-    /// <returns>Returns updated dictionary.</returns>
-    public static TagHelperAttributeList AddIf(this TagHelperAttributeList dict, string key, string value, bool add) {
-        if (add)
-            dict.Add(key, value);
-        return dict;
-    }
-
-    /// <summary>
-    /// Add an item to the dictionary if `add` is true.
-    /// </summary>
-    /// <param name="dict">Dictionary to update.</param>
-    /// <param name="key">Key to add to dictionary if true.</param>
-    /// <param name="value">Value to add to dictionary if true.</param>
-    /// <param name="add">Add to dictionary if true.</param>
-    /// <returns>Returns updated dictionary.</returns>
-    public static AttributeDictionary AddIf(this AttributeDictionary dict, string key, string value, bool add) {
-        if (add)
-            dict.Add(key, value);
-        return dict;
+    /// <param name="key">The attribute key.</param>
+    /// <param name="value">The attribute value.</param>
+    /// <param name="set">Set (add or overwrite) attribute if true.</param>
+    public static void SetAttributeIf(this TagBuilder tagBuilder, string key, string? value, bool set) {
+        if (set) {
+            tagBuilder.MergeAttribute(key, value, true);
+        }
     }
 
     /// <summary>

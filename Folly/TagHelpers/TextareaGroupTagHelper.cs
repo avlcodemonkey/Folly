@@ -8,38 +8,44 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Folly.TagHelpers;
 
 public sealed class TextareaGroupTagHelper : GroupBaseTagHelper {
-    private IHtmlContent BuildInput() {
+    private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
+        if (string.IsNullOrWhiteSpace(FieldName))
+            return HtmlString.Empty;
+
         var textarea = new TagBuilder("textarea");
+        // add any attributes passed in first. we'll overwrite ones we need as we build
+        attributes.ToList().ForEach(x => textarea.Attributes.Add(x.Name, x.Value.ToString()));
+
         textarea.AddCssClass("form-input");
-        textarea.Attributes.Add("id", FieldName);
-        textarea.Attributes.Add("name", FieldName);
-        textarea.Attributes.AddIf("required", "true", Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true));
+        textarea.MergeAttribute("id", FieldName, true);
+        textarea.MergeAttribute("name", FieldName, true);
+        textarea.SetAttributeIf("required", "true", Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true));
+
         if (For != null) {
             var maxLength = GetMaxLength(For.ModelExplorer.Metadata.ValidatorMetadata);
-            textarea.Attributes.AddIf("maxlength", maxLength.ToString(CultureInfo.InvariantCulture), maxLength > 0);
+            textarea.SetAttributeIf("maxlength", maxLength.ToString(CultureInfo.InvariantCulture), maxLength > 0);
             var minLength = GetMinLength(For.ModelExplorer.Metadata.ValidatorMetadata);
-            textarea.Attributes.AddIf("minLength", minLength.ToString(CultureInfo.InvariantCulture), minLength > 0);
+            textarea.SetAttributeIf("minLength", minLength.ToString(CultureInfo.InvariantCulture), minLength > 0);
         }
-        textarea.Attributes.AddIf("rows", Rows.ToString(CultureInfo.InvariantCulture), Rows > 0);
+
         textarea.InnerHtml.Append(For?.ModelExplorer.Model?.ToString() ?? "");
         return textarea;
     }
 
     public TextareaGroupTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
-    public int Rows { get; set; } = 4;
-
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 
         var inputGroup = BuildInputGroup();
-        inputGroup.InnerHtml.AppendHtml(BuildInput());
+        inputGroup.InnerHtml.AppendHtml(BuildInput(output.Attributes));
         inputGroup.InnerHtml.AppendHtml(BuildHelp());
         inputGroup.InnerHtml.AppendHtml(output.GetChildContentAsync().Result);
 
         output.TagName = "div";
-        output.AddClass("mb-1", HtmlEncoder.Default);
         output.TagMode = TagMode.StartTagAndEndTag;
+        output.Attributes.Clear();
+        output.AddClass("mb-1", HtmlEncoder.Default);
         output.Content.AppendHtml(BuildLabel());
         output.Content.AppendHtml(inputGroup);
 

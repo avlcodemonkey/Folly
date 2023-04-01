@@ -7,20 +7,24 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Folly.TagHelpers;
 
 public sealed class CheckboxGroupTagHelper : GroupBaseTagHelper {
-    private IHtmlContent BuildCheckbox() {
+    private IHtmlContent BuildCheckbox(TagHelperAttributeList attributes) {
+        if (string.IsNullOrWhiteSpace(FieldName))
+            return HtmlString.Empty;
+
         var label = new TagBuilder("label");
         label.AddCssClass("form-checkbox");
         label.Attributes.Add("for", FieldName);
-        label.Attributes.AddIf("disabled", "true", Disabled == true);
 
         var input = new TagBuilder("input");
+        // add any attributes passed in first. we'll overwrite ones we need as we build
+        attributes.ToList().ForEach(x => input.Attributes.Add(x.Name, x.Value.ToString()));
+
         input.AddCssClass("form-input");
-        input.Attributes.Add("id", FieldName);
-        input.Attributes.Add("name", FieldName);
-        input.Attributes.Add("type", "checkbox");
-        input.Attributes.Add("value", "true");
-        input.Attributes.AddIf("checked", "true", For?.ModelExplorer.Model?.ToString().ToBool() == true);
-        input.Attributes.AddIf("disabled", "true", Disabled == true);
+        input.MergeAttribute("id", FieldName, true);
+        input.MergeAttribute("name", FieldName, true);
+        input.MergeAttribute("type", "checkbox", true);
+        input.MergeAttribute("value", "true", true);
+        input.SetAttributeIf("checked", "true", For?.ModelExplorer.Model?.ToString().ToBool() == true);
 
         label.InnerHtml.AppendHtml(input);
         if (!string.IsNullOrWhiteSpace(FieldTitle))
@@ -35,12 +39,13 @@ public sealed class CheckboxGroupTagHelper : GroupBaseTagHelper {
         Contextualize();
 
         var inputGroup = BuildInputGroup();
-        inputGroup.InnerHtml.AppendHtml(BuildCheckbox());
+        inputGroup.InnerHtml.AppendHtml(BuildCheckbox(output.Attributes));
         inputGroup.InnerHtml.AppendHtml(BuildHelp());
 
         output.TagName = "div";
-        output.AddClass("mb-1", HtmlEncoder.Default);
         output.TagMode = TagMode.StartTagAndEndTag;
+        output.Attributes.Clear();
+        output.AddClass("mb-1", HtmlEncoder.Default);
         output.Content.AppendHtml(BuildLabel(""));
         output.Content.AppendHtml(inputGroup);
 

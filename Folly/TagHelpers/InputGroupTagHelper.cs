@@ -10,14 +10,17 @@ namespace Folly.TagHelpers;
 public sealed class InputGroupTagHelper : GroupBaseTagHelper {
     private static readonly Type[] NumberTypes = { typeof(int), typeof(long), typeof(decimal), typeof(double), typeof(int?), typeof(long?), typeof(decimal?), typeof(double?) };
 
-    private IHtmlContent BuildInput() {
+    private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
         if (string.IsNullOrWhiteSpace(FieldName))
             return HtmlString.Empty;
 
         var input = new TagBuilder("input");
+        // add any attributes passed in first. we'll overwrite ones we need as we build
+        attributes.ToList().ForEach(x => input.Attributes.Add(x.Name, x.Value.ToString()));
+
         input.AddCssClass("form-input");
-        input.Attributes.Add("id", FieldName);
-        input.Attributes.Add("name", FieldName);
+        input.MergeAttribute("id", FieldName, true);
+        input.MergeAttribute("name", FieldName, true);
 
         var name = FieldName.ToLower(CultureInfo.InvariantCulture);
         var type = "text";
@@ -30,19 +33,15 @@ public sealed class InputGroupTagHelper : GroupBaseTagHelper {
         else if (For != null && NumberTypes.Contains(For.ModelExplorer.ModelType))
             type = "number";
 
-        input.Attributes.Add("type", type);
-        input.Attributes.Add("value", type == "password" ? "" : For?.ModelExplorer.Model?.ToString());
-
-        input.Attributes.AddIf("required", "true", (Required.HasValue && Required.Value) || (!Required.HasValue && For?.Metadata.IsRequired == true));
-        input.Attributes.AddIf("autofocus", "true", Autofocus);
-        input.Attributes.AddIf("disabled", "true", Disabled == true);
-        input.Attributes.AddIf("readonly", "true", ReadOnly);
+        input.MergeAttribute("type", type, true);
+        input.SetAttributeIf("value", type == "password" ? "" : For?.ModelExplorer.Model?.ToString(), true);
+        input.SetAttributeIf("required", "true", Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true));
 
         if (For != null) {
             var maxLength = GetMaxLength(For.ModelExplorer.Metadata.ValidatorMetadata);
-            input.Attributes.AddIf("maxlength", maxLength.ToString(CultureInfo.InvariantCulture), maxLength > 0);
+            input.SetAttributeIf("maxlength", maxLength.ToString(CultureInfo.InvariantCulture), maxLength > 0);
             var minLength = GetMinLength(For.ModelExplorer.Metadata.ValidatorMetadata);
-            input.Attributes.AddIf("minLength", minLength.ToString(CultureInfo.InvariantCulture), minLength > 0);
+            input.SetAttributeIf("minLength", minLength.ToString(CultureInfo.InvariantCulture), minLength > 0);
         }
 
         return input;
@@ -50,20 +49,18 @@ public sealed class InputGroupTagHelper : GroupBaseTagHelper {
 
     public InputGroupTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
-    public bool Autofocus { get; set; }
-    public bool ReadOnly { get; set; }
-
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 
         var inputGroup = BuildInputGroup();
-        inputGroup.InnerHtml.AppendHtml(BuildInput());
+        inputGroup.InnerHtml.AppendHtml(BuildInput(output.Attributes));
         inputGroup.InnerHtml.AppendHtml(BuildHelp());
         inputGroup.InnerHtml.AppendHtml(output.GetChildContentAsync().Result);
 
         output.TagName = "div";
-        output.AddClass("mb-1", HtmlEncoder.Default);
         output.TagMode = TagMode.StartTagAndEndTag;
+        output.Attributes.Clear();
+        output.AddClass("mb-1", HtmlEncoder.Default);
         output.Content.AppendHtml(BuildLabel());
         output.Content.AppendHtml(inputGroup);
 

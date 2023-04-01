@@ -11,7 +11,6 @@ namespace Folly.TagHelpers;
 public class GroupBaseTagHelper : BaseTagHelper {
     public GroupBaseTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
-    public bool? Disabled { get; set; }
     public string? FieldName => For?.Name ?? Name;
     public string? FieldTitle => For?.Metadata.DisplayName ?? Title;
     public ModelExpression? For { get; set; }

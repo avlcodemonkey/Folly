@@ -6,7 +6,6 @@ namespace Folly.TagHelpers;
 public sealed class FormCheckboxTagHelper : BaseTagHelper {
     public FormCheckboxTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
-    public bool? Disabled { get; set; }
     public string? Id { get; set; }
     public bool Checked { get; set; }
     public string Label { get; set; } = "";
@@ -23,12 +22,11 @@ public sealed class FormCheckboxTagHelper : BaseTagHelper {
         label.Attributes.Add("for", id);
 
         var input = new TagBuilder("input");
-        input.Attributes.Add("id", id);
-        input.Attributes.Add("name", Name);
-        input.Attributes.Add("type", "checkbox");
-        input.Attributes.Add("value", Value);
-        input.Attributes.AddIf("checked", "true", Checked);
-        input.Attributes.AddIf("disabled", "true", Disabled == true);
+        input.MergeAttribute("id", id, true);
+        input.MergeAttribute("name", Name);
+        input.MergeAttribute("type", "checkbox");
+        input.MergeAttribute("value", Value);
+        input.SetAttributeIf("checked", "true", Checked);
 
         label.InnerHtml.AppendHtml(input);
         label.InnerHtml.Append(Label);

@@ -1,5 +1,7 @@
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
@@ -32,20 +34,15 @@ public sealed class CheckboxGroupTagHelper : GroupBaseTagHelper {
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 
-        Required = false;
-
-        var div = new TagBuilder("div");
-        div.AddCssClass("mb-1");
-        div.InnerHtml.AppendHtml(BuildLabel(""));
-
         var inputGroup = BuildInputGroup();
         inputGroup.InnerHtml.AppendHtml(BuildCheckbox());
         inputGroup.InnerHtml.AppendHtml(BuildHelp());
-        div.InnerHtml.AppendHtml(inputGroup);
 
-        output.TagName = null;
+        output.TagName = "div";
+        output.AddClass("mb-1", HtmlEncoder.Default);
         output.TagMode = TagMode.StartTagAndEndTag;
-        output.Content.AppendHtml(div);
+        output.Content.AppendHtml(BuildLabel(""));
+        output.Content.AppendHtml(inputGroup);
 
         await base.ProcessAsync(context, output);
     }

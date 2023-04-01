@@ -15,7 +15,7 @@ public sealed class BreadcrumbTagHelper : BaseTagHelper {
         li.InnerHtml.AppendHtml(HtmlHelper.ActionLink(Core.Dashboard, "Index", "Dashboard"));
 
         output.TagName = "ul";
-        output.Attributes.Add("id", "breadcrumb");
+        output.Attributes.SetAttribute("id", "breadcrumb");
         output.Content.AppendHtml(li);
         output.Content.AppendHtml(await output.GetChildContentAsync());
 

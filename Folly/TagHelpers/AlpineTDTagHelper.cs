@@ -16,7 +16,7 @@ public sealed class AlpineTDTagHelper : TagHelper {
 
         output.TagName = "td";
         output.TagMode = TagMode.StartTagAndEndTag;
-        output.Attributes.Add("x-text", $"row.{Property}");
+        output.Attributes.SetAttribute("x-text", $"row.{Property}");
         output.Content.AppendHtml(await output.GetChildContentAsync());
 
         await base.ProcessAsync(context, output);

@@ -14,7 +14,7 @@ public sealed class TextareaGroupTagHelper : GroupBaseTagHelper {
 
         var textarea = new TagBuilder("textarea");
         // add any attributes passed in first. we'll overwrite ones we need as we build
-        attributes.ToList().ForEach(x => textarea.Attributes.Add(x.Name, x.Value.ToString()));
+        attributes.ToList().ForEach(x => textarea.MergeAttribute(x.Name, x.Value.ToString()));
 
         textarea.AddCssClass("form-input");
         textarea.MergeAttribute("id", FieldName, true);

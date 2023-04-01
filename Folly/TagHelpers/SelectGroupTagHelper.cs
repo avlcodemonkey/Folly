@@ -13,7 +13,7 @@ public sealed class SelectGroupTagHelper : GroupBaseTagHelper {
 
         var input = new TagBuilder("select");
         // add any attributes passed in first. we'll overwrite ones we need as we build
-        attributes.ToList().ForEach(x => input.Attributes.Add(x.Name, x.Value.ToString()));
+        attributes.ToList().ForEach(x => input.MergeAttribute(x.Name, x.Value.ToString()));
 
         input.AddCssClass("form-input");
         input.AddCssClass("form-select");
@@ -25,7 +25,7 @@ public sealed class SelectGroupTagHelper : GroupBaseTagHelper {
         input.InnerHtml.AppendHtml(new TagBuilder("option"));
         Options.ToList().ForEach(x => {
             var opt = new TagBuilder("option");
-            opt.Attributes.Add("value", x.Value.Trim());
+            opt.MergeAttribute("value", x.Value.Trim());
             opt.SetAttributeIf("selected", "true", selectedValue == x.Value);
             opt.InnerHtml.Append(x.Text.Trim());
             input.InnerHtml.AppendHtml(opt);

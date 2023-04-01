@@ -33,11 +33,11 @@ public sealed class FormContentTagHelper : BaseTagHelper {
         output.TagMode = TagMode.StartTagAndEndTag;
         output.TagName = "form";
         output.AddClass("container", HtmlEncoder.Default);
-        output.Attributes.Add("method", Method.ToString());
-        output.Attributes.Add("id", $"{Action!.ToLower(CultureInfo.InvariantCulture)}{Controller.UppercaseFirst()}Form");
+        output.Attributes.SetAttribute("method", Method.ToString());
+        output.Attributes.SetAttribute("id", $"{Action!.ToLower(CultureInfo.InvariantCulture)}{Controller.UppercaseFirst()}Form");
 
         var urlHelper = UrlHelperFactory.GetUrlHelper(HtmlHelper!.ViewContext);
-        output.Attributes.Add("action", urlHelper.Action(Action, Controller, RouteValues));
+        output.Attributes.SetAttribute("action", urlHelper.Action(Action, Controller, RouteValues));
 
         output.Content.AppendHtml(HtmlHelper.AntiForgeryToken());
         output.Content.AppendHtml(output.GetChildContentAsync().Result);

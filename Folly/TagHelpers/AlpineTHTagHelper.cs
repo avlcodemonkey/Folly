@@ -15,8 +15,8 @@ public sealed class AlpineTHTagHelper : TagHelper {
         }
 
         output.TagName = "th";
-        output.Attributes.Add(":class", $"sortClass('{Property}')");
-        output.Attributes.Add("@click", $"onSortClick('{Property}')");
+        output.Attributes.SetAttribute(":class", $"sortClass('{Property}')");
+        output.Attributes.SetAttribute("@click", $"onSortClick('{Property}')");
         output.Content.AppendHtml(await output.GetChildContentAsync());
 
         await base.ProcessAsync(context, output);

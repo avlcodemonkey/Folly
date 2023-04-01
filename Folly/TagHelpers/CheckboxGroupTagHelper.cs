@@ -13,11 +13,11 @@ public sealed class CheckboxGroupTagHelper : GroupBaseTagHelper {
 
         var label = new TagBuilder("label");
         label.AddCssClass("form-checkbox");
-        label.Attributes.Add("for", FieldName);
+        label.MergeAttribute("for", FieldName);
 
         var input = new TagBuilder("input");
         // add any attributes passed in first. we'll overwrite ones we need as we build
-        attributes.ToList().ForEach(x => input.Attributes.Add(x.Name, x.Value.ToString()));
+        attributes.ToList().ForEach(x => input.MergeAttribute(x.Name, x.Value.ToString()));
 
         input.AddCssClass("form-input");
         input.MergeAttribute("id", FieldName, true);

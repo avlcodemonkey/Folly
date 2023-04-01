@@ -21,8 +21,8 @@ public sealed class AlpineTableDataTagHelper : TagHelper {
         output.TagName = "div";
         output.AddClass("container", HtmlEncoder.Default);
         output.AddClass("alpine-table", HtmlEncoder.Default);
-        output.Attributes.Add("x-data", $"table('{Id}', '{Src}')");
-        output.Attributes.Add("x-cloak", null);
+        output.Attributes.SetAttribute("x-data", $"table('{Id}', '{Src}')");
+        output.Attributes.SetAttribute("x-cloak", null);
         output.Content.AppendHtml(await output.GetChildContentAsync());
 
         await base.ProcessAsync(context, output);

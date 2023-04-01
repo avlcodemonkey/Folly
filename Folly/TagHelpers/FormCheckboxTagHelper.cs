@@ -19,7 +19,7 @@ public sealed class FormCheckboxTagHelper : BaseTagHelper {
 
         var id = string.IsNullOrWhiteSpace(Id) ? $"{Name}_{Value}" : Id;
         var label = new TagBuilder("label");
-        label.Attributes.Add("for", id);
+        label.MergeAttribute("for", id);
 
         var input = new TagBuilder("input");
         input.MergeAttribute("id", id, true);

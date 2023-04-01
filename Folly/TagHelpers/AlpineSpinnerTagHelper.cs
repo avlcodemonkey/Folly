@@ -18,7 +18,7 @@ public sealed class AlpineSpinnerTagHelper : TagHelper {
         h1.InnerHtml.AppendHtml(div);
 
         var td = new TagBuilder("td");
-        td.Attributes.Add("colspan", Colspan.ToString(CultureInfo.InvariantCulture));
+        td.MergeAttribute("colspan", Colspan.ToString(CultureInfo.InvariantCulture));
         td.InnerHtml.AppendHtml(h1);
 
         var tr = new TagBuilder("tr");
@@ -26,7 +26,7 @@ public sealed class AlpineSpinnerTagHelper : TagHelper {
 
         output.TagName = "template";
         output.TagMode = TagMode.StartTagAndEndTag;
-        output.Attributes.Add("x-if", "!rows");
+        output.Attributes.SetAttribute("x-if", "!rows");
         output.Content.AppendHtml(tr);
 
         await base.ProcessAsync(context, output);

@@ -79,7 +79,7 @@ public class GroupBaseTagHelper : BaseTagHelper {
 
         var label = new TagBuilder("label");
         if (!string.IsNullOrWhiteSpace(forField ?? FieldName))
-            label.Attributes.Add("for", forField ?? FieldName);
+            label.MergeAttribute("for", forField ?? FieldName);
         label.InnerHtml.Append(FieldTitle);
         return label;
     }

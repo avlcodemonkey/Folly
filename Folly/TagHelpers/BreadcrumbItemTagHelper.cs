@@ -25,8 +25,8 @@ public sealed class BreadcrumbItemTagHelper : BaseTagHelper {
             if (!Label.IsEmpty() && HtmlHelper.ViewContext.HttpContext.Request.Headers.Any(x => x.Key == HtmxHeaders.Request)) {
                 // create a new title tag that htmx will swap out
                 var title = new TagBuilder("title");
-                title.Attributes.Add("id", "page-title");
-                title.Attributes.Add("hx-swap-oob", "true");
+                title.MergeAttribute("id", "page-title");
+                title.MergeAttribute("hx-swap-oob", "true");
                 title.InnerHtml.Append(Label);
                 output.PostContent.AppendHtml(title);
             }

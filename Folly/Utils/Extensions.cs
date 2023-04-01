@@ -41,13 +41,6 @@ public static class Extensions {
     }
 
     /// <summary>
-    /// Check if an integer has a value greater than zero.
-    /// </summary>
-    /// <param name="value">Integer to check.</param>
-    /// <returns>Returns true if the integer is not null and greater than zero.</returns>
-    public static bool HasPositiveValue(this int? value) => value.HasValue && value.Value > 0;
-
-    /// <summary>
     /// Check if the request object is an AJAX request.
     /// </summary>
     /// <param name="request">Current request object.</param>
@@ -96,13 +89,6 @@ public static class Extensions {
     public static bool ToBool(this string? val) => val != null && (val == "1" || val.ToLower() == "true");
 
     /// <summary>
-    /// Convert a button enum to a css class name.
-    /// </summary>
-    /// <param name="val">String value to convert.</param>
-    /// <returns>Css class name string.</returns>
-    public static string ToCssClass(this Button val) => CssRegex.Replace(val.ToString(), "-$1").Trim('-').ToLower();
-
-    /// <summary>
     /// Convert an icon enum to a css class name.
     /// </summary>
     /// <param name="val">String value to convert.</param>
@@ -131,13 +117,6 @@ public static class Extensions {
     /// <param name="value">Toggle enum value to convert.</param>
     /// <returns>Converted string.</returns>
     public static string ToHyphenCase(this DataToggle toggle) => CaseRegex.Replace(toggle.ToString(), "$1-$2").ToLower();
-
-    /// <summary>
-    /// Convert a pascal case string to hyphen case. IE "QuickBrownFoxJumpsOverTheLazyDog" to "quick-brown-fox-jumps-over-the-lazy-dog"
-    /// </summary>
-    /// <param name="value">Toggle enum value to convert.</param>
-    /// <returns>Converted string.</returns>
-    public static string ToHyphenCase(this DataToggle? toggle) => toggle.HasValue ? toggle.Value.ToHyphenCase() : "";
 
     /// <summary>
     /// Convert IEnumerable to a list of select list items.

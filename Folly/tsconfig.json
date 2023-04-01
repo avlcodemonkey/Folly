@@ -1,0 +1,18 @@
+{
+    "compilerOptions": {
+        "target": "es6",
+        "allowJs": true,
+        "checkJs": true,
+        "moduleResolution": "node",
+        "alwaysStrict": true,
+        "strictNullChecks": false,
+        "emitDeclarationOnly": true,
+        "declaration": true,
+        "removeComments": false
+    },
+    "include": [ "Assets/js/**/*" ],
+    "exclude": [
+        "node_modules",
+        "Assets/js/lib"
+    ]
+}

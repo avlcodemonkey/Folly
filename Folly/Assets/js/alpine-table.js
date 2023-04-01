@@ -1,6 +1,4 @@
-﻿// @ts-check
-
-import './alpinejs/index';
+import './lib/alpinejs/index';
 
 const TableSetting = Object.freeze({
     CurrentPage: 'currentPage',

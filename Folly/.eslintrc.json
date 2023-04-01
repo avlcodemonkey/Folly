@@ -1,4 +1,4 @@
-﻿{
+{
     /* See all the pre-defined configs here: https://www.npmjs.com/package/eslint-config-defaults */
     "extends": [
         "eslint:recommended",
@@ -10,8 +10,9 @@
     },
     "parserOptions": {
         "sourceType": "module",
-        "ecmaVersion": 2020
+        "ecmaVersion": "latest"
     },
+    "ignorePatterns": [ "Assets/js/lib" ],
     "rules": {
         "indent": [ "error", 4 ],
         "lines-between-class-members": "off",

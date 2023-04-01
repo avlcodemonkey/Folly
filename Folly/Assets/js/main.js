@@ -1,40 +1,15 @@
-﻿import * as htmx from './htmx.org/htmx';
-import Alpine from './alpinejs/index';
+import Alpine from './lib/alpinejs/index';
+
 import alpineTable from './alpine-table';
-import { dialog } from './dialog/index';
+import onHtmxConfirm from './eventHandlers/onHtmxConfirm';
+import onTableUpdated from './eventHandlers/onTableUpdated';
+import onSidebarToggled from './eventHandlers/onSidebarToggled';
 
-document.getElementById('sidebar-button').addEventListener('click', () => {
-    document.body.classList.toggle('sidebar-toggled');
-});
+document.getElementById('sidebar-button').addEventListener('click', onSidebarToggled);
 
-// listen for updates to alpine-table and process the table content
-document.body.addEventListener('alpine-table-updated', (e) => {
-    if (!e?.target) {
-        return;
-    }
+document.body.addEventListener('alpine-table-updated', onTableUpdated);
 
-    htmx.process(e.target);
-});
-
-document.body.addEventListener('htmx:confirm', async (e) => {
-    const { elt } = e.detail;
-
-    if (elt.hasAttribute('hx-confirm-content')) {
-        e.preventDefault();
-        const result = await dialog.confirm(elt.getAttribute('hx-confirm-content'), {
-            okText: elt.getAttribute('hx-confirm-ok') ?? 'Okay',
-            cancelText: elt.getAttribute('hx-confirm-cancel') ?? 'Cancel',
-            focus: 'cancel',
-        });
-        if (result) {
-            e.detail.issueRequest();
-        }
-    } else if (elt.hasAttribute('hx-alert-content')) {
-        e.preventDefault();
-        await dialog.alert(elt.getAttribute('hx-alert-content'));
-        elt.focus();
-    }
-});
+document.body.addEventListener('htmx:confirm', onHtmxConfirm);
 
 Alpine.data('table', alpineTable);
 

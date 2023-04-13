@@ -55,8 +55,8 @@ public class GroupBaseTagHelper : BaseTagHelper {
             return HtmlString.Empty;
 
         var icon = new TagBuilder("i");
-        icon.AddCssClass("fl");
-        icon.AddCssClass("fl-help");
+        icon.AddCssClass("mi");
+        icon.AddCssClass("mi-flag");
 
         var button = new TagBuilder("button");
         button.AddCssClass("button secondary icon-only");

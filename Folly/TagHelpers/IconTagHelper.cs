@@ -14,8 +14,8 @@ public sealed class IconTagHelper : BaseTagHelper {
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         output.TagName = "i";
         output.TagMode = TagMode.StartTagAndEndTag;
-        output.AddClass("fl", HtmlEncoder.Default);
-        output.AddClass($"fl-{Name.ToCssClass()}", HtmlEncoder.Default);
+        output.AddClass("mi", HtmlEncoder.Default);
+        output.AddClass($"mi-{Name.ToCssClass()}", HtmlEncoder.Default);
 
         await base.ProcessAsync(context, output);
     }

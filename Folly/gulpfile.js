@@ -22,7 +22,7 @@ const paths = {
     root: './Assets/',
     js: './Assets/js/',
     css: './Assets/css/',
-    font: './Assets/fontello/font/',
+    font: './Assets/mono-icons/',
     dist: './wwwroot/',
 };
 

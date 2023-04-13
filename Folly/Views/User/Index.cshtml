@@ -14,8 +14,8 @@
             <thead>
                 <tr>
                     <th class="alpine-no-sort">
-                        <a authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button secondary button-action" title="@Users.CreateUser">
-                            <icon name="Plus" />
+                        <a authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button primary button-action" title="@Users.CreateUser">
+                            <icon name="Add" />
                         </a>
                     </th>
                     <alpine-th property="id">@Core.Id</alpine-th>
@@ -30,12 +30,12 @@
                 <alpine-table-row>
                     <td>
                         <a authorize-roles="user.edit" class="button primary button-action" title="@Users.EditUser" :href="`@Url.Action("Index")/Edit/${row.id}`">
-                            <icon name="Edit" />
+                            <icon name="EditAlt" />
                         </a>
                         <a authorize-roles="user.delete" class="button dark button-action" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
                             hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel" hx-confirm-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
                         >
-                            <icon name="Trash" />
+                            <icon name="DeleteAlt" />
                         </a>
                     </td>
                     <alpine-td property="id" />

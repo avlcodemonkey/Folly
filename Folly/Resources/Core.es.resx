@@ -123,9 +123,6 @@
   <data name="Save" xml:space="preserve">
     <value>Ahorra</value>
   </data>
-  <data name="ToggleHelp" xml:space="preserve">
-    <value>Cambiar contexto ayuda</value>
-  </data>
   <data name="AreYouSure" xml:space="preserve">
     <value>Está seguro?</value>
   </data>
@@ -275,5 +272,14 @@
   </data>
   <data name="Close" xml:space="preserve">
     <value>Cerca</value>
+  </data>
+  <data name="ToggleHelp" xml:space="preserve">
+    <value>Alternar ayuda</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>Id</value>
+  </data>
+  <data name="CronError" xml:space="preserve">
+    <value>Error de Cron</value>
   </data>
 </root>

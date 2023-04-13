@@ -31,18 +31,24 @@
     }
 }
 
-.alpine-table th {
-    min-width: 100px;
+.alpine-table {
+    th {
+        min-width: 100px;
 
-    &:not(.alpine-no-sort) {
-        cursor: pointer;
+        &:not(.alpine-no-sort) {
+            cursor: pointer;
+        }
+
+        &.alpine-sort-asc::after {
+            content: ' \1f81d';
+        }
+
+        &.alpine-sort-desc::after {
+            content: ' \1f81f';
+        }
     }
 
-    &.alpine-sort-asc::after {
-        content: ' \1f81d';
-    }
-
-    &.alpine-sort-desc::after {
-        content: ' \1f81f';
+    td {
+        padding: 1rem .4rem;
     }
 }

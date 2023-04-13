@@ -124,7 +124,7 @@
     <value>Save</value>
   </data>
   <data name="ToggleHelp" xml:space="preserve">
-    <value>Toggle Context Help</value>
+    <value>Toggle Help</value>
   </data>
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
@@ -269,9 +269,6 @@
   </data>
   <data name="ErrorSessionInvalid" xml:space="preserve">
     <value>This session is no longer valid because the user logged in on another device.</value>
-  </data>
-  <data name="RateLoggerWarning" xml:space="preserve">
-    <value>Request {0}:{1} from IP {2} has been blocked, quota {3}/{4} exceeded by {5}. Blocked by rule {6}, TraceIdentifier {7}</value>
   </data>
   <data name="JavascriptException" xml:space="preserve">
     <value>Javascript Exception</value>

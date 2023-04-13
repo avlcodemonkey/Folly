@@ -448,15 +448,6 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Request {0}:{1} from IP {2} has been blocked, quota {3}/{4} exceeded by {5}. Blocked by rule {6}, TraceIdentifier {7}.
-        /// </summary>
-        public static string RateLoggerWarning {
-            get {
-                return ResourceManager.GetString("RateLoggerWarning", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Reload.
         /// </summary>
         public static string Reload {
@@ -520,7 +511,7 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Toggle Context Help.
+        ///   Looks up a localized string similar to Toggle Help.
         /// </summary>
         public static string ToggleHelp {
             get {

@@ -17,36 +17,36 @@
         <div id="sidebar">
             <ul>
                 <li id="sidebar-button" class="cursor-pointer">
-                    <a><icon name="Menu" class="fl-lg" /></a>
+                    <a><icon name="Menu" class="mi-lg" /></a>
                 </li>
 
                 @if (User.Identity?.IsAuthenticated == true)
                 {
                     <li authorize-roles="dashboard.index">
-                        <a asp-controller="Dashboard" asp-action="Index"><icon name="Home" class="fl-lg" /><span>@Core.Dashboard</span></a>
+                        <a asp-controller="Dashboard" asp-action="Index"><icon name="Home" class="mi-lg" /><span>@Core.Dashboard</span></a>
                     </li>
                     <li authorize-roles="role.index, user.index" class="divider"></li>
                     <li authorize-roles="role.index">
-                        <a asp-controller="Role" asp-action="Index"><icon name="Key" class="fl-lg" /><span>@Roles.MenuItem</span></a>
+                        <a asp-controller="Role" asp-action="Index"><icon name="Lock" class="mi-lg" /><span>@Roles.MenuItem</span></a>
                     </li>
                     <li authorize-roles="user.index">
-                        <a asp-controller="User" asp-action="Index"><icon name="Users" class="fl-lg" /><span>@Users.MenuItem</span></a>
+                        <a asp-controller="User" asp-action="Index"><icon name="Users" class="mi-lg" /><span>@Users.MenuItem</span></a>
                     </li>
                     <li class="divider"></li>
                     <li authorize-roles="account.updateAccount">
-                        <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Help" class="fl-lg" /><span>@Core.ToggleHelp</span></a>
+                        <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Flag" class="mi-lg" /><span>@Core.ToggleHelp</span></a>
                     </li>
                     <li authorize-roles="account.updateAccount">
-                        <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" class="fl-lg" /><span>@Account.UpdateAccount</span></a>
+                        <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" class="mi-lg" /><span>@Account.UpdateAccount</span></a>
                     </li>
                     <li>
-                        <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="Logout" class="fl-lg" /><span>@Account.Logout</span></a>
+                        <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" class="mi-lg" /><span>@Account.Logout</span></a>
                     </li>
                 }
                 else
                 {
                     <li>
-                        <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="Login" class="fl-lg" /><span>@Account.Login</span></a>
+                        <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="LogIn" class="mi-lg" /><span>@Account.Login</span></a>
                     </li>
                 }
             </ul>

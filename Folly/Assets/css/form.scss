@@ -1,18 +1,20 @@
 @import "root.scss";
 
 form {
-    input:valid {
+    input:valid:not(.button) {
         border-color: var(--color-success) !important;
     }
 
-    input:invalid {
+    input:invalid:not(.button) {
         border-color: var(--color-error) !important;
     }
 
     .input-group {
         display: flex;
 
-        input + span.input-group-addon, select + span.input-group-addon, textarea + span.input-group-addon {
+        input + span.input-group-addon,
+        select + span.input-group-addon,
+        textarea + span.input-group-addon {
             padding-left: 1rem;
         }
     }

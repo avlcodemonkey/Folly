@@ -14,10 +14,10 @@
             <thead>
                 <tr>
                     <th class="alpine-no-sort">
-                        <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary button-action" title="@Roles.CreateRole">
+                        <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary" title="@Roles.CreateRole">
                             <icon name="Add" />
                         </a>
-                        <a authorize-roles="role.refreshpermissions" href="@Url.Action("RefreshPermissions", "Role")" class="button primary button-action" title="@Roles.RefreshPermissions"
+                        <a authorize-roles="role.refreshpermissions" href="@Url.Action("RefreshPermissions", "Role")" class="button primary" title="@Roles.RefreshPermissions"
                             hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel" hx-confirm-content="@Roles.ConfirmRefreshPermissions"
                         >
                             <icon name="Refresh" />
@@ -31,13 +31,13 @@
                 <alpine-spinner colspan="3" />
                 <alpine-table-row>
                     <td>
-                        <a authorize-roles="role.edit" class="button primary button-action" title="@Roles.EditRole" :href="`@Url.Action("Index")/Edit/${row.id}`">
+                        <a authorize-roles="role.edit" class="button primary" title="@Roles.EditRole" :href="`@Url.Action("Index")/Edit/${row.id}`">
                             <icon name="EditAlt" />
                         </a>
-                        <a authorize-roles="role.edit" class="button primary button-action" title="@Core.Copy" :href="`@Url.Action("Index")/Copy/${row.id}`">
+                        <a authorize-roles="role.edit" class="button primary" title="@Core.Copy" :href="`@Url.Action("Index")/Copy/${row.id}`">
                             <icon name="Copy" />
                         </a>
-                        <a authorize-roles="role.delete" class="button dark button-action" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
+                        <a authorize-roles="role.delete" class="button dark" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
                             hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel" hx-confirm-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
                         >
                             <icon name="DeleteAlt" />

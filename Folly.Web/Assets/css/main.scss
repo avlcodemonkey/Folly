@@ -1,20 +1,21 @@
-/*! chota.css v0.8.1 | MIT License | github.com/jenil/chota */
-/* review later and see if i need all of these pieces */
+/* chota.css */
 @import "../vendor/chota/src/_base";
 @import "../vendor/chota/src/_grid";
 @import "../vendor/chota/src/_form";
-
 @import "../vendor/chota/src/_nav";
 @import "../vendor/chota/src/_card";
 @import "../vendor/chota/src/_tab";
 @import "../vendor/chota/src/_tag";
 @import "../vendor/chota/src/_dropdown";
-
 @import "../vendor/chota/src/_util";
 
-@import "./dialog/sky.css";
+/* dialog */
+@import "../vendor/dialog/sky.css";
+
+/* icon font*/
 @import "../vendor/mono-icons/icons.css";
 
+/* custom styles */
 @import "./root.scss";
 @import "./layout.scss";
 @import "./form.scss";

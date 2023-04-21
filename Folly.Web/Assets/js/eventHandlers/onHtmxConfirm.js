@@ -1,4 +1,4 @@
-import { dialog } from '../lib/dialog/index';
+import { dialog } from '../../vendor/dialog/index';
 
 /**
  * Add custom behavior to htmx:confirm event.

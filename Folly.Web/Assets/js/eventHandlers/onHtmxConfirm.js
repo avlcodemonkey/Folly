@@ -1,4 +1,8 @@
-import { dialog } from '../lib/dialog/index';
+/**
+ * Run `npm run build` in the vendor/dialog folder first to create this file.
+ * @todo find a non-TS dialog library or someother way to avoid this issue
+ */
+import { dialog } from '../../vendor/dialog/dist/index';
 
 /**
  * Add custom behavior to htmx:confirm event.

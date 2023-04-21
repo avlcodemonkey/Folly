@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33414.496
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Folly", "Folly\Folly.csproj", "{EF84FA23-31CD-4B3E-90CC-0422E58A2D53}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Folly.Web", "Folly.Web\Folly.Web.csproj", "{EF84FA23-31CD-4B3E-90CC-0422E58A2D53}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Folly.Domain", "Folly.Domain\Folly.Domain.csproj", "{80FF26BE-4DB8-4559-AFE1-A2E446E5508B}"
 EndProject

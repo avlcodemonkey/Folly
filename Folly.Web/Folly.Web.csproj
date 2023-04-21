@@ -15,6 +15,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <ScopedCssEnabled>false</ScopedCssEnabled>
+    <RootNamespace>Folly</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

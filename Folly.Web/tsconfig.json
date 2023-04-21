@@ -13,6 +13,6 @@
     "include": [ "Assets/js/**/*" ],
     "exclude": [
         "node_modules",
-        "Assets/js/lib"
+        "Assets/vendor"
     ]
 }

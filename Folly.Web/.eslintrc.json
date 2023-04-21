@@ -12,7 +12,7 @@
         "sourceType": "module",
         "ecmaVersion": "latest"
     },
-    "ignorePatterns": [ "Assets/js/lib" ],
+    "ignorePatterns": [ "Assets/vendor" ],
     "rules": {
         "indent": [ "error", 4 ],
         "lines-between-class-members": "off",

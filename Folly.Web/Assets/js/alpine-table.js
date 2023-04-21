@@ -1,4 +1,4 @@
-import './lib/alpinejs/index';
+import '../vendor/alpinejs/index';
 
 const TableSetting = Object.freeze({
     CurrentPage: 'currentPage',

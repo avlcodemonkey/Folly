@@ -1,6 +1,3 @@
 [submodule "Folly.Web/Assets/vendor/chota"]
 	path = Folly.Web/Assets/vendor/chota
 	url = https://github.com/jenil/chota.git
-[submodule "Folly.Web/Assets/vendor/dialog"]
-	path = Folly.Web/Assets/vendor/dialog
-	url = https://github.com/devlop/dialog.git

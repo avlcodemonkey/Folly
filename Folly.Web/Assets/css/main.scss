@@ -1,4 +1,5 @@
-/* chota framework */
+/*! chota.css v0.8.1 | MIT License | github.com/jenil/chota */
+/* review later and see if i need all of these pieces */
 @import "../vendor/chota/src/_base";
 @import "../vendor/chota/src/_grid";
 @import "../vendor/chota/src/_form";
@@ -11,13 +12,9 @@
 
 @import "../vendor/chota/src/_util";
 
-/* dialog */
-@import "../vendor/dialog/src/css/sky.scss";
-
-/* icon font */
+@import "./dialog/sky.css";
 @import "../vendor/mono-icons/icons.css";
 
-/* custom styles */
 @import "./root.scss";
 @import "./layout.scss";
 @import "./form.scss";

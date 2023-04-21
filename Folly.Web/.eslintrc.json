@@ -26,7 +26,6 @@
             "all"
         ],
         "max-len": [ "error", 200 ],
-        "no-underscore-dangle": "off",
-        "import/no-relative-packages": "off"
+        "no-underscore-dangle": "off"
     }
 }

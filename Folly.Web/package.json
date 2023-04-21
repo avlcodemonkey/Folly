@@ -3,6 +3,7 @@
     "name": "folly",
     "private": true,
     "devDependencies": {
+        "@devlop-ab/dialog": "^1.2.1",
         "alpinejs": "^3.12.0",
         "autoprefixer": "^10.4.13",
         "del": "^3.0.0",

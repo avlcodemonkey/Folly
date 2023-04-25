@@ -1,4 +1,4 @@
-import * as htmx from '../../vendor/htmx.org/htmx';
+import * as htmx from '../../vendor/htmx/src/htmx';
 
 /**
  * Listen for updates to alpine-table and process the table content with htmx.

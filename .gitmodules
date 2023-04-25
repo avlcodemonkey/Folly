@@ -4,3 +4,6 @@
 [submodule "Folly.Web/Assets/vendor/alpine"]
 	path = Folly.Web/Assets/vendor/alpine
 	url = https://github.com/alpinejs/alpine.git
+[submodule "Folly.Web/Assets/vendor/htmx"]
+	path = Folly.Web/Assets/vendor/htmx
+	url = https://github.com/bigskysoftware/htmx.git

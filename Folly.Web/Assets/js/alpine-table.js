@@ -1,4 +1,4 @@
-import '../vendor/alpine/packages/alpinejs/src/index';
+import '../vendor/alpinejs/module.esm';
 
 const TableSetting = Object.freeze({
     CurrentPage: 'currentPage',

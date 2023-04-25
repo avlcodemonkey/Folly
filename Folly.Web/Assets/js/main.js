@@ -1,4 +1,4 @@
-import Alpine from '../vendor/alpine/packages/alpinejs/src/index';
+import Alpine from '../vendor/alpinejs/module.esm';
 
 import alpineTable from './alpine-table';
 import onHtmxConfirm from './eventHandlers/onHtmxConfirm';

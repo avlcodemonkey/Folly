@@ -1,9 +1,11 @@
 {
     "compilerOptions": {
-        "checkJs": true
+        "checkJs": true,
+        "target": "es6"
     },
     "exclude": [
         "node_modules",
-        "Assets/vendor"
+        "Assets/vendor/**/*",
+        "wwwroot/**/*"
     ]
 }

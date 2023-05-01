@@ -6,6 +6,7 @@
     "exclude": [
         "node_modules",
         "Assets/vendor/**/*",
-        "wwwroot/**/*"
+        "wwwroot/**/*",
+        "gulpfile.js"
     ]
 }

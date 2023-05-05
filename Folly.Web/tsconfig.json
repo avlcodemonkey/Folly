@@ -1,18 +1,25 @@
 {
+    "include": [ "Assets/ts/**/*.ts" ],
+    "compileOnSave": false,
     "compilerOptions": {
-        "target": "es6",
-        "allowJs": true,
-        "checkJs": true,
+        "baseUrl": "./",
+        "removeComments": true,
+        "sourceMap": true,
+        "target": "ES6",
         "moduleResolution": "node",
+        "outDir": "wwwroot/js",
         "alwaysStrict": true,
+        "forceConsistentCasingInFileNames": true,
+        "noFallthroughCasesInSwitch": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": false, // @todo change later?
+        "noImplicitAny": true,
+        "noImplicitThis": true,
         "strictNullChecks": false,
-        "emitDeclarationOnly": true,
-        "declaration": true,
-        "removeComments": false
+        "skipLibCheck": true
     },
-    "include": [ "Assets/js/**/*" ],
     "exclude": [
-        "node_modules",
-        "Assets/vendor/**/*"
+        "node_modules"
     ]
 }

@@ -8,6 +8,8 @@ public class HtmxHeaders {
     /// Request headers
     /// </summary>
     public const string Request = "hx-request";
+    // @todo get this working
+    public const string RestoreRequest = "hx-history-restore-request";
 
     /// <summary>
     /// Response headers

@@ -1,19 +1,19 @@
 /* chota.css */
-@import "../vendor/chota/src/_base";
-@import "../vendor/chota/src/_grid";
-@import "../vendor/chota/src/_form";
-@import "../vendor/chota/src/_nav";
-@import "../vendor/chota/src/_card";
-@import "../vendor/chota/src/_tab";
-@import "../vendor/chota/src/_tag";
-@import "../vendor/chota/src/_dropdown";
-@import "../vendor/chota/src/_util";
+@import "chota/src/_base";
+@import "chota/src/_grid";
+@import "chota/src/_form";
+@import "chota/src/_nav";
+@import "chota/src/_card";
+@import "chota/src/_tab";
+@import "chota/src/_tag";
+@import "chota/src/_dropdown";
+@import "chota/src/_util";
 
 /* dialog */
-@import "../vendor/dialog/sky.scss";
+// @import "/dialog/sky.scss";
 
 /* icon font*/
-@import "../vendor/mono-icons/icons.css";
+@import "../font/icons.css";
 
 /* custom styles */
 @import "./root.scss";

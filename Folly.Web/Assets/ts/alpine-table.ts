@@ -1,4 +1,4 @@
-import '../vendor/alpinejs/module.esm';
+import { AlpineComponent } from 'alpinejs';
 
 const TableSetting = Object.freeze({
     CurrentPage: 'currentPage',
@@ -7,53 +7,58 @@ const TableSetting = Object.freeze({
     Sort: 'sort',
 });
 
-const SortOrder = Object.freeze({
-    Asc: 'asc',
-    Desc: 'desc',
-});
+enum SortOrder {
+    Asc = 'asc',
+    Desc = 'desc',
+}
 
-const alpineTable = (key, src) => ({
+interface IndexedRow {
+    _index: number;
+}
+
+interface SortColumn {
+    property: string;
+    sortOrder: SortOrder;
+}
+
+const alpineTable: AlpineComponent = (key: string, src: string) => ({
     // from html placeholder for the table
     key,
     src,
 
     // internal state
-    rows: undefined,
-    filteredRows: [],
+    rows: [] as Array<IndexedRow>,
+    filteredRows: [] as Array<IndexedRow>,
     filteredRowTotal: 0,
-    sortColumns: [],
+    sortColumns: [] as Array<SortColumn>,
     currentPage: 0,
     perPage: 10,
     maxPage: 0,
     searchQuery: '',
+    debounceTimer: 0,
 
-    /**
-     * Retrieves value from sessionStorage.
-     * @param {string} name
-     * @returns {string | null} Value if found, or null.
-     */
-    fetchSetting(name) {
+    fetchSetting(name: string) {
         return sessionStorage.getItem(`${this.key}_${name}`);
     },
 
-    saveSetting(name, value) {
+    saveSetting(name: string, value: string | number) {
         sessionStorage.setItem(`${this.key}_${name}`, value.toString());
     },
 
-    defaultCompare(a, b) {
+    defaultCompare(a: IndexedRow, b: IndexedRow) {
         if (a._index > b._index) {
             return 1;
         }
         return a._index < b._index ? -1 : 0;
     },
 
-    compare(a, b) {
+    compare(this: Array<SortColumn>, a: unknown, b: unknown) {
         let i = 0;
         const len = this.length;
         for (; i < len; i += 1) {
             const sort = this[i];
-            const aa = a[sort.property];
-            const bb = b[sort.property];
+            const aa = a[sort.property as keyof typeof a];
+            const bb = b[sort.property as keyof typeof b];
 
             if (aa === null) {
                 return 1;
@@ -71,17 +76,11 @@ const alpineTable = (key, src) => ({
         return 0;
     },
 
-    /**
-     * Filter an array of objects to find objects where value contains the value of `this`.
-     * @this {String} Value to search for
-     * @param {Object} obj - Object to search in.
-     * @returns {boolean} True if object contains `this`.
-     */
-    filterArray(obj) {
+    filterArray(this: string, obj: IndexedRow) {
         const tokens = (this || '').split(' ');
         return Array.from(Object.values(obj)).some((x) => {
             if (x.indexOf('_') < 0 && Object.prototype.hasOwnProperty.call(obj, x)) {
-                const objVal = (`${obj[x]}`).toLowerCase();
+                const objVal = (`${obj[x as keyof typeof obj]}`).toLowerCase();
                 if (tokens.every((y) => objVal.indexOf(y) > -1)) {
                     return true;
                 }
@@ -92,6 +91,7 @@ const alpineTable = (key, src) => ({
 
     filterData() {
         // create a new array and filter by the search query
+        
         const filteredData = this.searchQuery ? (this.rows?.filter(this.filterArray.bind(this.searchQuery.toLowerCase())) ?? []) : [...(this.rows ?? [])];
 
         // sort the new array
@@ -105,17 +105,19 @@ const alpineTable = (key, src) => ({
         this.filteredRows = filteredData.slice(this.perPage * this.currentPage, (this.perPage * this.currentPage) + this.perPage);
 
         // after rendering, notify that the table has been updated
+        // @ts-ignore @todo figure out how to get typescript to work with these magics from alpine
         this.$nextTick(() => {
+            // @ts-ignore
             this.$root.dispatchEvent(new CustomEvent('alpine-table-updated', { bubbles: true, composed: true }));
         });
     },
 
-    onSearchQueryInput(event) {
-        const val = event?.target?.value;
+    onSearchQueryInput(event: InputEvent) {
+        const val = (event?.target as HTMLInputElement)?.value;
         if (this.debounceTimer) {
             clearTimeout(this.debounceTimer);
         }
-        this.debounceTimer = setTimeout(() => {
+        this.debounceTimer = window.setTimeout(() => {
             if (this.searchQuery !== val) {
                 this.currentPage = 0;
                 this.saveSetting(TableSetting.SearchQuery, val);
@@ -125,8 +127,8 @@ const alpineTable = (key, src) => ({
         }, 250);
     },
 
-    onPerPageInput(event) {
-        const newVal = parseInt(event?.target?.value ?? 10, 10) ?? 10;
+    onPerPageInput(event: InputEvent) {
+        const newVal = parseInt((event?.target as HTMLInputElement)?.value ?? '10', 10) ?? 10;
         if (this.perPage !== newVal) {
             this.currentPage = 0;
             this.saveSetting(TableSetting.PerPage, newVal);
@@ -152,13 +154,13 @@ const alpineTable = (key, src) => ({
         this.setPage(Math.min(this.currentPage + 1, this.maxPage));
     },
 
-    setPage(page) {
+    setPage(page: number) {
         this.currentPage = page;
         this.saveSetting(TableSetting.CurrentPage, this.currentPage);
         this.filterData();
     },
 
-    onSortClick(property) {
+    onSortClick(property: string) {
         if (!property) {
             return;
         }
@@ -177,7 +179,7 @@ const alpineTable = (key, src) => ({
         this.filterData();
     },
 
-    sortClass(property) {
+    sortClass(property: string) {
         const index = property ? this.sortColumns.findIndex((x) => x.property === property) : -1;
         if (index === -1) {
             return '';
@@ -225,7 +227,7 @@ const alpineTable = (key, src) => ({
         try {
             this.rows = (await fetch(this.src, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
                 .then((res) => res.json()))
-                .map((x, index) => ({ ...x, _index: index })) ?? [];
+                .map((x: object, index: number) => ({ ...x, _index: index })) ?? [];
         } catch {
             this.rows = [];
         }

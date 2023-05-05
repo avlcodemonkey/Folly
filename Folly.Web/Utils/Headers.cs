@@ -19,7 +19,7 @@ public static class Headers {
             //.WithConnectSource("*", "'self'", "'unsafe-inline'", "data:", "blob:") // added to try to get hot reload to work
             .WithImageSource("'self'", "data:") // allow images from self, including base64 encoding images aka icon fonts
             .WithStyleSource("'self'", "'unsafe-inline'") // allow styles from self and inline from js
-            .WithFontSource(CSPConstants.Self)
+            .WithFontSource(CSPConstants.Self, "data:")
             .WithFrameAncestors(CSPConstants.None)
             .WithScriptSource("'self'", "'unsafe-eval'")
             .BuildPolicy()

@@ -3,11 +3,13 @@
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TypeScriptTarget>ESNext</TypeScriptTarget>
     <TypeScriptLib>ESNext</TypeScriptLib>
+    <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
   </PropertyGroup>
 
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
     <TypeScriptTarget>ESNext</TypeScriptTarget>
     <TypeScriptLib>ESNext</TypeScriptLib>
+    <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -19,15 +21,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove=".eslintrc.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="Assets\favicon.ico" />
-    <None Remove="Assets\js\htmx.js" />
-    <None Remove="Assets\js\htmx.min.js" />
-    <None Remove="Assets\js\tiny-components.js" />
-    <None Remove="Assets\js\tiny-components.min.js" />
     <None Remove="Assets\LICENSE.txt" />
     <None Remove="Assets\README.txt" />
   </ItemGroup>
@@ -40,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include=".eslintrc.json" />
     <None Include="Views\Shared\Error.cshtml" />
     <None Include="Views\Shared\_Layout.cshtml" />
     <None Include="Views\_ViewImports.cshtml" />

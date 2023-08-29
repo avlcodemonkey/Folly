@@ -64,6 +64,7 @@ public class GroupBaseTagHelper : BaseTagHelper {
         button.MergeAttribute("role", "button");
         button.MergeAttribute("hx-get", "#");
         button.MergeAttribute("hx-alert-content", HelpText!.Replace("\"", "&quot;"));
+        button.MergeAttribute("hx-alert-ok", Core.Okay);
         button.InnerHtml.AppendHtml(icon);
 
         var span = new TagBuilder("span");

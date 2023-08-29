@@ -1,0 +1,9 @@
+@using Folly.Resources
+
+<dialog id="confirm-dialog" hx-disable>
+    <p id="confirm-dialog-content" class="p-2">@Core.AreYouSure</p>
+    <form method="dialog" class="ml-2">
+        <button class="button primary" value="cancel" id="confirm-dialog-cancel" autofocus>@Core.Cancel</button>
+        <button class="button dark" value="ok" id="confirm-dialog-ok">@Core.Okay</button>
+    </form>
+</dialog>

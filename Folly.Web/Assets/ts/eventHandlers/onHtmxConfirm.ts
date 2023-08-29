@@ -1,5 +1,5 @@
 /**
- * Add custom behavior to htmx:confirm event.
+ * Add custom behavior to htmx:confirm event to enable alert/confirm dialogs.
  * @param {CustomEvent} e
  */
 const onHtmxConfirm = async (e: CustomEvent) => {

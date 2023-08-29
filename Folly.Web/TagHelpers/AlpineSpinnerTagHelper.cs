@@ -26,7 +26,7 @@ public sealed class AlpineSpinnerTagHelper : TagHelper {
 
         output.TagName = "template";
         output.TagMode = TagMode.StartTagAndEndTag;
-        output.Attributes.SetAttribute("x-if", "!rows");
+        output.Attributes.SetAttribute("x-if", "!rows?.length");
         output.Content.AppendHtml(tr);
 
         await base.ProcessAsync(context, output);

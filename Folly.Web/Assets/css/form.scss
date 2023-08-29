@@ -1,10 +1,6 @@
 @import "root.scss";
 
 form {
-    input:valid:not(.button) {
-        border-color: var(--color-success) !important;
-    }
-
     input:invalid:not(.button) {
         border-color: var(--color-error) !important;
     }

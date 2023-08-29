@@ -20,11 +20,13 @@ const onHtmxConfirm = async (e: CustomEvent) => {
         okBtn.innerHTML = elt.getAttribute('hx-confirm-ok');
         cancelBtn.innerHTML = elt.getAttribute('hx-confirm-cancel');
 
-        dialog.addEventListener('close', function() {
+        const closeHandler = () => {
+            dialog.removeEventListener('close', closeHandler);
             if (dialog.returnValue === 'ok') {
                 e.detail.issueRequest();
             }
-        });
+        };
+        dialog.addEventListener('close', closeHandler);
 
         dialog.showModal();
     } else if (elt.hasAttribute('hx-alert-content')) {
@@ -40,9 +42,11 @@ const onHtmxConfirm = async (e: CustomEvent) => {
         content.innerHTML = elt.getAttribute('hx-alert-content');
         okBtn.innerHTML = elt.getAttribute('hx-alert-ok');
 
-        dialog.addEventListener('close', function() {
+        const closeHandler = () => {
+            dialog.removeEventListener('close', closeHandler);
             elt.focus();
-        });
+        };
+        dialog.addEventListener('close', closeHandler);
 
         dialog.showModal();
     }

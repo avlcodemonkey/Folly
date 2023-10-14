@@ -1,4 +1,5 @@
 :root {
+    /* chota properties */
     --bg-color: #fcfcfc;
     --bg-secondary-color: #f3f3f6;
     --color-primary: #3e63ad;
@@ -13,4 +14,16 @@
     --font-color: #333333;
     --font-family-sans: -apple-system, BlinkMacSystemFont, Avenir, "Avenir Next", "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
     --font-family-mono: monaco, "Consolas", "Lucida Console", monospace;
+
+    /* luxbar properties */
+    --luxbar-color-bg: var(--color-primary);
+    --luxbar-color-hl: #2d477d;
+    --luxbar-color-fg: #fff;
+    --luxbar-height: 5rem;
+    --luxbar-padding: 1.125rem 1.5rem 1.125rem 1.5rem;
+    --luxbar-transition: .6s ease;
+    --luxbar-hamburger-line-height: .125rem;
+    --luxbar-hamburger-width: 1.625rem;
+    --luxbar-shadow: 0 .063rem .188rem rgba(#000, .12), 0 .063rem .125rem rgba(#000, .24);
+    --luxbar-expand-arrow-height: .313rem
 }

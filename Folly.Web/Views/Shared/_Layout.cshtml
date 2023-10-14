@@ -7,55 +7,58 @@
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-        <title id="page-title">@(ViewData[BaseController.TitleProperty] ?? Core.Dashboard)</title>
+        <title id="page-title">@(ViewData[BaseController.TitleProperty] ?? Core.Brand)</title>
         <link rel="icon" href="/favicon.ico" />
         <link rel="stylesheet" href="/index.css" asp-append-version="true" />
         <script src="/index.js" asp-append-version="true" defer></script>
     </head>
 
-    <body class="sidebar-toggled" hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header" hx-indicator="#spinner">
-        <div id="sidebar">
-            <ul>
-                <li id="sidebar-button" class="cursor-pointer">
-                    <a><icon name="Menu" class="mi-lg" /></a>
-                </li>
+    <body hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header" hx-indicator="#spinner">
+        <header id="luxbar" class="luxbar-fixed">
+            <input type="checkbox" class="luxbar-checkbox" id="luxbar-checkbox" />
+            <div class="luxbar-menu luxbar-menu-right">
+                <ul class="luxbar-navigation">
+                    <li authorize-roles="dashboard.index" class="luxbar-header">
+                        <a asp-controller="Dashboard" asp-action="Index" class="luxbar-brand"><icon name="Sun" class="mi-pad" aria-hidden="true" /><span>@Core.Brand</span></a>
+                        <label class="luxbar-hamburger luxbar-hamburger-doublespin" id="luxbar-hamburger" for="luxbar-checkbox"> <span></span> </label>
+                    </li>
 
-                @if (User.Identity?.IsAuthenticated == true)
-                {
-                    <li authorize-roles="dashboard.index">
-                        <a asp-controller="Dashboard" asp-action="Index"><icon name="Home" class="mi-lg" /><span>@Core.Dashboard</span></a>
-                    </li>
-                    <li authorize-roles="role.index, user.index" class="divider"></li>
-                    <li authorize-roles="role.index">
-                        <a asp-controller="Role" asp-action="Index"><icon name="Lock" class="mi-lg" /><span>@Roles.MenuItem</span></a>
-                    </li>
-                    <li authorize-roles="user.index">
-                        <a asp-controller="User" asp-action="Index"><icon name="Users" class="mi-lg" /><span>@Users.MenuItem</span></a>
-                    </li>
-                    <li class="divider"></li>
-                    <li authorize-roles="account.updateAccount">
-                        <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Flag" class="mi-lg" /><span>@Core.ToggleHelp</span></a>
-                    </li>
-                    <li authorize-roles="account.updateAccount">
-                        <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" class="mi-lg" /><span>@Account.UpdateAccount</span></a>
-                    </li>
-                    <li>
-                        <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" class="mi-lg" /><span>@Account.Logout</span></a>
-                    </li>
-                }
-                else
-                {
-                    <li>
-                        <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="LogIn" class="mi-lg" /><span>@Account.Login</span></a>
-                    </li>
-                }
-            </ul>
-        </div>
+                    @if (User.Identity?.IsAuthenticated == true)
+                    {
+                        <li authorize-roles="role.index">
+                            <a asp-controller="Role" asp-action="Index"><icon name="Lock" class="mi-pad" aria-hidden="true" /><span>@Roles.MenuItem</span></a>
+                        </li>
+                        <li authorize-roles="user.index">
+                            <a asp-controller="User" asp-action="Index"><icon name="Users" class="mi-pad" aria-hidden="true" /><span>@Users.MenuItem</span></a>
+                        </li>
+                        <li authorize-roles="account.updateAccount">
+                            <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Flag" class="mi-pad" aria-hidden="true" /><span>@Core.ToggleHelp</span></a>
+                        </li>
+                        <li authorize-roles="account.updateAccount">
+                            <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" class="mi-pad" aria-hidden="true" /><span>@Account.UpdateAccount</span></a>
+                        </li>
+                        <li>
+                            <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" class="mi-pad" aria-hidden="true" /><span>@Account.Logout</span></a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li>
+                            <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="LogIn" class="mi-pad" aria-hidden="true" /><span>@Account.Login</span></a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </header>
+
         <div id="main">
             @RenderBody()
         </div>
+
         <div id="spinner" class="htmx-indicator"></div>
+
         <partial name="_AlertDialog" />
+
         <partial name="_ConfirmDialog" />
     </body>
 </html>

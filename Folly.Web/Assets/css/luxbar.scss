@@ -1,0 +1,275 @@
+/* Built file from https://github.com/avlcodemonkey/luxbar */
+
+.luxbar-default {
+    width: 100%;
+    position: relative;
+    box-shadow: var(--luxbar-shadow);
+    z-index: 1000
+}
+
+.luxbar-static {
+    box-shadow: var(--luxbar-shadow);
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1000
+}
+
+.luxbar-static .luxbar-checkbox:checked ~ .luxbar-menu {
+    position: absolute
+}
+
+.luxbar-fixed {
+    width: 100%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    box-shadow: var(--luxbar-shadow)
+}
+
+.luxbar-hamburger span:before, .luxbar-hamburger span:after, .luxbar-hamburger span {
+    display: block;
+    height: var(--luxbar-hamburger-line-height);
+    width: var(--luxbar-hamburger-width);
+    transition: var(--luxbar-transition)
+}
+
+.luxbar-checkbox:checked ~ .luxbar-menu li .luxbar-hamburger span {
+    background-color: transparent
+}
+
+.luxbar-checkbox:checked ~ .luxbar-menu li .luxbar-hamburger span:before, .luxbar-checkbox:checked ~ .luxbar-menu li .luxbar-hamburger span:after {
+    margin-top: 0
+}
+
+.luxbar-header {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: row;
+    flex-direction: row;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+    -ms-flex-align: center;
+    align-items: center;
+    height: var(--luxbar-height)
+}
+
+.luxbar-menu-left .luxbar-navigation, .luxbar-menu-left .luxbar-header {
+    -ms-flex-pack: start;
+    justify-content: flex-start
+}
+
+.luxbar-menu-right .luxbar-hamburger {
+    margin-left: auto
+}
+
+.luxbar-brand {
+    font-size: 1.6em;
+    padding: var(--luxbar-padding)
+}
+
+.luxbar-menu {
+    min-height: var(--luxbar-height);
+    transition: var(--luxbar-transition);
+    width: 100%
+}
+
+.luxbar-navigation {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    list-style: none;
+    padding-left: 0;
+    margin: 0
+}
+
+.luxbar-menu a, .luxbar-navigation li a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer
+}
+
+.luxbar-navigation li {
+    height: var(--luxbar-height)
+}
+
+.luxbar-navigation li a {
+    padding: var(--luxbar-padding);
+    display: block
+}
+
+.luxbar-hamburger {
+    padding: var(--luxbar-padding);
+    position: relative;
+    cursor: pointer
+}
+
+.luxbar-hamburger span:before, .luxbar-hamburger span:after {
+    content: "";
+    position: absolute
+}
+
+.luxbar-hamburger span:before {
+    margin-top: -8px
+}
+
+.luxbar-hamburger span:after {
+    margin-top: 8px
+}
+
+.luxbar-checkbox {
+    display: none
+}
+
+.luxbar-checkbox:not(:checked) ~ .luxbar-menu {
+    overflow: hidden;
+    height: var(--luxbar-height)
+}
+
+.luxbar-checkbox:checked ~ .luxbar-menu {
+    transition: height var(--luxbar-transition);
+    height: 100vh;
+    overflow: auto
+}
+
+.luxbar-dropdown {
+    position: relative;
+    height: auto;
+    min-height: var(--luxbar-height)
+}
+
+.luxbar-dropdown:hover > ul {
+    position: relative;
+    display: block;
+    min-width: 100%
+}
+
+.luxbar-dropdown > a:after {
+    position: absolute;
+    content: "";
+    right: .625rem;
+    top: calc(var(--luxbar-height) / 2 - var(--luxbar-expand-arrow-height) + .063rem);
+    border-width: var(--luxbar-expand-arrow-height) var(--luxbar-expand-arrow-height) 0;
+    border-color: transparent;
+    border-style: solid
+}
+
+.luxbar-dropdown > ul {
+    display: block;
+    overflow-x: hidden;
+    list-style: none;
+    padding: 0
+}
+
+.luxbar-dropdown > ul li {
+    min-width: 100%;
+    height: calc(var(--luxbar-height) / 1.5);
+    padding: .313rem .625rem .313rem 4rem
+}
+
+.luxbar-dropdown > ul li a {
+    min-height: calc(var(--luxbar-height) / 1.5);
+    line-height: calc(var(--luxbar-height) / 1.5);
+    padding: 0
+}
+
+@media screen and (min-width: 768px) {
+    .luxbar-navigation {
+        -ms-flex-flow: row;
+        flex-flow: row;
+        -ms-flex-pack: end;
+        justify-content: flex-end
+    }
+
+    .luxbar-navigation li {
+        border-top: 0
+    }
+
+    .luxbar-navigation li:last-child {
+        margin-right: 1rem
+    }
+
+    .luxbar-hamburger {
+        display: none
+    }
+
+    .luxbar-checkbox:not(:checked) ~ .luxbar-menu {
+        overflow: visible
+    }
+
+    .luxbar-checkbox:checked ~ .luxbar-menu {
+        height: var(--luxbar-height)
+    }
+
+    .luxbar-menu-right .luxbar-header {
+        margin-right: auto
+    }
+
+    .luxbar-dropdown {
+        height: var(--luxbar-height)
+    }
+
+    .luxbar-dropdown:hover > ul {
+        position: absolute;
+        left: 0;
+        top: var(--luxbar-height);
+        padding: 0
+    }
+
+    .luxbar-dropdown > ul {
+        display: none
+    }
+
+    .luxbar-dropdown > ul li {
+        padding: .313rem .625rem
+    }
+
+    .luxbar-dropdown > ul li a {
+        white-space: nowrap
+    }
+}
+
+.luxbar-checkbox:checked + .luxbar-menu .luxbar-hamburger-doublespin span:before {
+    transform: rotate(225deg)
+}
+
+.luxbar-checkbox:checked + .luxbar-menu .luxbar-hamburger-doublespin span:after {
+    transform: rotate(-225deg)
+}
+
+.luxbar-checkbox:checked + .luxbar-menu .luxbar-hamburger-spin span:before {
+    transform: rotate(45deg)
+}
+
+.luxbar-checkbox:checked + .luxbar-menu .luxbar-hamburger-spin span:after {
+    transform: rotate(-45deg)
+}
+
+:root {
+    --luxbar-color-bg: #3e63ad;
+    --luxbar-color-hl: #2d477d;
+    --luxbar-color-fg: #fff;
+    --luxbar-height: 3.625rem;
+    --luxbar-padding: 1.125rem 1.5rem 1.125rem 1.5rem;
+    --luxbar-transition: .6s ease;
+    --luxbar-hamburger-line-height: .125rem;
+    --luxbar-hamburger-width: 1.625rem;
+    --luxbar-shadow: 0 .063rem .188rem rgba(#000, .12), 0 .063rem .125rem rgba(#000, .24);
+    --luxbar-expand-arrow-height: .313rem
+}
+
+.luxbar-menu, .luxbar-menu .luxbar-dropdown ul {
+    background-color: var(--luxbar-color-bg);
+    color: var(--luxbar-color-fg)
+}
+
+.luxbar-menu .active, .luxbar-menu li:hover {
+    background-color: var(--luxbar-color-hl)
+}
+
+.luxbar-menu .luxbar-hamburger span, .luxbar-menu .luxbar-hamburger span:before, .luxbar-menu .luxbar-hamburger span:after {
+    background-color: var(--luxbar-color-fg)
+}

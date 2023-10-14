@@ -126,8 +126,8 @@
   <data name="ToggleHelp" xml:space="preserve">
     <value>Toggle Help</value>
   </data>
-  <data name="Dashboard" xml:space="preserve">
-    <value>Dashboard</value>
+  <data name="Brand" xml:space="preserve">
+    <value>Folly</value>
   </data>
   <data name="AreYouSure" xml:space="preserve">
     <value>Are you sure?</value>
@@ -284,5 +284,8 @@
   </data>
   <data name="Close" xml:space="preserve">
     <value>Close</value>
+  </data>
+  <data name="Dashboard" xml:space="preserve">
+    <value>Dashboard</value>
   </data>
 </root>

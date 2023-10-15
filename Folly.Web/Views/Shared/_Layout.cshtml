@@ -19,32 +19,37 @@
             <div class="luxbar-menu luxbar-menu-right">
                 <ul class="luxbar-navigation">
                     <li authorize-roles="dashboard.index" class="luxbar-header">
-                        <a asp-controller="Dashboard" asp-action="Index" class="luxbar-brand"><icon name="Sun" class="mi-pad" aria-hidden="true" /><span>@Core.Brand</span></a>
+                        <a asp-controller="Dashboard" asp-action="Index" class="luxbar-brand"><icon name="Sun" class="mi-mr" aria-hidden="true" /><span>@Core.Brand</span></a>
                         <label class="luxbar-hamburger luxbar-hamburger-doublespin" id="luxbar-hamburger" for="luxbar-checkbox"> <span></span> </label>
                     </li>
 
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <li authorize-roles="role.index">
-                            <a asp-controller="Role" asp-action="Index"><icon name="Lock" class="mi-pad" aria-hidden="true" /><span>@Roles.MenuItem</span></a>
+                            <a asp-controller="Role" asp-action="Index"><icon name="Lock" class="mi-mr" aria-hidden="true" /><span>@Roles.MenuItem</span></a>
                         </li>
                         <li authorize-roles="user.index">
-                            <a asp-controller="User" asp-action="Index"><icon name="Users" class="mi-pad" aria-hidden="true" /><span>@Users.MenuItem</span></a>
+                            <a asp-controller="User" asp-action="Index"><icon name="Users" class="mi-mr" aria-hidden="true" /><span>@Users.MenuItem</span></a>
                         </li>
-                        <li authorize-roles="account.updateAccount">
-                            <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Flag" class="mi-pad" aria-hidden="true" /><span>@Core.ToggleHelp</span></a>
-                        </li>
-                        <li authorize-roles="account.updateAccount">
-                            <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" class="mi-pad" aria-hidden="true" /><span>@Account.UpdateAccount</span></a>
-                        </li>
-                        <li>
-                            <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" class="mi-pad" aria-hidden="true" /><span>@Account.Logout</span></a>
+                        <li class="luxbar-dropdown">
+                            <a href="#"><icon name="User" class="mi-mr" aria-hidden="true" />@Profile.MyProfile</a>
+                            <ul>
+                                <li authorize-roles="profile.updateProfile">
+                                    <a asp-controller="Profile" asp-action="ToggleContextHelp"><icon name="Flag" class="mi-mr" aria-hidden="true" /><span>@Core.ToggleHelp</span></a>
+                                </li>
+                                <li authorize-roles="profile.updateProfile">
+                                    <a asp-controller="Profile" asp-action="UpdateProfile"><icon name="User" class="mi-mr" aria-hidden="true" /><span>@Profile.UpdateProfile</span></a>
+                                </li>
+                                <li>
+                                    <a asp-controller="Profile" asp-action="Logout" hx-boost="false"><icon name="LogOut" class="mi-mr" aria-hidden="true" /><span>@Profile.Logout</span></a>
+                                </li>
+                            </ul>
                         </li>
                     }
                     else
                     {
                         <li>
-                            <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="LogIn" class="mi-pad" aria-hidden="true" /><span>@Account.Login</span></a>
+                            <a asp-controller="Profile" asp-action="Login" hx-boost="false"><icon name="LogIn" class="mi-mr" aria-hidden="true" /><span>@Profile.Login</span></a>
                         </li>
                     }
                 </ul>

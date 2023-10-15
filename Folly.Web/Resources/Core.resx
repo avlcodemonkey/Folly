@@ -124,7 +124,7 @@
     <value>Save</value>
   </data>
   <data name="ToggleHelp" xml:space="preserve">
-    <value>Toggle Help</value>
+    <value>Help</value>
   </data>
   <data name="Brand" xml:space="preserve">
     <value>Folly</value>

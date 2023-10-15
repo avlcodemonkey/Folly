@@ -3,10 +3,10 @@ using Folly.Resources;
 
 namespace Folly.Models;
 
-public sealed record UpdateAccount : BaseModel {
-    public UpdateAccount() { }
+public sealed record UpdateProfile : BaseModel {
+    public UpdateProfile() { }
 
-    public UpdateAccount(User user) {
+    public UpdateProfile(User user) {
         Email = user.Email;
         FirstName = user.FirstName;
         LastName = user.LastName ?? "";

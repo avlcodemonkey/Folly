@@ -13,11 +13,11 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Controllers;
 
-public class AccountController : BaseController {
+public class ProfileController : BaseController {
     private readonly ILanguageService LanguageService;
     private readonly IUserService UserService;
 
-    public AccountController(IAppConfiguration appConfig, IUserService userService, ILanguageService languageService, ILogger<AccountController> logger) : base(appConfig, logger) {
+    public ProfileController(IAppConfiguration appConfig, IUserService userService, ILanguageService languageService, ILogger<ProfileController> logger) : base(appConfig, logger) {
         UserService = userService;
         LanguageService = languageService;
     }
@@ -37,32 +37,32 @@ public class AccountController : BaseController {
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).ConfigureAwait(false);
     }
 
-    [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName), ParentAction(nameof(UpdateAccount))]
+    [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName), ParentAction(nameof(UpdateProfile))]
     public IActionResult ToggleContextHelp() {
         HttpContext.Session.ToggleSetting(Help.SettingName);
         return View("ToggleContextHelp", new Help(HttpContext.Session));
     }
 
     [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName)]
-    public async Task<IActionResult> UpdateAccount() {
+    public async Task<IActionResult> UpdateProfile() {
         var user = await UserService.GetUserByUserName(User.Identity!.Name!);
-        return View("UpdateAccount", new UpdateAccount(user));
+        return View("UpdateProfile", new UpdateProfile(user));
     }
 
     [HttpPost, Authorize(Policy = PermissionRequirementHandler.PolicyName), ValidModel]
-    public async Task<IActionResult> UpdateAccount(UpdateAccount model) {
+    public async Task<IActionResult> UpdateProfile(UpdateProfile model) {
         if (!ModelState.IsValid)
-            return View("UpdateAccount", model);
+            return View("UpdateProfile", model);
 
-        var result = await UserService.UpdateAccount(model);
+        var result = await UserService.UpdateProfile(model);
         if (result.IsEmpty()) {
             var language = await LanguageService.GetLanguageById(model.LanguageId);
             Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName, CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(new CultureInfo(language.LanguageCode))));
-            ViewData[MessageProperty] = Account.AccountUpdated;
-            return View("UpdateAccount", model);
+            ViewData[MessageProperty] = Profile.ProfileUpdated;
+            return View("UpdateProfile", model);
         }
         ViewData[MessageProperty] = result;
-        return View("UpdateAccount", model);
+        return View("UpdateProfile", model);
     }
 
     public IActionResult AccessDenied() {

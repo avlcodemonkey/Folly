@@ -31,8 +31,7 @@ public sealed class UserService : IUserService {
                 Id = userDTO.Id, Email = userDTO.Email, FirstName = userDTO.FirstName, LastName = userDTO.LastName,
                 LanguageId = userDTO.LanguageId, UserName = userDTO.UserName, Status = true
             };
-        }
-        else {
+        } else {
             model = await DbContext.Users.Include(x => x.UserRoles).FirstAsync(x => x.Id == userDTO.Id);
             model.Email = userDTO.Email;
             model.FirstName = userDTO.FirstName;
@@ -103,24 +102,23 @@ public sealed class UserService : IUserService {
             var existingRoles = await DbContext.UserRoles.Where(x => x.UserId == user.Id).ToListAsync();
             DbContext.UserRoles.RemoveRange(existingRoles.Where(x => !user.UserRoles.Any(y => y.RoleId == x.RoleId)));
             DbContext.Users.Update(user);
-        }
-        else {
+        } else {
             DbContext.Users.Add(user);
         }
 
         return await DbContext.SaveChangesAsync() > 0;
     }
 
-    public async Task<string> UpdateAccount(DTO.UpdateAccount account) {
+    public async Task<string> UpdateProfile(DTO.UpdateProfile profile) {
         // load user object and copy settings the user is allowed to change
         var user = await CurrentUser();
         if (user == null)
             return Core.ErrorGeneric;
 
-        user.FirstName = account.FirstName;
-        user.LastName = account.LastName;
-        user.LanguageId = account.LanguageId;
-        user.Email = account.Email;
+        user.FirstName = profile.FirstName;
+        user.LastName = profile.LastName;
+        user.LanguageId = profile.LanguageId;
+        user.Email = profile.Email;
         DbContext.Users.Update(user);
 
         return (await DbContext.SaveChangesAsync() > 0) ? "" : Core.ErrorGeneric;

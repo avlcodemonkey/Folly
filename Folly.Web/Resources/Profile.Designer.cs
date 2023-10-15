@@ -22,14 +22,14 @@ namespace Folly.Resources {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    public class Account {
+    public class Profile {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
         private static global::System.Globalization.CultureInfo resourceCulture;
         
         [global::System.Diagnostics.CodeAnalysis.SuppressMessageAttribute("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-        internal Account() {
+        internal Profile() {
         }
         
         /// <summary>
@@ -39,7 +39,7 @@ namespace Folly.Resources {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Folly.Resources.Account", typeof(Account).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Folly.Resources.Profile", typeof(Profile).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,15 +57,6 @@ namespace Folly.Resources {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Your account was updated successfully. You will need to refresh this page if you changed your language..
-        /// </summary>
-        public static string AccountUpdated {
-            get {
-                return ResourceManager.GetString("AccountUpdated", resourceCulture);
             }
         }
         
@@ -124,11 +115,29 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update Account.
+        ///   Looks up a localized string similar to My Profile.
         /// </summary>
-        public static string UpdateAccount {
+        public static string MyProfile {
             get {
-                return ResourceManager.GetString("UpdateAccount", resourceCulture);
+                return ResourceManager.GetString("MyProfile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Your profile was updated successfully. You will need to refresh this page if you changed your language..
+        /// </summary>
+        public static string ProfileUpdated {
+            get {
+                return ResourceManager.GetString("ProfileUpdated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Update.
+        /// </summary>
+        public static string UpdateProfile {
+            get {
+                return ResourceManager.GetString("UpdateProfile", resourceCulture);
             }
         }
     }

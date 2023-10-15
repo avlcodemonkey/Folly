@@ -15,8 +15,20 @@ body {
     }
 }
 
-.mi-pad {
-    margin-right: .5rem;
+.luxbar-menu {
+    font-size: 1.8rem;
+
+    .luxbar-brand {
+        font-size: 2rem;
+    }
+
+    .mi-mr {
+        margin-right: .5rem;
+    }
+
+    a:hover {
+        opacity: inherit;
+    }
 }
 
 #main {

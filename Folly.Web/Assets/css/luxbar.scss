@@ -66,7 +66,7 @@
 }
 
 .luxbar-brand {
-    font-size: 1.6em;
+    font-size: 1.6rem;
     padding: var(--luxbar-padding)
 }
 
@@ -143,8 +143,7 @@
 
 .luxbar-dropdown:hover > ul {
     position: relative;
-    display: block;
-    min-width: 100%
+    display: block
 }
 
 .luxbar-dropdown > a:after {
@@ -159,21 +158,12 @@
 
 .luxbar-dropdown > ul {
     display: block;
-    overflow-x: hidden;
     list-style: none;
     padding: 0
 }
 
 .luxbar-dropdown > ul li {
-    min-width: 100%;
-    height: calc(var(--luxbar-height) / 1.5);
-    padding: .313rem .625rem .313rem 4rem
-}
-
-.luxbar-dropdown > ul li a {
-    min-height: calc(var(--luxbar-height) / 1.5);
-    line-height: calc(var(--luxbar-height) / 1.5);
-    padding: 0
+    padding: 0 .625rem 0 var(--luxbar-height)
 }
 
 @media screen and (min-width: 768px) {
@@ -186,10 +176,6 @@
 
     .luxbar-navigation li {
         border-top: 0
-    }
-
-    .luxbar-navigation li:last-child {
-        margin-right: 1rem
     }
 
     .luxbar-hamburger {
@@ -224,7 +210,7 @@
     }
 
     .luxbar-dropdown > ul li {
-        padding: .313rem .625rem
+        padding: 0 .625rem
     }
 
     .luxbar-dropdown > ul li a {
@@ -266,7 +252,7 @@
     color: var(--luxbar-color-fg)
 }
 
-.luxbar-menu .active, .luxbar-menu li:hover {
+.luxbar-menu .luxbar-active, .luxbar-menu li:hover {
     background-color: var(--luxbar-color-hl)
 }
 

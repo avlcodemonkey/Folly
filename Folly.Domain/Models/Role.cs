@@ -1,13 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Folly.Domain.Models;
 
 [Table("Role")]
-public class Role : BaseEntity
-{
-    public Role()
-    {
+public class Role : BaseEntity {
+    public Role() {
         RolePermissions = new List<RolePermission>();
         UserRoles = new List<UserRole>();
     }

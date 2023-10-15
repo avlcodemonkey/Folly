@@ -1,7 +1,6 @@
-﻿namespace Folly.Domain.Models;
+namespace Folly.Domain.Models;
 
-public class BaseEntity
-{
+public class BaseEntity {
     public DateTime CreatedDate { get; set; }
     public int? CreatedUserId { get; set; }
     public DateTime UpdatedDate { get; set; }

@@ -1,15 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Folly.Domain.Models;
 
 [Table("Permission")]
-public class Permission : BaseEntity
-{
-    public Permission()
-    {
-        RolePermissions = new HashSet<RolePermission>();
-    }
+public class Permission : BaseEntity {
+    public Permission() => RolePermissions = new HashSet<RolePermission>();
 
     [StringLength(100)]
     [Required]

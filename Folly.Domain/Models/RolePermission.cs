@@ -1,22 +1,20 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Folly.Domain.Models
-{
-    [Table("RolePermission")]
-    public class RolePermission : BaseEntity
-    {
-        [Key]
-        public int Id { get; set; }
+namespace Folly.Domain.Models;
 
-        public Permission Permission { get; set; } = null!;
+[Table("RolePermission")]
+public class RolePermission : BaseEntity {
+    [Key]
+    public int Id { get; set; }
 
-        [Required]
-        public int PermissionId { get; set; }
+    public Permission Permission { get; set; } = null!;
 
-        public Role Role { get; set; } = null!;
+    [Required]
+    public int PermissionId { get; set; }
 
-        [Required]
-        public int RoleId { get; set; }
-    }
+    public Role Role { get; set; } = null!;
+
+    [Required]
+    public int RoleId { get; set; }
 }

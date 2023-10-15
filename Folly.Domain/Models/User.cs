@@ -1,15 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Folly.Domain.Models;
 
 [Table("User")]
-public class User : BaseEntity
-{
-    public User()
-    {
-        UserRoles = new HashSet<UserRole>();
-    }
+public class User : BaseEntity {
+    public User() => UserRoles = new HashSet<UserRole>();
 
     [StringLength(100)]
     [Required]

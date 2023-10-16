@@ -2,12 +2,17 @@
     col, [class*=" col-"], [class^="col-"] {
         margin: 0 calc(var(--grid-gutter) / 2) 0 calc(var(--grid-gutter) / 2);
     }
-}
 
-.button-dismiss {
-    border: none;
-    color: inherit;
-    background: inherit;
-    margin-top: -1rem;
-    font-weight: bold;
+    span {
+        padding-top: .75rem;
+    }
+
+    .button-dismiss {
+        border: none;
+        color: inherit;
+        background: inherit;
+        margin-top: -1rem;
+        font-weight: bold;
+        font-size: 2rem;
+    }
 }

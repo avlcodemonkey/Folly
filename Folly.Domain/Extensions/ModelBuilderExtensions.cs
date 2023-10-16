@@ -1,15 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Folly.Domain.Configurations;
 using Folly.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Folly.Domain.Extensions;
 
-public static class ModelBuilderExtensions
-{
+public static class ModelBuilderExtensions {
     /// <summary>
     /// Seed data to get a clean db up and running.
     /// </summary>
-    public static void Seed(this ModelBuilder modelBuilder)
-    {
+    public static void Seed(this ModelBuilder modelBuilder) {
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(LanguageConfiguration).Assembly);
+
         var now = DateTime.UtcNow;
         modelBuilder.Entity<Language>().HasData(
             new Language { Id = 1, Name = "English", LanguageCode = "en", CountryCode = "us", IsDefault = true, CreatedDate = now, UpdatedDate = now },
@@ -20,15 +21,14 @@ public static class ModelBuilderExtensions
             new Permission { Id = 1, ControllerName = "Dashboard", ActionName = "Index", CreatedDate = now, UpdatedDate = now },
             new Permission { Id = 2, ControllerName = "Account", ActionName = "UpdateAccount", CreatedDate = now, UpdatedDate = now },
             new Permission { Id = 3, ControllerName = "Account", ActionName = "Logout", CreatedDate = now, UpdatedDate = now },
-            new Permission { Id = 4, ControllerName = "Profiler", ActionName = "Dashboard", CreatedDate = now, UpdatedDate = now },
-            new Permission { Id = 5, ControllerName = "Role", ActionName = "Index", CreatedDate = now, UpdatedDate = now },
-            new Permission { Id = 6, ControllerName = "Role", ActionName = "Edit", CreatedDate = now, UpdatedDate = now },
-            new Permission { Id = 7, ControllerName = "Role", ActionName = "Delete", CreatedDate = now, UpdatedDate = now },
-            new Permission { Id = 8, ControllerName = "User", ActionName = "Index", CreatedDate = now, UpdatedDate = now },
-            new Permission { Id = 9, ControllerName = "User", ActionName = "Create", CreatedDate = now, UpdatedDate = now },
-            new Permission { Id = 10, ControllerName = "User", ActionName = "Edit", CreatedDate = now, UpdatedDate = now },
-            new Permission { Id = 11, ControllerName = "User", ActionName = "Delete", CreatedDate = now, UpdatedDate = now },
-            new Permission { Id = 12, ControllerName = "Role", ActionName = "RefreshPermissions", CreatedDate = now, UpdatedDate = now }
+            new Permission { Id = 4, ControllerName = "Role", ActionName = "Index", CreatedDate = now, UpdatedDate = now },
+            new Permission { Id = 5, ControllerName = "Role", ActionName = "Edit", CreatedDate = now, UpdatedDate = now },
+            new Permission { Id = 6, ControllerName = "Role", ActionName = "Delete", CreatedDate = now, UpdatedDate = now },
+            new Permission { Id = 7, ControllerName = "User", ActionName = "Index", CreatedDate = now, UpdatedDate = now },
+            new Permission { Id = 8, ControllerName = "User", ActionName = "Create", CreatedDate = now, UpdatedDate = now },
+            new Permission { Id = 9, ControllerName = "User", ActionName = "Edit", CreatedDate = now, UpdatedDate = now },
+            new Permission { Id = 10, ControllerName = "User", ActionName = "Delete", CreatedDate = now, UpdatedDate = now },
+            new Permission { Id = 11, ControllerName = "Role", ActionName = "RefreshPermissions", CreatedDate = now, UpdatedDate = now }
         );
 
         modelBuilder.Entity<Role>().HasData(
@@ -45,8 +45,7 @@ public static class ModelBuilderExtensions
             new RolePermission { Id = 8, PermissionId = 8, RoleId = 1, CreatedDate = now, UpdatedDate = now },
             new RolePermission { Id = 9, PermissionId = 9, RoleId = 1, CreatedDate = now, UpdatedDate = now },
             new RolePermission { Id = 10, PermissionId = 10, RoleId = 1, CreatedDate = now, UpdatedDate = now },
-            new RolePermission { Id = 11, PermissionId = 11, RoleId = 1, CreatedDate = now, UpdatedDate = now },
-            new RolePermission { Id = 12, PermissionId = 12, RoleId = 1, CreatedDate = now, UpdatedDate = now }
+            new RolePermission { Id = 11, PermissionId = 11, RoleId = 1, CreatedDate = now, UpdatedDate = now }
         );
 
         // hardcode to my user for now.  @todo will need a different solution eventually

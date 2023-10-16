@@ -53,10 +53,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Resources\Profile.Designer.cs">
+    <Compile Update="Resources\Account.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Profile.resx</DependentUpon>
+      <DependentUpon>Account.resx</DependentUpon>
     </Compile>
     <Compile Update="Resources\ContextHelp.Designer.cs">
       <DesignTime>True</DesignTime>
@@ -81,12 +81,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Resources\Profile.es.resx">
+    <EmbeddedResource Update="Resources\Account.es.resx">
       <Generator></Generator>
     </EmbeddedResource>
-    <EmbeddedResource Update="Resources\Profile.resx">
+    <EmbeddedResource Update="Resources\Account.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Profile.Designer.cs</LastGenOutput>
+      <LastGenOutput>Account.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\ContextHelp.es.resx">
       <Generator></Generator>

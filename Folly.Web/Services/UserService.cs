@@ -109,16 +109,16 @@ public sealed class UserService : IUserService {
         return await DbContext.SaveChangesAsync() > 0;
     }
 
-    public async Task<string> UpdateProfile(DTO.UpdateProfile profile) {
+    public async Task<string> UpdateAccount(DTO.UpdateAccount account) {
         // load user object and copy settings the user is allowed to change
         var user = await CurrentUser();
         if (user == null)
             return Core.ErrorGeneric;
 
-        user.FirstName = profile.FirstName;
-        user.LastName = profile.LastName;
-        user.LanguageId = profile.LanguageId;
-        user.Email = profile.Email;
+        user.FirstName = account.FirstName;
+        user.LastName = account.LastName;
+        user.LanguageId = account.LanguageId;
+        user.Email = account.Email;
         DbContext.Users.Update(user);
 
         return (await DbContext.SaveChangesAsync() > 0) ? "" : Core.ErrorGeneric;

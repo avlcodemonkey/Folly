@@ -123,10 +123,10 @@
   <data name="ErrorSendingEmail" xml:space="preserve">
     <value>An error occurred sending the email.</value>
   </data>
-  <data name="UpdateProfile" xml:space="preserve">
+  <data name="UpdateAccount" xml:space="preserve">
     <value>Update</value>
   </data>
-  <data name="ProfileUpdated" xml:space="preserve">
+  <data name="AccountUpdated" xml:space="preserve">
     <value>Your profile was updated successfully. You will need to refresh this page if you changed your language.</value>
   </data>
   <data name="Help" xml:space="preserve">
@@ -141,7 +141,7 @@
   <data name="Logout" xml:space="preserve">
     <value>Logout</value>
   </data>
-  <data name="MyProfile" xml:space="preserve">
+  <data name="MyAccount" xml:space="preserve">
     <value>My Profile</value>
   </data>
 </root>

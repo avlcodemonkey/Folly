@@ -2,17 +2,17 @@
 @using Folly.Resources
 @using Folly.Services
 @using Folly.Controllers
-@model UpdateProfile
+@model UpdateAccount
 @inject IViewService ViewService
 
 <content>
     <breadcrumb>
-        <breadcrumb-item label="@Profile.UpdateProfile" controller="Profile" action="UpdateProfile" active="true" />
+        <breadcrumb-item label="@Account.UpdateAccount" controller="Account" action="UpdateAccount" active="true" />
     </breadcrumb>
 
     <partial name="_Alert" />
 
-    <form-content controller="Profile" action="UpdateProfile">
+    <form-content controller="Account" action="UpdateAccount">
         <input-group for="FirstName" autofocus="true" />
         <input-group for="LastName" />
         <input-group for="Email" />

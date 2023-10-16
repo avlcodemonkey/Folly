@@ -19,5 +19,5 @@ public interface IUserService {
 
     Task<bool> SaveUser(User userDTO);
 
-    Task<string> UpdateProfile(UpdateProfile profile);
+    Task<string> UpdateAccount(UpdateAccount account);
 }

@@ -32,16 +32,16 @@
                             <a asp-controller="User" asp-action="Index"><icon name="Users" class="mi-mr" aria-hidden="true" /><span>@Users.MenuItem</span></a>
                         </li>
                         <li class="luxbar-dropdown">
-                            <a href="#"><icon name="User" class="mi-mr" aria-hidden="true" />@Profile.MyProfile</a>
+                            <a href="#"><icon name="User" class="mi-mr" aria-hidden="true" />@Account.MyAccount</a>
                             <ul>
-                                <li authorize-roles="profile.updateProfile">
-                                    <a asp-controller="Profile" asp-action="ToggleContextHelp"><icon name="Flag" class="mi-mr" aria-hidden="true" /><span>@Core.ToggleHelp</span></a>
+                                <li authorize-roles="account.updateAccount">
+                                    <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Flag" class="mi-mr" aria-hidden="true" /><span>@Core.ToggleHelp</span></a>
                                 </li>
-                                <li authorize-roles="profile.updateProfile">
-                                    <a asp-controller="Profile" asp-action="UpdateProfile"><icon name="User" class="mi-mr" aria-hidden="true" /><span>@Profile.UpdateProfile</span></a>
+                                <li authorize-roles="account.updateAccount">
+                                    <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" class="mi-mr" aria-hidden="true" /><span>@Account.UpdateAccount</span></a>
                                 </li>
                                 <li>
-                                    <a asp-controller="Profile" asp-action="Logout" hx-boost="false"><icon name="LogOut" class="mi-mr" aria-hidden="true" /><span>@Profile.Logout</span></a>
+                                    <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" class="mi-mr" aria-hidden="true" /><span>@Account.Logout</span></a>
                                 </li>
                             </ul>
                         </li>
@@ -49,7 +49,7 @@
                     else
                     {
                         <li>
-                            <a asp-controller="Profile" asp-action="Login" hx-boost="false"><icon name="LogIn" class="mi-mr" aria-hidden="true" /><span>@Profile.Login</span></a>
+                            <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="LogIn" class="mi-mr" aria-hidden="true" /><span>@Account.Login</span></a>
                         </li>
                     }
                 </ul>

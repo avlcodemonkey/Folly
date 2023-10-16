@@ -1,22 +1,17 @@
-﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 #pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
 
-namespace Folly.Domain.Migrations
-{
+namespace Folly.Domain.Migrations {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
-    {
+    public partial class InitialCreate : Migration {
         /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
+        protected override void Up(MigrationBuilder migrationBuilder) {
             migrationBuilder.CreateTable(
                 name: "Language",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     CountryCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
@@ -28,15 +23,13 @@ namespace Folly.Domain.Migrations
                     UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedUserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Language", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Permission",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ActionName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
@@ -46,15 +39,13 @@ namespace Folly.Domain.Migrations
                     UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedUserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Permission", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "Role",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     IsDefault = table.Column<bool>(type: "INTEGER", nullable: false),
@@ -64,15 +55,13 @@ namespace Folly.Domain.Migrations
                     UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedUserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_Role", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "User",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     Email = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
@@ -86,15 +75,13 @@ namespace Folly.Domain.Migrations
                     UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedUserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_User", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
                 name: "RolePermission",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     PermissionId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -104,8 +91,7 @@ namespace Folly.Domain.Migrations
                     UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedUserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_RolePermission", x => x.Id);
                     table.ForeignKey(
                         name: "FK_RolePermission_Permission_PermissionId",
@@ -123,8 +109,7 @@ namespace Folly.Domain.Migrations
 
             migrationBuilder.CreateTable(
                 name: "UserRole",
-                columns: table => new
-                {
+                columns: table => new {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     RoleId = table.Column<int>(type: "INTEGER", nullable: false),
@@ -134,8 +119,7 @@ namespace Folly.Domain.Migrations
                     UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false),
                     UpdatedUserId = table.Column<int>(type: "INTEGER", nullable: true)
                 },
-                constraints: table =>
-                {
+                constraints: table => {
                     table.PrimaryKey("PK_UserRole", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserRole_Role_RoleId",
@@ -168,7 +152,6 @@ namespace Folly.Domain.Migrations
                     { 1, "Index", "Dashboard", new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null, new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null },
                     { 2, "UpdateAccount", "Account", new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null, new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null },
                     { 3, "Logout", "Account", new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null, new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null },
-                    { 4, "Dashboard", "Profiler", new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null, new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null },
                     { 5, "Index", "Role", new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null, new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null },
                     { 6, "Edit", "Role", new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null, new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null },
                     { 7, "Delete", "Role", new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null, new DateTime(2023, 2, 27, 20, 40, 1, 595, DateTimeKind.Utc).AddTicks(8890), null },
@@ -235,8 +218,7 @@ namespace Folly.Domain.Migrations
         }
 
         /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
+        protected override void Down(MigrationBuilder migrationBuilder) {
             migrationBuilder.DropTable(
                 name: "Language");
 

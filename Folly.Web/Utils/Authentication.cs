@@ -10,15 +10,14 @@ using Microsoft.AspNetCore.Localization;
 namespace Folly.Utils;
 
 public static class Authentication {
-
     /// <summary>
-    /// Configure authentication and session for app.
+    /// Configure authentication and session for app using Auth0.
     /// </summary>
     public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, AppConfiguration appConfig) {
         services.AddAuth0WebAppAuthentication(options => {
             options.Domain = appConfig.Auth.Domain;
             options.ClientId = appConfig.Auth.ClientId;
-            options.CallbackPath = new PathString($"/{nameof(ProfileController).StripController()}/Callback");
+            options.CallbackPath = new PathString($"/{nameof(AccountController).StripController()}/Callback");
             options.Scope = "openid profile email";
 
             options.OpenIdConnectEvents = new OpenIdConnectEvents {

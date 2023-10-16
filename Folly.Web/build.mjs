@@ -3,7 +3,6 @@ import { sassPlugin } from "esbuild-sass-plugin";
 import postcss from "postcss";
 import autoprefixer from "autoprefixer";
 
-
 const watch = process.argv.includes("--watch");
 
 const args = {

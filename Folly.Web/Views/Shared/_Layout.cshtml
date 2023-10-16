@@ -32,7 +32,7 @@
                             <a asp-controller="User" asp-action="Index"><icon name="Users" class="mi-mr" aria-hidden="true" /><span>@Users.MenuItem</span></a>
                         </li>
                         <li class="luxbar-dropdown">
-                            <a href="#"><icon name="User" class="mi-mr" aria-hidden="true" />@Account.MyAccount</a>
+                            <a href="#"><icon name="Settings" class="mi-mr" aria-hidden="true" />@Account.Settings</a>
                             <ul>
                                 <li authorize-roles="account.updateAccount">
                                     <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Flag" class="mi-mr" aria-hidden="true" /><span>@Core.ToggleHelp</span></a>

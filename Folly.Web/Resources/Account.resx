@@ -124,7 +124,7 @@
     <value>An error occurred sending the email.</value>
   </data>
   <data name="UpdateAccount" xml:space="preserve">
-    <value>Update</value>
+    <value>Profile</value>
   </data>
   <data name="AccountUpdated" xml:space="preserve">
     <value>Your profile was updated successfully. You will need to refresh this page if you changed your language.</value>
@@ -141,7 +141,7 @@
   <data name="Logout" xml:space="preserve">
     <value>Logout</value>
   </data>
-  <data name="MyAccount" xml:space="preserve">
-    <value>My Profile</value>
+  <data name="Settings" xml:space="preserve">
+    <value>Settings</value>
   </data>
 </root>

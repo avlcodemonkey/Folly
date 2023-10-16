@@ -124,16 +124,16 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to My Profile.
+        ///   Looks up a localized string similar to Settings.
         /// </summary>
-        public static string MyAccount {
+        public static string Settings {
             get {
-                return ResourceManager.GetString("MyAccount", resourceCulture);
+                return ResourceManager.GetString("Settings", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Update.
+        ///   Looks up a localized string similar to Profile.
         /// </summary>
         public static string UpdateAccount {
             get {

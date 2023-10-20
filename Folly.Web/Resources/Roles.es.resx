@@ -156,4 +156,19 @@
   <data name="ErrorNameRequired" xml:space="preserve">
     <value>Un nombre es necesaria para crear un rol.</value>
   </data>
+  <data name="ErrorDuplicateDefault" xml:space="preserve">
+    <value>¡Ya se ha establecido otro rol como rol predeterminado!</value>
+  </data>
+  <data name="IsDefault" xml:space="preserve">
+    <value>Predeterminado</value>
+  </data>
+  <data name="SuccessRefreshingPermissions" xml:space="preserve">
+    <value>Los permisos se han actualizado correctamente.!</value>
+  </data>
+  <data name="RefreshPermissions" xml:space="preserve">
+    <value>¡Actualiza los permisos!</value>
+  </data>
+  <data name="ConfirmRefreshPermissions" xml:space="preserve">
+    <value>Esto añadirá los permisos que falten y eliminará los obsoletos. ¡¿Seguro que quieres continuar?!</value>
+  </data>
 </root>

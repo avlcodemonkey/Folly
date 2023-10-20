@@ -243,9 +243,6 @@
   <data name="Yes" xml:space="preserve">
     <value>Sí</value>
   </data>
-  <data name="Hangfire" xml:space="preserve">
-    <value>Hangfire Dashboard</value>
-  </data>
   <data name="Error" xml:space="preserve">
     <value>Error</value>
   </data>
@@ -281,5 +278,14 @@
   </data>
   <data name="CronError" xml:space="preserve">
     <value>Error de Cron</value>
+  </data>
+  <data name="Brand" xml:space="preserve">
+    <value>Folly</value>
+  </data>
+  <data name="JavascriptException" xml:space="preserve">
+    <value>Javascript Excepion</value>
+  </data>
+  <data name="UnhandledError" xml:space="preserve">
+    <value>Unhandled error code `{0}` for request `{1}`.</value>
   </data>
 </root>

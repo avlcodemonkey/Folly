@@ -1,16 +1,12 @@
 /* chota.css */
-@import "chota/src/_base";
-@import "chota/src/_grid";
-@import "chota/src/_form";
-@import "chota/src/_nav";
-@import "chota/src/_card";
-@import "chota/src/_tab";
-@import "chota/src/_tag";
-@import "chota/src/_dropdown";
-@import "chota/src/_util";
+@import "../external/chota/src/_base.css";
+@import "../external/chota/src/_grid.css";
+@import "../external/chota/src/_form.css";
+@import "../external/chota/src/_card.css";
+@import "../external/chota/src/_util.css";
 
 /* menu styles */
-@import "./luxbar.scss";
+@import "../external/luxbar/scss/luxbar.scss";
 
 /* icon font */
 @import "../font/icons.css";

@@ -59,7 +59,7 @@ public class GroupBaseTagHelper : BaseTagHelper {
         icon.AddCssClass("mi-flag");
 
         var button = new TagBuilder("button");
-        button.AddCssClass("button secondary icon-only");
+        button.AddCssClass("button success icon-only");
         button.MergeAttribute("type", "button");
         button.MergeAttribute("role", "button");
         button.MergeAttribute("hx-get", "#");

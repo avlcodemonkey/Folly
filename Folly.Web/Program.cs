@@ -28,6 +28,10 @@ builder.Services.AddScoped<IPermissionService, PermissionService>();
 builder.Services.AddScoped<IRoleService, RoleService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
+// configure healthchecks
+// @TODO decide what other health checks should be added
+builder.Services.AddHealthChecks().AddDbContextCheck<FollyDbContext>();
+
 builder.Services.AddScoped<IViewService, ViewService>();
 
 builder.Services.AddSession();
@@ -60,6 +64,9 @@ builder.Services.AddMvc(options => options.Filters.Add(new RequireHttpsAttribute
     .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 
 var app = builder.Build();
+
+// configure endpoint for health checks
+app.MapHealthChecks("/status");
 
 // force all requests to https
 app.UseHttpsRedirection();

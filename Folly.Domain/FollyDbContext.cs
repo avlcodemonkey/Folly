@@ -26,12 +26,10 @@ public partial class FollyDbContext : DbContext {
 
     public FollyDbContext() { }
 
-    public FollyDbContext(DbContextOptions<FollyDbContext> options, IConfiguration? configuration, IHttpContextAccessor httpContextAccessor, string? connectionString = null)
+    public FollyDbContext(DbContextOptions<FollyDbContext> options, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         : base(options) {
         Configuration = configuration;
         HttpContextAccessor = httpContextAccessor;
-        if (connectionString != null)
-            ConnectionString = connectionString;
     }
 
     public DbSet<Language> Languages { get; set; }

@@ -1,4 +1,4 @@
-using Folly.Domain.Models;
+using Folly.Domain;
 using Folly.Services;
 
 namespace Folly.Extensions.Program;

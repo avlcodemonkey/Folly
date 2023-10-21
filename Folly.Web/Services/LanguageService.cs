@@ -1,4 +1,4 @@
-using Folly.Domain.Models;
+using Folly.Domain;
 using Folly.Extensions.Services;
 using Microsoft.EntityFrameworkCore;
 using DTO = Folly.Models;

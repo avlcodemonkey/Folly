@@ -1,3 +1,4 @@
+using Folly.Domain;
 using Folly.Domain.Models;
 using Folly.Extensions.Services;
 using Microsoft.EntityFrameworkCore;

@@ -1,9 +1,10 @@
 using Folly.Domain.Extensions;
+using Folly.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace Folly.Domain.Models;
+namespace Folly.Domain;
 
 public partial class FollyDbContext : DbContext {
     private readonly string ConnectionString = "Data Source = ..\\AppData\\Folly.db;";

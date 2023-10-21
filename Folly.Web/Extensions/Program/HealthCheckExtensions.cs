@@ -1,6 +1,6 @@
 using System.Text;
 using System.Text.Json;
-using Folly.Domain.Models;
+using Folly.Domain;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 

@@ -1,4 +1,4 @@
-namespace Folly.Utils;
+namespace Folly.Attributes;
 
 [AttributeUsage(AttributeTargets.Method)]
 public sealed class ParentActionAttribute : Attribute {

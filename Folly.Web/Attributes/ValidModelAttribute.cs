@@ -4,7 +4,7 @@ using Folly.Resources;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace Folly.Utils;
+namespace Folly.Attributes;
 
 public sealed class ValidModelAttribute : ActionFilterAttribute {
     private readonly bool UseTempData;

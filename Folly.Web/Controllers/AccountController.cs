@@ -1,5 +1,6 @@
 using System.Globalization;
 using Auth0.AspNetCore.Authentication;
+using Folly.Attributes;
 using Folly.Configuration;
 using Folly.Models;
 using Folly.Resources;

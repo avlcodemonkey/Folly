@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace Folly;
+namespace Folly.Extensions;
 
-public static class Extensions {
+public static class ControllerExtensions {
     private const string RequestedWithHeader = "X-Requested-With";
     private const string XmlHttpRequest = "XMLHttpRequest";
     private static readonly Regex CaseRegex = new(@"([a-z])([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
@@ -23,9 +23,8 @@ public static class Extensions {
     /// <param name="value">The attribute value.</param>
     /// <param name="set">Set (add or overwrite) attribute if true.</param>
     public static void SetAttributeIf(this TagBuilder tagBuilder, string key, string? value, bool set) {
-        if (set) {
+        if (set)
             tagBuilder.MergeAttribute(key, value, true);
-        }
     }
 
     /// <summary>
@@ -133,7 +132,7 @@ public static class Extensions {
     /// </summary>
     /// <param name="value">String to update.</param>
     /// <returns>Updated string.</returns>
-    public static string UppercaseFirst(this string value) => value.IsEmpty() ? "" : (char.ToUpper(value[0]) + value[1..]);
+    public static string UppercaseFirst(this string value) => value.IsEmpty() ? "" : char.ToUpper(value[0]) + value[1..];
 
     /// <summary>
     /// Check if user has help enabled.

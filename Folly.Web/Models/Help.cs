@@ -1,3 +1,5 @@
+using Folly.Extensions;
+
 namespace Folly.Models;
 
 public sealed class Help {

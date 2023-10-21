@@ -1,5 +1,5 @@
 using Folly.Domain.Models;
-using Folly.ServiceExtensions;
+using Folly.Extensions.Services;
 using Microsoft.EntityFrameworkCore;
 using DTO = Folly.Models;
 
@@ -52,8 +52,7 @@ public sealed class RoleService : IRoleService {
             });
             DbContext.RolePermissions.RemoveRange(existingPermissions.Where(x => !role.RolePermissions.Any(y => y.PermissionId == x.PermissionId)));
             DbContext.Roles.Update(role);
-        }
-        else {
+        } else {
             DbContext.Roles.Add(role);
         }
 

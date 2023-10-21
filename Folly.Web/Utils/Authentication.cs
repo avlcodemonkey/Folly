@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Auth0.AspNetCore.Authentication;
 using Folly.Configuration;
 using Folly.Controllers;
+using Folly.Extensions;
 using Folly.Services;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Localization;

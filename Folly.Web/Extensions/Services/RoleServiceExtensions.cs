@@ -1,7 +1,7 @@
 using Folly.Domain.Models;
 using DTO = Folly.Models;
 
-namespace Folly.ServiceExtensions;
+namespace Folly.Extensions.Services;
 
 public static class RoleServiceExtensions {
     public static IQueryable<DTO.Role> SelectDTO(this IQueryable<Role> query)

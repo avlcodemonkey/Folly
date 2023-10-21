@@ -1,7 +1,7 @@
 using Folly.Domain.Models;
 using DTO = Folly.Models;
 
-namespace Folly.ServiceExtensions;
+namespace Folly.Extensions.Services;
 
 public static class LanguageServiceExtensions {
     public static IQueryable<DTO.Language> SelectDTO(this IQueryable<Language> query)

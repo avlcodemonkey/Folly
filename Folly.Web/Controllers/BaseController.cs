@@ -1,4 +1,5 @@
 using Folly.Configuration;
+using Folly.Extensions;
 using Folly.Resources;
 using Microsoft.AspNetCore.Mvc;
 

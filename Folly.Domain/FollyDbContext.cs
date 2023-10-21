@@ -6,7 +6,7 @@ using Microsoft.Extensions.Configuration;
 namespace Folly.Domain.Models;
 
 public partial class FollyDbContext : DbContext {
-    private const string DatabasePath = "Data Source = ..\\AppData\\Folly.db;";
+    private readonly string ConnectionString = "Data Source = ..\\AppData\\Folly.db;";
     private readonly IConfiguration? Configuration;
     private readonly IHttpContextAccessor? HttpContextAccessor;
 
@@ -15,7 +15,7 @@ public partial class FollyDbContext : DbContext {
             return;
 
         // fall back to using hardcode database path when configuration isn't injected.  this happens when using dotnet ef tools locally
-        var connectionString = Configuration == null ? DatabasePath : $"Data Source = {Configuration.GetSection("App").GetSection("Database")["FilePath"]};";
+        var connectionString = Configuration == null ? ConnectionString : $"Data Source = {Configuration.GetSection("App").GetSection("Database")["FilePath"]};";
 
         optionsBuilder.UseSqlite(connectionString);
         optionsBuilder.EnableSensitiveDataLogging();
@@ -26,10 +26,12 @@ public partial class FollyDbContext : DbContext {
 
     public FollyDbContext() { }
 
-    public FollyDbContext(DbContextOptions<FollyDbContext> options, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+    public FollyDbContext(DbContextOptions<FollyDbContext> options, IConfiguration? configuration, IHttpContextAccessor httpContextAccessor, string? connectionString = null)
         : base(options) {
         Configuration = configuration;
         HttpContextAccessor = httpContextAccessor;
+        if (connectionString != null)
+            ConnectionString = connectionString;
     }
 
     public DbSet<Language> Languages { get; set; }

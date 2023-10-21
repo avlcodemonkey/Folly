@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Folly.Web", "Folly.Web\Foll
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Folly.Domain", "Folly.Domain\Folly.Domain.csproj", "{80FF26BE-4DB8-4559-AFE1-A2E446E5508B}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Folly.Domain.Tests", "Folly.Domain.Tests\Folly.Domain.Tests.csproj", "{3EB8691B-93C3-47FB-A3D9-374110A2BAC5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{80FF26BE-4DB8-4559-AFE1-A2E446E5508B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80FF26BE-4DB8-4559-AFE1-A2E446E5508B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80FF26BE-4DB8-4559-AFE1-A2E446E5508B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3EB8691B-93C3-47FB-A3D9-374110A2BAC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3EB8691B-93C3-47FB-A3D9-374110A2BAC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3EB8691B-93C3-47FB-A3D9-374110A2BAC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3EB8691B-93C3-47FB-A3D9-374110A2BAC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

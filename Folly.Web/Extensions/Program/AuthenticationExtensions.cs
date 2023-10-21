@@ -3,14 +3,16 @@ using System.Security.Claims;
 using Auth0.AspNetCore.Authentication;
 using Folly.Configuration;
 using Folly.Controllers;
-using Folly.Extensions;
 using Folly.Services;
+using Folly.Utils;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Localization;
 
-namespace Folly.Utils;
+namespace Folly.Extensions.Program;
 
-public static class Authentication {
+public static class AuthenticationExtensions {
     /// <summary>
     /// Configure authentication and session for app using Auth0.
     /// </summary>
@@ -69,6 +71,13 @@ public static class Authentication {
 
         // work around to move the Auth0 unique identifier into the Identity.Name
         services.Configure<OpenIdConnectOptions>(Auth0Constants.AuthenticationScheme, options => options.TokenValidationParameters.NameClaimType = ClaimTypes.NameIdentifier);
+
+        services.AddScoped<IClaimsTransformation, ClaimsTransformer>();
+        services.AddAuthorization(options => options.AddPolicy(PermissionRequirementHandler.PolicyName, policy => policy.Requirements.Add(new PermissionRequirement())));
+        services.AddSingleton<IAuthorizationHandler, PermissionRequirementHandler>();
+
+        // Data protection theoretically is used with auth cookies.
+        services.AddDataProtection();
 
         return services;
     }

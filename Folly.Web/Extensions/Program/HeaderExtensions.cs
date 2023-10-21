@@ -1,8 +1,8 @@
 using HardHat;
 
-namespace Folly.Utils;
+namespace Folly.Extensions.Program;
 
-public static class Headers {
+public static class HeaderExtensions {
     /// <summary>
     /// Harden headers to help secure app.
     /// Using HardHat (https://github.com/TerribleDev/HardHat) even though its been abandoned because it works.

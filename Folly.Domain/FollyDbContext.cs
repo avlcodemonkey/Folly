@@ -27,7 +27,7 @@ public partial class FollyDbContext : DbContext {
 
     public FollyDbContext() { }
 
-    public FollyDbContext(DbContextOptions<FollyDbContext> options, IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
+    public FollyDbContext(DbContextOptions<FollyDbContext> options, IConfiguration? configuration = null, IHttpContextAccessor? httpContextAccessor = null)
         : base(options) {
         Configuration = configuration;
         HttpContextAccessor = httpContextAccessor;

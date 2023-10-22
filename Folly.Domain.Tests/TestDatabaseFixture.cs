@@ -13,24 +13,35 @@ namespace Folly.Domain.Tests;
 /// for more details about using a database fixture for testing with xUnit.
 /// </summary>
 public class TestDatabaseFixture : IDisposable {
-    private const string ConnectionString = "Filename=:memory:";
-    private readonly SqliteConnection Connection;
-    private readonly Mock<IConfiguration> MockConfiguration;
+    private const string _ConnectionString = "Filename=:memory:";
+    private readonly SqliteConnection _Connection;
+    private readonly Mock<IConfiguration> _MockConfiguration;
 
-    private static readonly object Lock = new();
-    private static bool DatabaseInitialized;
+    public const string Test = "test";
+
+    private static readonly object _Lock = new();
+    private static bool _DatabaseInitialized;
+
+    private static IHttpContextAccessor CreateHttpContextAccessor(User? user = null) {
+        var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+        if (user != null)
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+            mockHttpContextAccessor.Setup(x => x.HttpContext.User.Identity).Returns(new GenericIdentity(user.UserName, "test"));
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        return mockHttpContextAccessor.Object;
+    }
 
     public TestDatabaseFixture() {
-        MockConfiguration = new Mock<IConfiguration>();
-        MockConfiguration.Setup(x => x.GetSection("App").GetSection("Database")["FilePath"]).Returns(ConnectionString);
+        _MockConfiguration = new Mock<IConfiguration>();
+        _MockConfiguration.Setup(x => x.GetSection("App").GetSection("Database")["FilePath"]).Returns(_ConnectionString);
 
         // creates the SQLite in-memory database, which will persist until the connection is closed at the end of the test (see Dispose below).
-        Connection = new SqliteConnection("Filename=:memory:");
-        Connection.Open();
+        _Connection = new SqliteConnection("Filename=:memory:");
+        _Connection.Open();
 
         // lock allows us to use this fixture safely with multiple classes of tests if needed
-        lock (Lock) {
-            if (!DatabaseInitialized) {
+        lock (_Lock) {
+            if (!_DatabaseInitialized) {
                 // create the schema and user data we will need for each test
                 using (var dbContext = CreateContext()) {
                     dbContext.Database.Migrate();
@@ -39,19 +50,13 @@ public class TestDatabaseFixture : IDisposable {
                     dbContext.SaveChanges();
                 }
 
-                DatabaseInitialized = true;
+                _DatabaseInitialized = true;
             }
         }
     }
-    private static IHttpContextAccessor CreateHttpContextAccessor(User? user = null) {
-        var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
-        if (user != null)
-            mockHttpContextAccessor.Setup(x => x.HttpContext.User.Identity).Returns(new GenericIdentity(user.UserName, "test"));
-        return mockHttpContextAccessor.Object;
-    }
 
     public FollyDbContext CreateContext(User? user = null)
-        => new(new DbContextOptionsBuilder<FollyDbContext>().UseSqlite(Connection).Options, MockConfiguration.Object, CreateHttpContextAccessor(user));
+        => new(new DbContextOptionsBuilder<FollyDbContext>().UseSqlite(_Connection).Options, _MockConfiguration.Object, CreateHttpContextAccessor(user));
 
     public FollyDbContext CreateContextForCreate() => CreateContext(UserForCreate);
 
@@ -61,7 +66,7 @@ public class TestDatabaseFixture : IDisposable {
     public User UserForUpdate { get; } = new() { Id = -2, UserName = "update_user", Email = "update_user@fake.com", LanguageId = -1, FirstName = "Update" };
 
     public void Dispose() {
-        Connection.Dispose();
+        _Connection.Dispose();
         GC.SuppressFinalize(this);
     }
 }

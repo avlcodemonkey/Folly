@@ -3,25 +3,25 @@ using Folly.Domain.Models;
 namespace Folly.Domain.Tests;
 
 public class FollyDbContextTests : IClassFixture<TestDatabaseFixture> {
-    private readonly TestDatabaseFixture Fixture;
+    private readonly TestDatabaseFixture _Fixture;
 
-    private readonly Language LanguageForCreate = new() { Id = -1, Name = "create language", CountryCode = "country1", LanguageCode = "lang1" };
-    private readonly Language LanguageForUpdate = new() { Id = -2, Name = "update language", CountryCode = "country2", LanguageCode = "lang2" };
+    private readonly Language _LanguageForCreate = new() { Id = -1, Name = "create language", CountryCode = "country1", LanguageCode = "lang1" };
+    private readonly Language _LanguageForUpdate = new() { Id = -2, Name = "update language", CountryCode = "country2", LanguageCode = "lang2" };
 
-    public FollyDbContextTests(TestDatabaseFixture fixture) => Fixture = fixture;
+    public FollyDbContextTests(TestDatabaseFixture fixture) => _Fixture = fixture;
 
     [Fact]
     public async Task SaveChangesAsync_SetsCreatedUser() {
         // arrange
         var createStartTime = DateTime.UtcNow;
-        var createUserId = Fixture.UserForCreate.Id;
+        var createUserId = _Fixture.UserForCreate.Id;
 
         // act
         Language createdLanguage;
-        using (var dbContext = Fixture.CreateContextForCreate()) {
-            dbContext.Languages.Add(LanguageForCreate);
+        using (var dbContext = _Fixture.CreateContextForCreate()) {
+            dbContext.Languages.Add(_LanguageForCreate);
             await dbContext.SaveChangesAsync();
-            createdLanguage = dbContext.Languages.First(x => x.Id == LanguageForCreate.Id);
+            createdLanguage = dbContext.Languages.First(x => x.Id == _LanguageForCreate.Id);
         }
 
         // assert
@@ -35,23 +35,23 @@ public class FollyDbContextTests : IClassFixture<TestDatabaseFixture> {
     [Fact]
     public async Task SaveChangesAsync_SetsUpdatedUser() {
         // arrange
-        using (var dbContext = Fixture.CreateContextForCreate()) {
-            dbContext.Languages.Add(LanguageForUpdate);
+        using (var dbContext = _Fixture.CreateContextForCreate()) {
+            dbContext.Languages.Add(_LanguageForUpdate);
             await dbContext.SaveChangesAsync();
         }
-        var createUserId = Fixture.UserForCreate.Id;
-        var updateUserId = Fixture.UserForUpdate.Id;
+        var createUserId = _Fixture.UserForCreate.Id;
+        var updateUserId = _Fixture.UserForUpdate.Id;
         var updateStartTime = DateTime.UtcNow;
         var newLanguageName = "new language name";
 
         // act
         Language updatedLanguage;
-        using (var dbContext = Fixture.CreateContextForUpdate()) {
-            updatedLanguage = dbContext.Languages.First(x => x.Id == LanguageForUpdate.Id);
+        using (var dbContext = _Fixture.CreateContextForUpdate()) {
+            updatedLanguage = dbContext.Languages.First(x => x.Id == _LanguageForUpdate.Id);
             updatedLanguage.Name = newLanguageName;
             dbContext.Languages.Update(updatedLanguage);
             await dbContext.SaveChangesAsync();
-            updatedLanguage = dbContext.Languages.First(x => x.Id == LanguageForUpdate.Id);
+            updatedLanguage = dbContext.Languages.First(x => x.Id == _LanguageForUpdate.Id);
         }
 
         // assert

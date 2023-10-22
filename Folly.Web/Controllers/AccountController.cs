@@ -16,12 +16,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Folly.Controllers;
 
 public class AccountController : BaseController {
-    private readonly ILanguageService LanguageService;
-    private readonly IUserService UserService;
+    private readonly ILanguageService _LanguageService;
+    private readonly IUserService _UserService;
 
     public AccountController(IAppConfiguration appConfig, IUserService userService, ILanguageService languageService, ILogger<AccountController> logger) : base(appConfig, logger) {
-        UserService = userService;
-        LanguageService = languageService;
+        _UserService = userService;
+        _LanguageService = languageService;
     }
 
     public async Task Login(string returnUrl = "/") {
@@ -47,7 +47,7 @@ public class AccountController : BaseController {
 
     [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName)]
     public async Task<IActionResult> UpdateAccount() {
-        var user = await UserService.GetUserByUserName(User.Identity!.Name!);
+        var user = await _UserService.GetUserByUserName(User.Identity!.Name!);
         return View("UpdateAccount", new UpdateAccount(user));
     }
 
@@ -56,9 +56,9 @@ public class AccountController : BaseController {
         if (!ModelState.IsValid)
             return View("UpdateAccount", model);
 
-        var result = await UserService.UpdateAccount(model);
+        var result = await _UserService.UpdateAccount(model);
         if (result.IsEmpty()) {
-            var language = await LanguageService.GetLanguageById(model.LanguageId);
+            var language = await _LanguageService.GetLanguageById(model.LanguageId);
             Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName, CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(new CultureInfo(language.LanguageCode))));
             ViewData[MessageProperty] = Account.AccountUpdated;
             return View("UpdateAccount", model);

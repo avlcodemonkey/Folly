@@ -11,13 +11,13 @@ namespace Folly.Controllers;
 
 [Authorize(Policy = PermissionRequirementHandler.PolicyName)]
 public class UserController : BaseController {
-    private readonly ILanguageService LanguageService;
-    private readonly IUserService UserService;
+    private readonly ILanguageService _LanguageService;
+    private readonly IUserService _UserService;
 
     private IActionResult CreateEditView(User model) => View("CreateEdit", model);
 
     private async Task<User?> LoadUser(int id) {
-        var model = await UserService.GetUserById(id);
+        var model = await _UserService.GetUserById(id);
         if (model != null)
             return model;
 
@@ -29,7 +29,7 @@ public class UserController : BaseController {
         if (!ModelState.IsValid)
             return CreateEditView(model);
 
-        await UserService.SaveUser(model);
+        await _UserService.SaveUser(model);
         ViewData[MessageProperty] = Users.SuccessSavingUser;
         Response.Headers.Add(HtmxHeaders.PushUrl, Url.Action(nameof(Index)));
         return Index();
@@ -37,8 +37,8 @@ public class UserController : BaseController {
 
     public UserController(IAppConfiguration appConfig, IUserService userService, ILanguageService languageService, ILogger<UserController> logger)
         : base(appConfig, logger) {
-        UserService = userService;
-        LanguageService = languageService;
+        _UserService = userService;
+        _LanguageService = languageService;
     }
 
     [HttpGet]
@@ -53,7 +53,7 @@ public class UserController : BaseController {
         if (model == null)
             return Index();
 
-        await UserService.DeleteUser(model);
+        await _UserService.DeleteUser(model);
         ViewData[MessageProperty] = Users.SuccessDeletingUser;
         return Index();
     }
@@ -71,5 +71,5 @@ public class UserController : BaseController {
     public IActionResult Index() => View("Index");
 
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
-    public async Task<IActionResult> List() => Ok((await UserService.GetAllUsers()).Select(x => new { x.Id, x.UserName, x.FirstName, x.LastName, x.Email }));
+    public async Task<IActionResult> List() => Ok((await _UserService.GetAllUsers()).Select(x => new { x.Id, x.UserName, x.FirstName, x.LastName, x.Email }));
 }

@@ -7,7 +7,6 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 namespace Folly.Extensions.Program;
 
 public static class HealthCheckExtensions {
-
     public static IServiceCollection ConfigureHealthChecks(this IServiceCollection services) {
         services
             .AddHealthChecks()

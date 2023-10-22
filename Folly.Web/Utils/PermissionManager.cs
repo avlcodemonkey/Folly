@@ -10,12 +10,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace Folly.Utils;
 
 public sealed class PermissionManager {
-    private readonly IPermissionService PermissionService;
-    private readonly IRoleService RoleService;
+    private readonly IPermissionService _PermissionService;
+    private readonly IRoleService _RoleService;
 
     public PermissionManager(IPermissionService permissionService, IRoleService roleService) {
-        PermissionService = permissionService;
-        RoleService = roleService;
+        _PermissionService = permissionService;
+        _RoleService = roleService;
     }
 
     /// <summary>
@@ -33,23 +33,23 @@ public sealed class PermissionManager {
             .ToDictionary(x => x.ToLower(CultureInfo.InvariantCulture), x => x);
 
         // query all permissions from db
-        var permissions = (await PermissionService.GetAll()).ToDictionary(x => $"{x.ControllerName?.Trim()}.{x.ActionName?.Trim()}".ToLower(CultureInfo.InvariantCulture), x => x);
+        var permissions = (await _PermissionService.GetAll()).ToDictionary(x => $"{x.ControllerName?.Trim()}.{x.ActionName?.Trim()}".ToLower(CultureInfo.InvariantCulture), x => x);
 
         // save any actions not in db
         await actionList.Where(x => !permissions.ContainsKey(x.Key)).ToList().ForEachAsync(async x => {
             var parts = x.Value.Split('.');
-            await PermissionService.Save(new Permission { ControllerName = parts[0], ActionName = parts[1] });
+            await _PermissionService.Save(new Permission { ControllerName = parts[0], ActionName = parts[1] });
         });
 
         // delete any permission not in action list
-        await permissions.Where(x => !actionList.ContainsKey(x.Key)).ToList().ForEachAsync(async x => await PermissionService.Delete(x.Value.Id));
+        await permissions.Where(x => !actionList.ContainsKey(x.Key)).ToList().ForEachAsync(async x => await _PermissionService.Delete(x.Value.Id));
 
         // if there are no permissions in the db, then set up the default role with all permissions now that we've added permissions
         if (!permissions.Any()) {
             // reload permissions from the db and add all to the default role
-            var defaultRole = (await RoleService.GetAllRoles()).FirstOrDefault(x => x.IsDefault);
+            var defaultRole = (await _RoleService.GetAllRoles()).FirstOrDefault(x => x.IsDefault);
             if (defaultRole != null)
-                await RoleService.SaveManyRolePermissions((await PermissionService.GetAll()).Select(x => new RolePermission { PermissionId = x.Id, RoleId = defaultRole.Id }));
+                await _RoleService.SaveManyRolePermissions((await _PermissionService.GetAll()).Select(x => new RolePermission { PermissionId = x.Id, RoleId = defaultRole.Id }));
         }
         return true;
     }

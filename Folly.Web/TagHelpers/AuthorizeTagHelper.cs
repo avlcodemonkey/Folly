@@ -5,9 +5,9 @@ namespace Folly.TagHelpers;
 
 [HtmlTargetElement(Attributes = "authorize-roles")]
 public sealed class AuthorizeTagHelper : TagHelper {
-    private readonly IHttpContextAccessor HttpContextAccessor;
+    private readonly IHttpContextAccessor _HttpContextAccessor;
 
-    public AuthorizeTagHelper(IHttpContextAccessor httpContextAccessor) => HttpContextAccessor = httpContextAccessor;
+    public AuthorizeTagHelper(IHttpContextAccessor httpContextAccessor) => _HttpContextAccessor = httpContextAccessor;
 
     [HtmlAttributeName("authorize-roles")]
     public string Roles { get; set; } = "";
@@ -17,7 +17,7 @@ public sealed class AuthorizeTagHelper : TagHelper {
             output.Attributes.Remove(attribute);
         }
 
-        var user = HttpContextAccessor.HttpContext?.User;
+        var user = _HttpContextAccessor.HttpContext?.User;
         if (user == null || !Roles.Split(',').Select(x => x.Trim().ToLower(CultureInfo.InvariantCulture)).Any(user.IsInRole)) {
             output.SuppressOutput();
         }

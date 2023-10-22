@@ -7,16 +7,16 @@ using Microsoft.Extensions.Configuration;
 namespace Folly.Domain;
 
 public partial class FollyDbContext : DbContext {
-    private readonly string ConnectionString = "Data Source = ..\\AppData\\Folly.db;";
-    private readonly IConfiguration? Configuration;
-    private readonly IHttpContextAccessor? HttpContextAccessor;
+    private readonly string _ConnectionString = "Data Source = ..\\AppData\\Folly.db;";
+    private readonly IConfiguration? _Configuration;
+    private readonly IHttpContextAccessor? _HttpContextAccessor;
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (optionsBuilder.IsConfigured)
             return;
 
         // fall back to using hardcode database path when configuration isn't injected.  this happens when using dotnet ef tools locally
-        var connectionString = Configuration == null ? ConnectionString : $"Data Source = {Configuration.GetSection("App").GetSection("Database")["FilePath"]};";
+        var connectionString = _Configuration == null ? _ConnectionString : $"Data Source = {_Configuration.GetSection("App").GetSection("Database")["FilePath"]};";
 
         optionsBuilder.UseSqlite(connectionString);
         optionsBuilder.EnableSensitiveDataLogging();
@@ -29,8 +29,8 @@ public partial class FollyDbContext : DbContext {
 
     public FollyDbContext(DbContextOptions<FollyDbContext> options, IConfiguration? configuration = null, IHttpContextAccessor? httpContextAccessor = null)
         : base(options) {
-        Configuration = configuration;
-        HttpContextAccessor = httpContextAccessor;
+        _Configuration = configuration;
+        _HttpContextAccessor = httpContextAccessor;
     }
 
     public DbSet<Language> Languages { get; set; }
@@ -41,7 +41,7 @@ public partial class FollyDbContext : DbContext {
     public DbSet<User> Users { get; set; }
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
-        var userName = HttpContextAccessor?.HttpContext?.User.Identity?.Name;
+        var userName = _HttpContextAccessor?.HttpContext?.User.Identity?.Name;
         var user = string.IsNullOrEmpty(userName) ? null : await Users.FirstAsync(x => x.UserName == userName, cancellationToken: cancellationToken);
 
         var entries = ChangeTracker.Entries().Where(e => e.Entity is BaseEntity && (e.State == EntityState.Added || e.State == EntityState.Modified));
@@ -53,7 +53,8 @@ public partial class FollyDbContext : DbContext {
             if (entity.State == EntityState.Added) {
                 model.CreatedDate = DateTime.UtcNow;
                 model.CreatedUserId = user?.Id;
-            } else {
+            }
+            else {
                 // don't overwrite existing created valus
                 entity.Property(nameof(BaseEntity.CreatedDate)).IsModified = false;
                 entity.Property(nameof(BaseEntity.CreatedUserId)).IsModified = false;

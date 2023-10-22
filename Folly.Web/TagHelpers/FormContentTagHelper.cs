@@ -12,9 +12,9 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Folly.TagHelpers;
 
 public sealed class FormContentTagHelper : BaseTagHelper {
-    private readonly IUrlHelperFactory UrlHelperFactory;
+    private readonly IUrlHelperFactory _UrlHelperFactory;
 
-    public FormContentTagHelper(IHtmlHelper htmlHelper, IUrlHelperFactory urlHelperFactory) : base(htmlHelper) => UrlHelperFactory = urlHelperFactory;
+    public FormContentTagHelper(IHtmlHelper htmlHelper, IUrlHelperFactory urlHelperFactory) : base(htmlHelper) => _UrlHelperFactory = urlHelperFactory;
 
     public string Action { get; set; } = "";
     public string Controller { get; set; } = "";
@@ -37,7 +37,7 @@ public sealed class FormContentTagHelper : BaseTagHelper {
         output.Attributes.SetAttribute("method", Method.ToString());
         output.Attributes.SetAttribute("id", $"{Action!.ToLower(CultureInfo.InvariantCulture)}{Controller.UppercaseFirst()}Form");
 
-        var urlHelper = UrlHelperFactory.GetUrlHelper(HtmlHelper!.ViewContext);
+        var urlHelper = _UrlHelperFactory.GetUrlHelper(HtmlHelper!.ViewContext);
         output.Attributes.SetAttribute("action", urlHelper.Action(Action, Controller, RouteValues));
 
         output.Content.AppendHtml(HtmlHelper.AntiForgeryToken());

@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Authentication;
 namespace Folly.Utils;
 
 public sealed class ClaimsTransformer : IClaimsTransformation {
-    private readonly IUserService UserService;
+    private readonly IUserService _UserService;
 
-    public ClaimsTransformer(IUserService userService) => UserService = userService;
+    public ClaimsTransformer(IUserService userService) => _UserService = userService;
 
     public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal) {
         if (principal.Identity == null)
@@ -21,11 +21,11 @@ public sealed class ClaimsTransformer : IClaimsTransformation {
         if (string.IsNullOrWhiteSpace(principal.Identity.Name))
             return principal;
 
-        var user = await UserService.GetUserByUserName(principal.Identity.Name);
+        var user = await _UserService.GetUserByUserName(principal.Identity.Name);
         if (user == null)
             return principal;
 
-        var claims = await UserService.GetClaimsByUserId(user.Id);
+        var claims = await _UserService.GetClaimsByUserId(user.Id);
         if (claims.Any())
             currentPrincipal.AddClaims(claims.Select(x => new Claim(currentPrincipal.RoleClaimType, $"{x.ControllerName}.{x.ActionName}".ToLower(CultureInfo.InvariantCulture))));
         return principal;

@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Mvc.Filters;
 namespace Folly.Attributes;
 
 public sealed class ValidModelAttribute : ActionFilterAttribute {
-    private readonly bool UseTempData;
+    private readonly bool _UseTempData;
 
-    public ValidModelAttribute(bool useTempData = false) => UseTempData = useTempData;
+    public ValidModelAttribute(bool useTempData = false) => _UseTempData = useTempData;
 
     public override void OnActionExecuting(ActionExecutingContext context) {
         var param = context.ActionArguments.FirstOrDefault(p => p.Value is BaseModel);
@@ -19,7 +19,7 @@ public sealed class ValidModelAttribute : ActionFilterAttribute {
 
         if (!context.ModelState.IsValid) {
             var controller = (Controller)context.Controller;
-            if (UseTempData)
+            if (_UseTempData)
                 controller.TempData[BaseController.ErrorProperty] = context.ModelState.ToErrorString();
             else
                 controller.ViewData[BaseController.ErrorProperty] = context.ModelState.ToErrorString();

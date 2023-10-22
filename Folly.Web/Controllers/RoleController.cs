@@ -11,13 +11,13 @@ namespace Folly.Controllers;
 
 [Authorize(Policy = PermissionRequirementHandler.PolicyName)]
 public class RoleController : BaseController {
-    private readonly IPermissionService PermissionService;
-    private readonly IRoleService RoleService;
+    private readonly IPermissionService _PermissionService;
+    private readonly IRoleService _RoleService;
 
     private IActionResult CreateEditView(Role model) => View("CreateEdit", model);
 
     private async Task<Role?> LoadRole(int id) {
-        var model = await RoleService.GetRoleById(id);
+        var model = await _RoleService.GetRoleById(id);
         if (model != null)
             return model;
 
@@ -29,15 +29,15 @@ public class RoleController : BaseController {
         if (!ModelState.IsValid)
             return CreateEditView(model);
 
-        await RoleService.SaveRole(model);
+        await _RoleService.SaveRole(model);
         ViewData[MessageProperty] = Roles.SuccessSavingRole;
         Response.Headers.Add(HtmxHeaders.PushUrl, Url.Action(nameof(Index)));
         return Index();
     }
 
     public RoleController(IAppConfiguration appConfig, IRoleService roleService, IPermissionService permissionService, ILogger<RoleController> logger) : base(appConfig, logger) {
-        RoleService = roleService;
-        PermissionService = permissionService;
+        _RoleService = roleService;
+        _PermissionService = permissionService;
     }
 
     [HttpGet, ParentAction(nameof(Edit))]
@@ -54,7 +54,7 @@ public class RoleController : BaseController {
         if (!ModelState.IsValid)
             return Index();
 
-        await RoleService.CopyRole(model);
+        await _RoleService.CopyRole(model);
         ViewData[MessageProperty] = Roles.SuccessCopyingRole;
         return Index();
     }
@@ -71,7 +71,7 @@ public class RoleController : BaseController {
         if (model == null)
             return Index();
 
-        await RoleService.DeleteRole(model);
+        await _RoleService.DeleteRole(model);
         ViewData[MessageProperty] = Roles.SuccessDeletingRole;
         return Index();
     }
@@ -89,11 +89,11 @@ public class RoleController : BaseController {
     public IActionResult Index() => View("Index");
 
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
-    public async Task<IActionResult> List() => Ok((await RoleService.GetAllRoles()).Select(x => new { x.Id, x.Name }));
+    public async Task<IActionResult> List() => Ok((await _RoleService.GetAllRoles()).Select(x => new { x.Id, x.Name }));
 
     [HttpGet]
     public async Task<IActionResult> RefreshPermissions() {
-        await new PermissionManager(PermissionService, RoleService).Register();
+        await new PermissionManager(_PermissionService, _RoleService).Register();
         Response.Headers.Add(HtmxHeaders.ReplaceUrl, Url.Action(nameof(Index)));
         ViewData[MessageProperty] = Roles.SuccessRefreshingPermissions;
         return Index();

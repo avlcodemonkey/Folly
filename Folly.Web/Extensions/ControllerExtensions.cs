@@ -11,10 +11,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Folly.Extensions;
 
 public static class ControllerExtensions {
-    private const string RequestedWithHeader = "X-Requested-With";
-    private const string XmlHttpRequest = "XMLHttpRequest";
-    private static readonly Regex CaseRegex = new(@"([a-z])([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
-    private static readonly Regex CssRegex = new(@"(?<!_)([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+    private const string _RequestedWithHeader = "X-Requested-With";
+    private const string _XmlHttpRequest = "XMLHttpRequest";
+    private static readonly Regex _CaseRegex = new(@"([a-z])([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
+    private static readonly Regex _CssRegex = new(@"(?<!_)([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 
     /// <summary>
     /// Merge an attribute if condition is met.
@@ -48,7 +48,7 @@ public static class ControllerExtensions {
         if (request == null)
             throw new ArgumentNullException(nameof(request));
         if (request.Headers != null)
-            return request.Headers[RequestedWithHeader] == XmlHttpRequest;
+            return request.Headers[_RequestedWithHeader] == _XmlHttpRequest;
         return false;
     }
 
@@ -66,11 +66,11 @@ public static class ControllerExtensions {
     /// <param name="controller">Controller to redirect to.</param>
     /// <param name="expression">Evaluates to name of action to invoke.</param>
     /// <returns>Redirect action result.</returns>
-    public static IActionResult Redirect<TController>(this Controller controller, Expression<Func<TController, string>> expression, object routeValues = null)
+    public static IActionResult Redirect<TController>(this Controller controller, Expression<Func<TController, string>> expression, object? routeValues = null)
         where TController : Controller {
         if (expression.Body is not ConstantExpression constant)
             throw new ArgumentException("Expression must be a constant expression.");
-        return controller.RedirectToAction(constant.Value.ToString(), typeof(TController).Name.StripController(), routeValues);
+        return controller.RedirectToAction(constant.ToString(), typeof(TController).Name.StripController(), routeValues);
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ public static class ControllerExtensions {
     /// </summary>
     /// <param name="val">String value to convert.</param>
     /// <returns>Css class name string.</returns>
-    public static string ToCssClass(this Icon val) => CssRegex.Replace(val.ToString(), "-$1").Trim('-').ToLower();
+    public static string ToCssClass(this Icon val) => _CssRegex.Replace(val.ToString(), "-$1").Trim('-').ToLower();
 
     /// <summary>
     /// Convert the ModelStateDictionary into a string of errors a view can display.
@@ -115,7 +115,7 @@ public static class ControllerExtensions {
     /// </summary>
     /// <param name="value">Toggle enum value to convert.</param>
     /// <returns>Converted string.</returns>
-    public static string ToHyphenCase(this DataToggle toggle) => CaseRegex.Replace(toggle.ToString(), "$1-$2").ToLower();
+    public static string ToHyphenCase(this DataToggle toggle) => _CaseRegex.Replace(toggle.ToString(), "$1-$2").ToLower();
 
     /// <summary>
     /// Convert IEnumerable to a list of select list items.

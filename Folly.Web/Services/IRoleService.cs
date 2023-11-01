@@ -3,17 +3,17 @@ using Folly.Models;
 namespace Folly.Services;
 
 public interface IRoleService {
-    Task<bool> CopyRole(CopyRole copyRoleDTO);
+    Task<bool> CopyRoleAsync(CopyRole copyRoleDTO);
 
-    Task<bool> DeleteRole(Role roleDTO);
+    Task<bool> DeleteRoleAsync(Role roleDTO);
 
-    Task<IEnumerable<Role>> GetAllRoles();
+    Task<IEnumerable<Role>> GetAllRolesAsync();
 
-    Task<Role> GetDefaultRole();
+    Task<Role> GetDefaultRoleAsync();
 
-    Task<Role> GetRoleById(int id);
+    Task<Role> GetRoleByIdAsync(int id);
 
-    Task<bool> SaveManyRolePermissions(IEnumerable<RolePermission> rolePermissions);
+    Task<bool> SaveRoleAsync(Role roleDTO);
 
-    Task<bool> SaveRole(Role roleDTO);
+    Task<bool> AddPermissionsToDefaultRoleAsync(IEnumerable<int> permissionIds);
 }

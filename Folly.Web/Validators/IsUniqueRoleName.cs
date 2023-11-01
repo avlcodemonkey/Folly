@@ -9,8 +9,11 @@ namespace Folly.Validators;
 public sealed class IsUniqueRoleName : ValidationAttribute {
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext) {
         var service = validationContext.GetService(typeof(IRoleService)) as IRoleService;
-        if (validationContext.ObjectInstance is Role role && service!.GetAllRoles().Result.Any(x => x.Name == role.Name && x.Id != role.Id))
+
+        if (validationContext.ObjectInstance is Role role && service!.GetAllRolesAsync().Result.Any(x => x.Name == role.Name && x.Id != role.Id)) {
             return new ValidationResult(Roles.ErrorDuplicateName, new[] { nameof(role.Name) });
+        }
+
         return ValidationResult.Success!;
     }
 }

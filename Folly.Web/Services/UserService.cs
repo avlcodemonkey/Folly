@@ -62,7 +62,7 @@ public sealed class UserService : IUserService {
 
     public async Task<bool> AddUser(DTO.User userDTO) {
         var user = await MapUserToModel(userDTO);
-        var defaultRole = await _RoleService.GetDefaultRole();
+        var defaultRole = await _RoleService.GetDefaultRoleAsync();
         if (user.UserRoles?.Any() != true && defaultRole != null)
             user.UserRoles = new List<UserRole> { new() { RoleId = defaultRole.Id } };
         _DbContext.Users.Add(user);

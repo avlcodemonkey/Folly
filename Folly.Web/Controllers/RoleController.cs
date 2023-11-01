@@ -17,7 +17,7 @@ public class RoleController : BaseController {
     private IActionResult CreateEditView(Role model) => View("CreateEdit", model);
 
     private async Task<Role?> LoadRole(int id) {
-        var model = await _RoleService.GetRoleById(id);
+        var model = await _RoleService.GetRoleByIdAsync(id);
         if (model != null)
             return model;
 
@@ -29,7 +29,7 @@ public class RoleController : BaseController {
         if (!ModelState.IsValid)
             return CreateEditView(model);
 
-        await _RoleService.SaveRole(model);
+        await _RoleService.SaveRoleAsync(model);
         ViewData[MessageProperty] = Roles.SuccessSavingRole;
         Response.Headers.Add(HtmxHeaders.PushUrl, Url.Action(nameof(Index)));
         return Index();
@@ -54,7 +54,7 @@ public class RoleController : BaseController {
         if (!ModelState.IsValid)
             return Index();
 
-        await _RoleService.CopyRole(model);
+        await _RoleService.CopyRoleAsync(model);
         ViewData[MessageProperty] = Roles.SuccessCopyingRole;
         return Index();
     }
@@ -71,7 +71,7 @@ public class RoleController : BaseController {
         if (model == null)
             return Index();
 
-        await _RoleService.DeleteRole(model);
+        await _RoleService.DeleteRoleAsync(model);
         ViewData[MessageProperty] = Roles.SuccessDeletingRole;
         return Index();
     }
@@ -89,7 +89,7 @@ public class RoleController : BaseController {
     public IActionResult Index() => View("Index");
 
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
-    public async Task<IActionResult> List() => Ok((await _RoleService.GetAllRoles()).Select(x => new { x.Id, x.Name }));
+    public async Task<IActionResult> List() => Ok((await _RoleService.GetAllRolesAsync()).Select(x => new { x.Id, x.Name }));
 
     [HttpGet]
     public async Task<IActionResult> RefreshPermissions() {

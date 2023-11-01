@@ -3,9 +3,7 @@ using Folly.Models;
 namespace Folly.Services;
 
 public interface ILanguageService {
-    Task<IEnumerable<Language>> GetAll();
+    Task<IEnumerable<Language>> GetAllLanguagesAsync();
 
-    Task<Language> GetDefaultLanguage();
-
-    Task<Language> GetLanguageById(int id);
+    Task<Language> GetLanguageByIdAsync(int id);
 }

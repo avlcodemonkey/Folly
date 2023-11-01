@@ -50,7 +50,7 @@ public static class AuthenticationExtensions {
                     }
 
                     var user = await userService.GetUserByUserName(username);
-                    var languages = await languageService.GetAll();
+                    var languages = await languageService.GetAllLanguagesAsync();
                     if (user == null) {
                         user = new Models.User {
                             UserName = username,

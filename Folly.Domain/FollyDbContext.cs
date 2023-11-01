@@ -20,7 +20,6 @@ public partial class FollyDbContext : DbContext {
 
         optionsBuilder.UseSqlite(connectionString);
         optionsBuilder.EnableSensitiveDataLogging();
-        optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.Seed();
@@ -53,8 +52,7 @@ public partial class FollyDbContext : DbContext {
             if (entity.State == EntityState.Added) {
                 model.CreatedDate = DateTime.UtcNow;
                 model.CreatedUserId = user?.Id;
-            }
-            else {
+            } else {
                 // don't overwrite existing created valus
                 entity.Property(nameof(BaseEntity.CreatedDate)).IsModified = false;
                 entity.Property(nameof(BaseEntity.CreatedUserId)).IsModified = false;

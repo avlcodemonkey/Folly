@@ -25,12 +25,12 @@
         <input-group for="LastName" />
         <input-group for="UserName" />
         <input-group for="Email" />
-        <select-group for="LanguageId" options="@(await ViewService.GetLanguageList())" />
+        <select-group for="LanguageId" options="@(await ViewService.GetLanguageSelectListAsync())" />
 
         <div class="mb-1">
             <label asp-for="RoleIds">@Users.Roles</label>
             @{
-                var roles = await ViewService.GetAllRoles();
+                var roles = await ViewService.GetAllRolesAsync();
                 foreach (var role in roles)
                 {
                     <form-checkbox name="RoleIds" value="@role.Id" label="@role.Name" checked="@Model.RoleIds?.Contains(role.Id) == true" />

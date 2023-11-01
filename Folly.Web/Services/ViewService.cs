@@ -16,17 +16,23 @@ public sealed class ViewService : IViewService {
         _RoleService = roleService;
     }
 
-    public async Task<IEnumerable<Role>> GetAllRoles() => await _RoleService.GetAllRoles();
+    public async Task<IEnumerable<Role>> GetAllRolesAsync() => await _RoleService.GetAllRolesAsync();
 
-    public async Task<Dictionary<string, List<Permission>>> GetControllerPermissions() {
+    public async Task<Dictionary<string, List<Permission>>> GetControllerPermissionsAsync() {
         var controllerPermissions = new Dictionary<string, List<Permission>>();
-        (await _PermissionService.GetAll()).ToList().ForEach(permission => {
-            if (!controllerPermissions.ContainsKey(permission.ControllerName))
+        var permissions = await _PermissionService.GetAll();
+
+        foreach (var permission in permissions) {
+            if (!controllerPermissions.ContainsKey(permission.ControllerName)) {
                 controllerPermissions.Add(permission.ControllerName, new List<Permission>());
+            }
+
             controllerPermissions[permission.ControllerName].Add(permission);
-        });
+        }
+
         return controllerPermissions;
     }
 
-    public async Task<IEnumerable<SelectListItem>> GetLanguageList() => (await _LanguageService.GetAll()).ToSelectList(x => x.Name, x => x.Id.ToString(CultureInfo.InvariantCulture));
+    public async Task<IEnumerable<SelectListItem>> GetLanguageSelectListAsync()
+        => (await _LanguageService.GetAllLanguagesAsync()).ToSelectList(x => x.Name, x => x.Id.ToString(CultureInfo.InvariantCulture));
 }

@@ -16,7 +16,7 @@
         <input-group for="FirstName" autofocus="true" />
         <input-group for="LastName" />
         <input-group for="Email" />
-        <select-group for="LanguageId" options="@(await ViewService.GetLanguageList())" />
+        <select-group for="LanguageId" options="@(await ViewService.GetLanguageSelectListAsync())" />
 
         <input class="button primary" type="submit" value="@Core.Save">
     </form-content>

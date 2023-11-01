@@ -4,9 +4,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 namespace Folly.Services;
 
 public interface IViewService {
-    Task<IEnumerable<Role>> GetAllRoles();
+    Task<IEnumerable<Role>> GetAllRolesAsync();
 
-    Task<Dictionary<string, List<Permission>>> GetControllerPermissions();
+    Task<Dictionary<string, List<Permission>>> GetControllerPermissionsAsync();
 
-    Task<IEnumerable<SelectListItem>> GetLanguageList();
+    Task<IEnumerable<SelectListItem>> GetLanguageSelectListAsync();
 }

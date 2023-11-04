@@ -18,16 +18,16 @@ public class RoleController : BaseController {
 
     private async Task<Role?> LoadRole(int id) {
         var model = await _RoleService.GetRoleByIdAsync(id);
-        if (model != null)
-            return model;
-
-        ViewData[ErrorProperty] = Core.ErrorInvalidId;
-        return null;
+        if (model == null) {
+            ViewData[ErrorProperty] = Core.ErrorInvalidId;
+        }
+        return model;
     }
 
     private async Task<IActionResult> Save(Role model) {
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid) {
             return CreateEditView(model);
+        }
 
         await _RoleService.SaveRoleAsync(model);
         ViewData[MessageProperty] = Roles.SuccessSavingRole;
@@ -43,16 +43,18 @@ public class RoleController : BaseController {
     [HttpGet, ParentAction(nameof(Edit))]
     public async Task<IActionResult> Copy(int id) {
         var model = await LoadRole(id);
-        if (model == null)
+        if (model == null) {
             return Index();
+        }
 
         return View("Copy", new CopyRole { Id = model.Id, Prompt = Core.CopyOf.Replace("{0}", model.Name) });
     }
 
     [HttpPost, ParentAction(nameof(Edit)), ValidModel]
     public async Task<IActionResult> Copy(CopyRole model) {
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid) {
             return Index();
+        }
 
         await _RoleService.CopyRoleAsync(model);
         ViewData[MessageProperty] = Roles.SuccessCopyingRole;

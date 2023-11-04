@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Folly.Domain.Models;
 
 [Table("User")]
-public class User : BaseEntity {
+public class User : AuditableEntity {
     public User() => UserRoles = new HashSet<UserRole>();
 
     [StringLength(100)]

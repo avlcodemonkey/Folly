@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Folly.Domain.Models;
 
 [Table("RolePermission")]
-public class RolePermission : BaseEntity {
+public class RolePermission : AuditableEntity {
     [Key]
     public int Id { get; set; }
 

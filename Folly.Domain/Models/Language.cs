@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Folly.Domain.Models;
 
 [Table("Language")]
-public class Language : BaseEntity {
+public class Language : AuditableEntity {
     [StringLength(10)]
     [Required]
     public string CountryCode { get; set; } = null!;

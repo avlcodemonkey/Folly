@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Folly.Domain.Models;
 
 [Table("Permission")]
-public class Permission : BaseEntity {
+public class Permission : AuditableEntity {
     public Permission() => RolePermissions = new HashSet<RolePermission>();
 
     [StringLength(100)]

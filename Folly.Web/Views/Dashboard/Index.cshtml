@@ -1,6 +1,15 @@
 @using Folly.Controllers;
+@using Folly.Resources;
+@using Folly.Utils;
+
 @{
-    ViewData[BaseController.TitleProperty] = Folly.Resources.Core.Brand;
+    ViewData[BaseController.TitleProperty] = Folly.Resources.Core.Dashboard;
+
+    // create a title tag for htmx to swap in if this is an htmx request
+    if (ViewContext.HttpContext.Request.Headers.Any(x => x.Key == HtmxHeaders.Request))
+    {
+        <title hx-swap-oob="true" id="page-title">@Core.Dashboard</title>
+    }
 }
 
 <div id="content" class="dashboard">

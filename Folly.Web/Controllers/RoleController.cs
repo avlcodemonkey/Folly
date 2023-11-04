@@ -67,11 +67,7 @@ public class RoleController : BaseController {
 
     [HttpDelete]
     public async Task<IActionResult> Delete(int id) {
-        var model = await LoadRole(id);
-        if (model == null)
-            return Index();
-
-        await _RoleService.DeleteRoleAsync(model);
+        await _RoleService.DeleteRoleAsync(id);
         ViewData[MessageProperty] = Roles.SuccessDeletingRole;
         return Index();
     }

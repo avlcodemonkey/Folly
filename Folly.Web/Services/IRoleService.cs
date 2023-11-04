@@ -5,7 +5,7 @@ namespace Folly.Services;
 public interface IRoleService {
     Task<bool> CopyRoleAsync(CopyRole copyRoleDTO);
 
-    Task<bool> DeleteRoleAsync(Role roleDTO);
+    Task<bool> DeleteRoleAsync(int id);
 
     Task<IEnumerable<Role>> GetAllRolesAsync();
 

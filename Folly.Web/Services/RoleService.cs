@@ -28,8 +28,8 @@ public sealed class RoleService : IRoleService {
         return await _DbContext.SaveChangesAsync() > 0;
     }
 
-    public async Task<bool> DeleteRoleAsync(DTO.Role roleDTO) {
-        var role = await _DbContext.Roles.FirstAsync(x => x.Id == roleDTO.Id);
+    public async Task<bool> DeleteRoleAsync(int id) {
+        var role = await _DbContext.Roles.FirstAsync(x => x.Id == id);
         _DbContext.Roles.Remove(role);
         return await _DbContext.SaveChangesAsync() > 0;
     }
@@ -38,7 +38,8 @@ public sealed class RoleService : IRoleService {
 
     public async Task<DTO.Role> GetDefaultRoleAsync() => await _DbContext.Roles.SelectAsDTO().FirstAsync(x => x.IsDefault);
 
-    public async Task<DTO.Role> GetRoleByIdAsync(int id) => await _DbContext.Roles.Include(x => x.RolePermissions).Where(x => x.Id == id).SelectAsDTO().FirstAsync();
+    public async Task<DTO.Role> GetRoleByIdAsync(int id)
+        => await _DbContext.Roles.Include(x => x.RolePermissions).Where(x => x.Id == id).SelectAsDTO().FirstAsync();
 
     public async Task<bool> SaveRoleAsync(DTO.Role roleDTO) {
         if (roleDTO.Id > 0) {
@@ -60,5 +61,4 @@ public sealed class RoleService : IRoleService {
         defaultRole.RolePermissions = permissionIds.Select(x => new RolePermission { PermissionId = x, RoleId = defaultRole.Id }).ToList();
         return await _DbContext.SaveChangesAsync() > 0;
     }
-
 }

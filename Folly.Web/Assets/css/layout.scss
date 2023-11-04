@@ -39,7 +39,7 @@ body {
     height: 100%;
 }
 
-#spinner {
+#htmx-indicator {
     display: none;
 
     &.htmx-request {

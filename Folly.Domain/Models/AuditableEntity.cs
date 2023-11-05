@@ -4,5 +4,5 @@ namespace Folly.Domain.Models;
 
 public class AuditableEntity {
     [NotMapped]
-    public long TemporaryId { get; set; }
+    public long TemporaryKey { get; set; }
 }

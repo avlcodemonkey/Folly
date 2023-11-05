@@ -13,6 +13,22 @@ public partial class FollyDbContext : DbContext {
     private readonly IConfiguration? _Configuration;
     private readonly IHttpContextAccessor? _HttpContextAccessor;
 
+    public DbSet<AuditLog> AuditLog { get; set; }
+    public DbSet<Language> Languages { get; set; }
+    public DbSet<Permission> Permissions { get; set; }
+    public DbSet<RolePermission> RolePermissions { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<UserRole> UserRoles { get; set; }
+    public DbSet<User> Users { get; set; }
+
+    public FollyDbContext() { }
+
+    public FollyDbContext(DbContextOptions<FollyDbContext> options, IConfiguration? configuration = null, IHttpContextAccessor? httpContextAccessor = null)
+        : base(options) {
+        _Configuration = configuration;
+        _HttpContextAccessor = httpContextAccessor;
+    }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
         if (optionsBuilder.IsConfigured) {
             return;
@@ -27,51 +43,37 @@ public partial class FollyDbContext : DbContext {
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.Seed();
 
-    public FollyDbContext() { }
-
-    public FollyDbContext(DbContextOptions<FollyDbContext> options, IConfiguration? configuration = null, IHttpContextAccessor? httpContextAccessor = null)
-        : base(options) {
-        _Configuration = configuration;
-        _HttpContextAccessor = httpContextAccessor;
-    }
-
-    public DbSet<AuditLog> AuditLog { get; set; }
-
-    public DbSet<Language> Languages { get; set; }
-
-    public DbSet<Permission> Permissions { get; set; }
-
-    public DbSet<RolePermission> RolePermissions { get; set; }
-
-    public DbSet<Role> Roles { get; set; }
-
-    public DbSet<UserRole> UserRoles { get; set; }
-
-    public DbSet<User> Users { get; set; }
-
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
         var changedEntities = ChangeTracker.Entries().Where(x => x.Entity is AuditableEntity &&
             (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)).ToList();
 
-        // create change log records based on the current changed entities
-        // SaveChanges clears these, so gotta do this first
-        var changeLogs = await CreateAuditLogsAsync(changedEntities, cancellationToken);
+        // create audit log records based on the current changed entities
+        // SaveChanges resets the change tracker so gotta do this first
+        var auditLogs = await CreateAuditLogsAsync(changedEntities, cancellationToken);
 
-        // save entity changes to the db
-        var result = await base.SaveChangesAsync(cancellationToken);
-        if (result > 0) {
-            // now save the audit logs, including updating primary keys for added entities
-            await SaveAuditLogsAsync(changedEntities, changeLogs, cancellationToken);
+        // @todo may want to set `AutoSavepointsEnabled=false` to prevent locking issues
+        using var transaction = await Database.BeginTransactionAsync(cancellationToken);
+
+        try {
+            // save entity changes to the db
+            var result = await base.SaveChangesAsync(cancellationToken);
+            if (result > 0) {
+                // now save the audit logs, including updating primary keys for added entities
+                await SaveAuditLogsAsync(changedEntities, auditLogs, cancellationToken);
+            }
+            await transaction.CommitAsync(cancellationToken);
+            return result;
+        } catch (Exception) {
+            await transaction.RollbackAsync(cancellationToken);
+            throw;
         }
-
-        return result;
     }
 
     private async Task<List<AuditLog>> CreateAuditLogsAsync(List<EntityEntry> changedEntries, CancellationToken cancellationToken) {
-        var changeLogs = new List<AuditLog>();
+        var auditLogs = new List<AuditLog>();
 
         if (!changedEntries.Any()) {
-            return changeLogs;
+            return auditLogs;
         }
 
         var batchId = Guid.NewGuid();
@@ -85,7 +87,7 @@ public partial class FollyDbContext : DbContext {
                 continue;
             }
 
-            ((AuditableEntity)entry.Entity).TemporaryId = primaryKey.Value;
+            ((AuditableEntity)entry.Entity).TemporaryKey = primaryKey.Value;
 
             var entityName = entry.Entity.GetType().Name;
             var changeLog = new AuditLog {
@@ -107,30 +109,32 @@ public partial class FollyDbContext : DbContext {
                 changeLog.NewValues = JsonSerializer.Serialize(newValues);
             }
 
-            changeLogs.Add(changeLog);
+            auditLogs.Add(changeLog);
         }
 
-        return changeLogs;
+        return auditLogs;
     }
 
-    private async Task SaveAuditLogsAsync(List<EntityEntry> changedEntities, List<AuditLog> changeLogs, CancellationToken cancellationToken) {
-        if (!changeLogs.Any()) {
+    private async Task SaveAuditLogsAsync(List<EntityEntry> changedEntities, List<AuditLog> auditLogs, CancellationToken cancellationToken) {
+        if (!auditLogs.Any()) {
             return;
         }
 
+        // create a dictionary for the added entities so we can set the new primaryKey on the audit log record
         var keyMap = changedEntities.ToDictionary(GetEntryIdentifier, GetEntryPrimaryKey);
 
-        foreach (var changeLog in changeLogs) {
-            if (keyMap.TryGetValue($"{changeLog.Entity}_{changeLog.PrimaryKey}", out var primaryKey)) {
-                changeLog.PrimaryKey = primaryKey;
+        var addedEntityLogs = auditLogs.Where(x => x.State == EntityState.Added);
+        foreach (var auditLog in addedEntityLogs) {
+            if (keyMap.TryGetValue($"{auditLog.Entity}_{auditLog.PrimaryKey}", out var primaryKey)) {
+                auditLog.PrimaryKey = primaryKey;
             }
         }
 
-        await AuditLog.AddRangeAsync(changeLogs, cancellationToken);
+        await AuditLog.AddRangeAsync(auditLogs, cancellationToken);
         await base.SaveChangesAsync(cancellationToken);
     }
 
-    private string GetEntryIdentifier(EntityEntry entry) => $"{entry.Entity.GetType().Name}_{((AuditableEntity)entry.Entity).TemporaryId}";
+    private string GetEntryIdentifier(EntityEntry entry) => $"{entry.Entity.GetType().Name}_{((AuditableEntity)entry.Entity).TemporaryKey}";
 
     private long GetEntryPrimaryKey(EntityEntry entry) => entry.GetPrimaryKey() ?? -1;
 }

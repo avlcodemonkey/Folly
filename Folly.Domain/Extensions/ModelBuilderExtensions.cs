@@ -11,7 +11,6 @@ public static class ModelBuilderExtensions {
     public static void Seed(this ModelBuilder modelBuilder) {
         modelBuilder.ApplyConfigurationsFromAssembly(typeof(UserConfiguration).Assembly);
 
-        var now = DateTime.UtcNow;
         modelBuilder.Entity<Language>().HasData(
             new Language { Id = 1, Name = "English", LanguageCode = "en", CountryCode = "us", IsDefault = true },
             new Language { Id = 2, Name = "Spanish", LanguageCode = "es", CountryCode = "mx", IsDefault = false }

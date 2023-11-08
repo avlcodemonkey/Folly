@@ -51,7 +51,19 @@ public partial class FollyDbContext : DbContext {
         // SaveChanges resets the change tracker so gotta do this first
         var auditLogs = await CreateAuditLogsAsync(changedEntities, cancellationToken);
 
-        // @todo may want to set `AutoSavepointsEnabled=false` to prevent locking issues
+        // set the created/updated date fields on these entities for easy access
+        changedEntities.ForEach(x => {
+            var model = (AuditableEntity)x.Entity;
+            model.UpdatedDate = DateTime.UtcNow;
+
+            if (x.State == EntityState.Added) {
+                model.CreatedDate = DateTime.UtcNow;
+            } else {
+                // don't overwrite existing created values
+                x.Property(nameof(AuditableEntity.CreatedDate)).IsModified = false;
+            }
+        });
+
         using var transaction = await Database.BeginTransactionAsync(cancellationToken);
 
         try {

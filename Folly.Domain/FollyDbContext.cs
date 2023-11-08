@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace Folly.Domain;
 
-public partial class FollyDbContext : DbContext {
+public sealed class FollyDbContext : DbContext {
     private readonly string _ConnectionString = "Data Source = ..\\AppData\\Folly.db;";
     private readonly IConfiguration? _Configuration;
     private readonly IHttpContextAccessor? _HttpContextAccessor;
@@ -27,6 +27,10 @@ public partial class FollyDbContext : DbContext {
         : base(options) {
         _Configuration = configuration;
         _HttpContextAccessor = httpContextAccessor;
+
+        // don't create savepoints when SaveChanges is called inside a transaction
+        // this can cause database locking issues
+        Database.AutoSavepointsEnabled = false;
     }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {

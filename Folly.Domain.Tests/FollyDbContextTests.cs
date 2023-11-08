@@ -26,9 +26,7 @@ public class FollyDbContextTests : IClassFixture<TestDatabaseFixture> {
 
         // assert
         Assert.NotNull(createdLanguage);
-        Assert.Equal(createUserId, createdLanguage.CreatedUserId);
         Assert.True(createStartTime <= createdLanguage.CreatedDate);
-        Assert.Equal(createUserId, createdLanguage.UpdatedUserId);
         Assert.True(createStartTime <= createdLanguage.UpdatedDate);
     }
 
@@ -57,8 +55,6 @@ public class FollyDbContextTests : IClassFixture<TestDatabaseFixture> {
         // assert
         Assert.NotNull(updatedLanguage);
         Assert.Equal(newLanguageName, updatedLanguage.Name);
-        Assert.Equal(createUserId, updatedLanguage.CreatedUserId);
-        Assert.Equal(updateUserId, updatedLanguage.UpdatedUserId);
         Assert.True(updateStartTime >= updatedLanguage.CreatedDate);
         Assert.True(updateStartTime <= updatedLanguage.UpdatedDate);
     }

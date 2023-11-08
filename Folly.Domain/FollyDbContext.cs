@@ -28,8 +28,7 @@ public sealed class FollyDbContext : DbContext {
         _Configuration = configuration;
         _HttpContextAccessor = httpContextAccessor;
 
-        // don't create savepoints when SaveChanges is called inside a transaction
-        // this can cause database locking issues
+        // don't create savepoints when SaveChanges is called inside a transaction. savepoints can cause database locking issues
         Database.AutoSavepointsEnabled = false;
     }
 
@@ -38,7 +37,7 @@ public sealed class FollyDbContext : DbContext {
             return;
         }
 
-        // fall back to using hardcode database path when configuration isn't injected.  this happens when using dotnet ef tools locally
+        // fall back to using hardcoded database path when configuration isn't injected.  this happens when using dotnet ef tools locally
         var connectionString = _Configuration == null ? _ConnectionString : $"Data Source = {_Configuration.GetSection("App").GetSection("Database")["FilePath"]};";
 
         optionsBuilder.UseSqlite(connectionString);
@@ -47,6 +46,10 @@ public sealed class FollyDbContext : DbContext {
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.ApplyDefaults().Seed();
 
+    /// <summary>
+    /// Add custom logic for auditing to the base SaveChangesAsync method.
+    /// </summary>
+    /// <remarks>App code should always use SaveChangesAsync instead of SaveChanges. SaveChanges is not overridden for use in tests.</remarks>
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
         var changedEntities = ChangeTracker.Entries().Where(x => x.Entity is AuditableEntity &&
             (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)).ToList();
@@ -63,7 +66,7 @@ public sealed class FollyDbContext : DbContext {
             if (x.State == EntityState.Added) {
                 model.CreatedDate = DateTime.UtcNow;
             } else {
-                // don't overwrite existing created values
+                // don't overwrite existing createdDate values
                 x.Property(nameof(AuditableEntity.CreatedDate)).IsModified = false;
             }
         });
@@ -103,6 +106,7 @@ public sealed class FollyDbContext : DbContext {
                 continue;
             }
 
+            // track the temporaryId that EF assigns so we can update our auditLogs with the database assigned ID after saving to the db
             ((AuditableEntity)entry.Entity).TemporaryId = primaryKey.Value;
 
             var entityName = entry.Entity.GetType().Name;
@@ -120,7 +124,6 @@ public sealed class FollyDbContext : DbContext {
                 var oldValues = changedProperties.ToDictionary(x => x.Metadata.Name, x => x.OriginalValue?.ToString());
                 var newValues = changedProperties.ToDictionary(x => x.Metadata.Name, x => x.CurrentValue?.ToString());
 
-                // switch this to json
                 changeLog.OldValues = JsonSerializer.Serialize(oldValues);
                 changeLog.NewValues = JsonSerializer.Serialize(newValues);
             }

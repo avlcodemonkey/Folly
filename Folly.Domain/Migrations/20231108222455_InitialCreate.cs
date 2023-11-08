@@ -24,7 +24,7 @@ namespace Folly.Domain.Migrations
                     PrimaryKey = table.Column<long>(type: "INTEGER", nullable: false),
                     State = table.Column<int>(type: "INTEGER", nullable: false),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: true),
+                    UserId = table.Column<long>(type: "INTEGER", nullable: true),
                     OldValues = table.Column<string>(type: "TEXT", nullable: true),
                     NewValues = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -42,7 +42,9 @@ namespace Folly.Domain.Migrations
                     CountryCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
                     IsDefault = table.Column<bool>(type: "INTEGER", nullable: false),
                     LanguageCode = table.Column<string>(type: "TEXT", maxLength: 10, nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -56,7 +58,9 @@ namespace Folly.Domain.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     ActionName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    ControllerName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
+                    ControllerName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -70,7 +74,9 @@ namespace Folly.Domain.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     IsDefault = table.Column<bool>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -87,8 +93,10 @@ namespace Folly.Domain.Migrations
                     FirstName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
                     LanguageId = table.Column<int>(type: "INTEGER", nullable: false),
                     LastName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: true),
-                    Status = table.Column<bool>(type: "INTEGER", nullable: true, defaultValueSql: "(1)"),
-                    UserName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false)
+                    Status = table.Column<bool>(type: "INTEGER", nullable: true, defaultValue: true),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -102,7 +110,9 @@ namespace Folly.Domain.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     PermissionId = table.Column<int>(type: "INTEGER", nullable: false),
-                    RoleId = table.Column<int>(type: "INTEGER", nullable: false)
+                    RoleId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {
@@ -128,7 +138,9 @@ namespace Folly.Domain.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     RoleId = table.Column<int>(type: "INTEGER", nullable: false),
-                    UserId = table.Column<int>(type: "INTEGER", nullable: false)
+                    UserId = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)"),
+                    UpdatedDate = table.Column<DateTime>(type: "TEXT", nullable: false, defaultValueSql: "(current_timestamp)")
                 },
                 constraints: table =>
                 {

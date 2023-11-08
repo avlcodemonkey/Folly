@@ -5,7 +5,7 @@ namespace Folly.Domain.Models;
 
 [Table("Permission")]
 public class Permission : AuditableEntity {
-    public Permission() => RolePermissions = new HashSet<RolePermission>();
+    public Permission() => RolePermissions = new List<RolePermission>();
 
     [StringLength(100)]
     [Required]

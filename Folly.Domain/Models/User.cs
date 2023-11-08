@@ -6,7 +6,7 @@ namespace Folly.Domain.Models;
 
 [Table("User")]
 public class User : AuditableEntity {
-    public User() => UserRoles = new HashSet<UserRole>();
+    public User() => UserRoles = new List<UserRole>();
 
     [StringLength(100)]
     [Required]

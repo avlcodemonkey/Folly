@@ -10,9 +10,6 @@ public class Role : AuditableEntity {
         UserRoles = new List<UserRole>();
     }
 
-    [Key]
-    public int Id { get; set; }
-
     public bool IsDefault { get; set; }
 
     [StringLength(100)]

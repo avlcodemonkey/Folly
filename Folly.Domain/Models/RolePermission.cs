@@ -5,9 +5,6 @@ namespace Folly.Domain.Models;
 
 [Table("RolePermission")]
 public class RolePermission : AuditableEntity {
-    [Key]
-    public int Id { get; set; }
-
     public Permission Permission { get; set; } = null!;
 
     [Required]

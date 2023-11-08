@@ -24,7 +24,7 @@ public class AuditLog {
     [Required]
     public DateTime Date { get; set; }
 
-    public int? UserId { get; set; }
+    public long? UserId { get; set; }
 
     public string? OldValues { get; set; }
 

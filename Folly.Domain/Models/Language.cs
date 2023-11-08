@@ -9,9 +9,6 @@ public class Language : AuditableEntity {
     [Required]
     public string CountryCode { get; set; } = null!;
 
-    [Key]
-    public int Id { get; set; }
-
     public bool IsDefault { get; set; }
 
     [StringLength(10)]

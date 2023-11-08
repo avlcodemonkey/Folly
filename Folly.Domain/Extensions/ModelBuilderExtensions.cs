@@ -1,10 +1,38 @@
-using Folly.Domain.Configurations;
+using System.Reflection;
+using Folly.Domain.Attributes;
 using Folly.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace Folly.Domain.Extensions;
 
 public static class ModelBuilderExtensions {
+    /// <summary>
+    /// Apply custom DefaultValue and DefaultValueSql attributes.
+    /// </summary>
+    public static ModelBuilder ApplyDefaults(this ModelBuilder modelBuilder) {
+        foreach (var entityType in modelBuilder.Model.GetEntityTypes()) {
+            foreach (var property in entityType.GetProperties()) {
+                var info = property.PropertyInfo ?? property.FieldInfo as MemberInfo;
+                if (info == null) {
+                    continue;
+                }
+
+                var attributes = Attribute.GetCustomAttributes(info);
+                if (attributes?.Any() == true) {
+                    if (attributes.FirstOrDefault(x => x is DefaultValueSqlAttribute) is DefaultValueSqlAttribute defaultValueSqlAttr) {
+                        property.SetDefaultValueSql(defaultValueSqlAttr.Sql);
+                    }
+                    if (attributes.FirstOrDefault(x => x is DefaultValueAttribute) is DefaultValueAttribute defaultValueAttr) {
+                        property.SetDefaultValue(defaultValueAttr.DefaultValue);
+                    }
+                }
+            }
+        }
+
+        return modelBuilder;
+    }
+
+
     /// <summary>
     /// Seed data to get a clean db up and running.
     /// </summary>

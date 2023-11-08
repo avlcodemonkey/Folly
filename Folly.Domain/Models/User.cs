@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using Folly.Domain.Attributes;
 
 namespace Folly.Domain.Models;
 
@@ -15,15 +16,13 @@ public class User : AuditableEntity {
     [Required]
     public string FirstName { get; set; } = null!;
 
-    [Key]
-    public int Id { get; set; }
-
     [Required]
     public int LanguageId { get; set; }
 
     [StringLength(100)]
     public string? LastName { get; set; }
 
+    [DefaultValue(true)]
     public bool? Status { get; set; }
 
     [StringLength(100)]

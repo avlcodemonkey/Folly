@@ -15,9 +15,6 @@ public class Permission : AuditableEntity {
     [Required]
     public string ControllerName { get; set; } = null!;
 
-    [Key]
-    public int Id { get; set; }
-
     [ForeignKey(nameof(RolePermission.PermissionId))]
     public IEnumerable<RolePermission> RolePermissions { get; set; }
 }

@@ -41,7 +41,7 @@ public partial class FollyDbContext : DbContext {
         optionsBuilder.EnableSensitiveDataLogging();
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.Seed();
+    protected override void OnModelCreating(ModelBuilder modelBuilder) => modelBuilder.ApplyDefaults().Seed();
 
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
         var changedEntities = ChangeTracker.Entries().Where(x => x.Entity is AuditableEntity &&
@@ -87,7 +87,7 @@ public partial class FollyDbContext : DbContext {
                 continue;
             }
 
-            ((AuditableEntity)entry.Entity).TemporaryKey = primaryKey.Value;
+            ((AuditableEntity)entry.Entity).TemporaryId = primaryKey.Value;
 
             var entityName = entry.Entity.GetType().Name;
             var changeLog = new AuditLog {
@@ -134,7 +134,7 @@ public partial class FollyDbContext : DbContext {
         await base.SaveChangesAsync(cancellationToken);
     }
 
-    private string GetEntryIdentifier(EntityEntry entry) => $"{entry.Entity.GetType().Name}_{((AuditableEntity)entry.Entity).TemporaryKey}";
+    private string GetEntryIdentifier(EntityEntry entry) => $"{entry.Entity.GetType().Name}_{((AuditableEntity)entry.Entity).TemporaryId}";
 
-    private long GetEntryPrimaryKey(EntityEntry entry) => entry.GetPrimaryKey() ?? -1;
+    private int GetEntryPrimaryKey(EntityEntry entry) => entry.GetPrimaryKey() ?? -1;
 }

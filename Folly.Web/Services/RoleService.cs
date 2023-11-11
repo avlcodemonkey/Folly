@@ -9,10 +9,21 @@ namespace Folly.Services;
 public sealed class RoleService : IRoleService {
     private readonly FollyDbContext _DbContext;
 
-    private static void MapUpdates(DTO.Role roleDTO, Role role) {
+    private async Task MapUpdates(DTO.Role roleDTO, Role role) {
         role.Name = roleDTO.Name;
         role.IsDefault = roleDTO.IsDefault;
-        role.RolePermissions = roleDTO.PermissionIds?.Select(x => new RolePermission { PermissionId = x, RoleId = roleDTO.Id }).ToList() ?? new List<RolePermission>();
+
+        var existingPermissions = new Dictionary<int, RolePermission>();
+        if (role.Id > 0 && roleDTO.PermissionIds?.Any() == true) {
+            existingPermissions = (await _DbContext.RolePermissions.Where(x => x.RoleId == role.Id).ToListAsync()).ToDictionary(x => x.PermissionId, x => x);
+        }
+
+        role.RolePermissions = roleDTO.PermissionIds?.Select(x => {
+            if (existingPermissions.TryGetValue(x, out var rolePermission)) {
+                return rolePermission;
+            }
+            return new RolePermission { PermissionId = x, RoleId = roleDTO.Id };
+        }).ToList() ?? new List<RolePermission>();
     }
 
     public RoleService(FollyDbContext dbContext) => _DbContext = dbContext;
@@ -29,14 +40,15 @@ public sealed class RoleService : IRoleService {
     }
 
     public async Task<bool> DeleteRoleAsync(int id) {
-        var role = await _DbContext.Roles.FirstAsync(x => x.Id == id);
+        // load role with rolePermissions so auditLog tracks them being deleted
+        var role = await _DbContext.Roles.Include(x => x.RolePermissions).FirstAsync(x => x.Id == id);
         _DbContext.Roles.Remove(role);
         return await _DbContext.SaveChangesAsync() > 0;
     }
 
     public async Task<IEnumerable<DTO.Role>> GetAllRolesAsync() => await _DbContext.Roles.SelectAsDTO().ToListAsync();
 
-    public async Task<DTO.Role> GetDefaultRoleAsync() => await _DbContext.Roles.SelectAsDTO().FirstAsync(x => x.IsDefault);
+    public async Task<DTO.Role> GetDefaultRoleAsync() => await _DbContext.Roles.Where(x => x.IsDefault).SelectAsDTO().FirstAsync();
 
     public async Task<DTO.Role> GetRoleByIdAsync(int id)
         => await _DbContext.Roles.Include(x => x.RolePermissions).Where(x => x.Id == id).SelectAsDTO().FirstAsync();
@@ -44,10 +56,11 @@ public sealed class RoleService : IRoleService {
     public async Task<bool> SaveRoleAsync(DTO.Role roleDTO) {
         if (roleDTO.Id > 0) {
             var role = await _DbContext.Roles.Include(x => x.RolePermissions).Where(x => x.Id == roleDTO.Id).FirstAsync();
-            MapUpdates(roleDTO, role);
+            await MapUpdates(roleDTO, role);
+            _DbContext.Roles.Update(role);
         } else {
             var role = new Role();
-            MapUpdates(roleDTO, role);
+            await MapUpdates(roleDTO, role);
             _DbContext.Roles.Add(role);
         }
 
@@ -56,7 +69,6 @@ public sealed class RoleService : IRoleService {
 
     public async Task<bool> AddPermissionsToDefaultRoleAsync(IEnumerable<int> permissionIds) {
         // @todo still need to re-test this
-
         var defaultRole = await _DbContext.Roles.FirstAsync(x => x.IsDefault);
         defaultRole.RolePermissions = permissionIds.Select(x => new RolePermission { PermissionId = x, RoleId = defaultRole.Id }).ToList();
         return await _DbContext.SaveChangesAsync() > 0;

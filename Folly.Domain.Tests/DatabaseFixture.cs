@@ -16,9 +16,6 @@ public class DatabaseFixture : IDisposable {
     private const string _ConnectionString = "Filename=:memory:";
     private readonly SqliteConnection _Connection;
     private readonly Mock<IConfiguration> _MockConfiguration;
-
-    public const string Test = "test";
-
     private static readonly object _Lock = new();
     private static bool _DatabaseInitialized;
 

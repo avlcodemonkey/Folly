@@ -1,4 +1,3 @@
-using System.Text.Json;
 using Folly.Domain.Extensions;
 using Folly.Domain.Models;
 using Microsoft.AspNetCore.Http;
@@ -119,13 +118,14 @@ public sealed class FollyDbContext : DbContext {
                 Date = DateTime.UtcNow
             };
 
-            if (entry.State is EntityState.Modified) {
+            if (entry.State is EntityState.Added) {
+                changeLog.NewValues = entry.Properties.ToAuditJson(true);
+            } else if (entry.State is EntityState.Deleted) {
+                changeLog.OldValues = entry.Properties.ToAuditJson(false);
+            } else if (entry.State is EntityState.Modified) {
                 var changedProperties = entry.Properties.Where(x => x.IsModified).ToList();
-                var oldValues = changedProperties.ToDictionary(x => x.Metadata.Name, x => x.OriginalValue?.ToString());
-                var newValues = changedProperties.ToDictionary(x => x.Metadata.Name, x => x.CurrentValue?.ToString());
-
-                changeLog.OldValues = JsonSerializer.Serialize(oldValues);
-                changeLog.NewValues = JsonSerializer.Serialize(newValues);
+                changeLog.OldValues = changedProperties.ToAuditJson(false);
+                changeLog.NewValues = changedProperties.ToAuditJson(true);
             }
 
             auditLogs.Add(changeLog);

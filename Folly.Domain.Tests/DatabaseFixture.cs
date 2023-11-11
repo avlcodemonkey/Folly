@@ -12,7 +12,7 @@ namespace Folly.Domain.Tests;
 /// See https://learn.microsoft.com/en-us/ef/core/testing/testing-with-the-database
 /// for more details about using a database fixture for testing with xUnit.
 /// </summary>
-public class TestDatabaseFixture : IDisposable {
+public class DatabaseFixture : IDisposable {
     private const string _ConnectionString = "Filename=:memory:";
     private readonly SqliteConnection _Connection;
     private readonly Mock<IConfiguration> _MockConfiguration;
@@ -24,14 +24,13 @@ public class TestDatabaseFixture : IDisposable {
 
     private static IHttpContextAccessor CreateHttpContextAccessor(User? user = null) {
         var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
-        if (user != null)
-#pragma warning disable CS8602 // Dereference of a possibly null reference.
-            mockHttpContextAccessor.Setup(x => x.HttpContext.User.Identity).Returns(new GenericIdentity(user.UserName, "test"));
-#pragma warning restore CS8602 // Dereference of a possibly null reference.
+        if (user != null) {
+            mockHttpContextAccessor.Setup(x => x.HttpContext!.User.Identity).Returns(new GenericIdentity(user.UserName, "test"));
+        }
         return mockHttpContextAccessor.Object;
     }
 
-    public TestDatabaseFixture() {
+    public DatabaseFixture() {
         _MockConfiguration = new Mock<IConfiguration>();
         _MockConfiguration.Setup(x => x.GetSection("App").GetSection("Database")["FilePath"]).Returns(_ConnectionString);
 
@@ -47,6 +46,7 @@ public class TestDatabaseFixture : IDisposable {
                     dbContext.Database.Migrate();
                     dbContext.Users.Add(UserForCreate);
                     dbContext.Users.Add(UserForUpdate);
+                    dbContext.Users.Add(UserForDelete);
                     dbContext.SaveChanges();
                 }
 
@@ -62,8 +62,11 @@ public class TestDatabaseFixture : IDisposable {
 
     public FollyDbContext CreateContextForUpdate() => CreateContext(UserForUpdate);
 
+    public FollyDbContext CreateContextForDelete() => CreateContext(UserForDelete);
+
     public User UserForCreate { get; } = new() { Id = -1, UserName = "create_user", Email = "create_user@fake.com", LanguageId = -1, FirstName = "Create" };
     public User UserForUpdate { get; } = new() { Id = -2, UserName = "update_user", Email = "update_user@fake.com", LanguageId = -1, FirstName = "Update" };
+    public User UserForDelete { get; } = new() { Id = -3, UserName = "delete_user", Email = "delete_user@fake.com", LanguageId = -1, FirstName = "Delete" };
 
     public void Dispose() {
         _Connection.Dispose();

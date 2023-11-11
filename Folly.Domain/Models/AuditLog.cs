@@ -18,6 +18,9 @@ public class AuditLog {
     [Required]
     public long PrimaryKey { get; set; }
 
+    /// <summary>
+    /// Should only be one of: Deleted = 2, Modified = 3, Added = 4
+    /// </summary>
     [Required]
     public EntityState State { get; set; }
 

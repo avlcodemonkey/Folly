@@ -109,7 +109,7 @@ public sealed class FollyDbContext : DbContext {
             ((AuditableEntity)entry.Entity).TemporaryId = primaryKey.Value;
 
             var entityName = entry.Entity.GetType().Name;
-            var changeLog = new AuditLog {
+            var auditLog = new AuditLog {
                 BatchId = batchId,
                 Entity = entityName,
                 PrimaryKey = primaryKey.Value,
@@ -119,16 +119,21 @@ public sealed class FollyDbContext : DbContext {
             };
 
             if (entry.State is EntityState.Added) {
-                changeLog.NewValues = entry.Properties.ToAuditJson(true);
+                auditLog.NewValues = entry.Properties.ToAuditJson(true);
             } else if (entry.State is EntityState.Deleted) {
-                changeLog.OldValues = entry.Properties.ToAuditJson(false);
+                auditLog.OldValues = entry.Properties.ToAuditJson(false);
             } else if (entry.State is EntityState.Modified) {
-                var changedProperties = entry.Properties.Where(x => x.IsModified).ToList();
-                changeLog.OldValues = changedProperties.ToAuditJson(false);
-                changeLog.NewValues = changedProperties.ToAuditJson(true);
+                var changedProperties = entry.Properties.Where(x => x.IsModified && x.OriginalValue?.ToString() != x.CurrentValue?.ToString()).ToList();
+                if (changedProperties.Any()) {
+                    auditLog.OldValues = changedProperties.ToAuditJson(false);
+                    auditLog.NewValues = changedProperties.ToAuditJson(true);
+                } else {
+                    // EF thinks this object changed, but properties are all the same so don't add an auditLog record
+                    continue;
+                }
             }
 
-            auditLogs.Add(changeLog);
+            auditLogs.Add(auditLog);
         }
 
         return auditLogs;

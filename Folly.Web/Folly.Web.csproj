@@ -21,26 +21,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Assets\favicon.ico" />
-    <None Remove="Assets\LICENSE.txt" />
-    <None Remove="Assets\README.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Assets\favicon.ico">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Views\Shared\Error.cshtml" />
-    <None Include="Views\Shared\_Layout.cshtml" />
-    <None Include="Views\_ViewImports.cshtml" />
-    <None Include="Views\_ViewStart.cshtml" />
-  </ItemGroup>
-
-  <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
   </ItemGroup>
 

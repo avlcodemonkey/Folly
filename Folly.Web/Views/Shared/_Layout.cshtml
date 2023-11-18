@@ -8,9 +8,15 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <title id="page-title">@(ViewData[BaseController.TitleProperty] ?? Core.Brand)</title>
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="stylesheet" href="/index.css" asp-append-version="true" />
-        <script src="/index.js" asp-append-version="true" defer></script>
+        <link rel="icon" href="~/Assets/favicon.ico" />
+
+        <environment include="Development">
+            <link rel="stylesheet" href="~/Assets/css/index.css" asp-append-version="true" />
+        </environment>
+        <environment exclude="Development">
+            <link rel="stylesheet" href="/Assets/dist/css/index.css" asp-append-version="true" />
+        </environment>
+        <script src="~/Assets/dist/ts/index.js" asp-append-version="true" defer></script>
     </head>
 
     <body hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header" hx-indicator="#htmx-indicator">

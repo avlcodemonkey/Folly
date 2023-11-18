@@ -6,6 +6,7 @@ using Folly.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.FileProviders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -44,7 +45,10 @@ app
     .UseExceptionHandling(builder)
     .UseSession()
     .UseResponseCompression()
-    .UseStaticFiles()
+    .UseStaticFiles(new StaticFileOptions {
+        FileProvider = new PhysicalFileProvider(Path.Combine(builder.Environment.ContentRootPath, "Assets")),
+        RequestPath = "/Assets"
+    })
     .UseRequestLocalization()
     .UseRouting()
     .UseAuthentication()

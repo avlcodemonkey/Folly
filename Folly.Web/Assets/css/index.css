@@ -6,17 +6,17 @@
 @import "../external/chota/src/_util.css";
 
 /* menu styles */
-@import "../external/luxbar/scss/luxbar.scss";
+@import "../external/luxbar/css/luxbar.css";
 
 /* icon font */
 @import "../font/icons.css";
 
 /* custom styles */
-@import "./root.scss";
-@import "./layout.scss";
-@import "./form.scss";
-@import "./breadcrumbs.scss";
-@import "./utils.scss";
+@import "./root.css";
+@import "./layout.css";
+@import "./form.css";
+@import "./breadcrumbs.css";
+@import "./utils.css";
 
-@import "./alpine-alert.scss";
-@import "./alpine-table.scss";
+@import "./alpine-alert.css";
+@import "./alpine-table.css";

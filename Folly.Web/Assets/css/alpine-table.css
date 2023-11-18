@@ -32,7 +32,7 @@
 }
 
 .alpine-table {
-    th {
+    & th {
         min-width: 100px;
 
         &:not(.alpine-no-sort) {
@@ -48,7 +48,7 @@
         }
     }
 
-    td {
+    & td {
         padding: 1rem .4rem;
     }
 

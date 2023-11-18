@@ -1,0 +1,17 @@
+form {
+    & input:invalid:not(.button) {
+        border-color: var(--color-error) !important;
+    }
+
+    .input-group {
+        display: flex;
+
+        & input + span.input-group-addon, & select + span.input-group-addon, & textarea + span.input-group-addon {
+            padding-left: 1rem;
+        }
+    }
+
+    & label input[type=checkbox] {
+        margin-right: 1rem;
+    }
+}

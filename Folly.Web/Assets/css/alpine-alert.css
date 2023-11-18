@@ -1,9 +1,9 @@
 .card {
-    col, [class*=" col-"], [class^="col-"] {
+    & col, & [class*=" col-"], [class^="col-"] {
         margin: 0 calc(var(--grid-gutter) / 2) 0 calc(var(--grid-gutter) / 2);
     }
 
-    span {
+    & span {
         padding-top: .75rem;
     }
 

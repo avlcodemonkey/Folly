@@ -1,28 +1,15 @@
 import esbuild from "esbuild";
-import { sassPlugin } from "esbuild-sass-plugin";
-import postcss from "postcss";
-import autoprefixer from "autoprefixer";
 
 const watch = process.argv.includes("--watch");
 
 const args = {
-    entryPoints: ['./Assets/ts/index.ts'],
-    outfile: 'wwwroot/index.js',
+    entryPoints: ['./Assets/ts/index.ts', './Assets/css/index.css'],
+    outdir: 'Assets/dist',
     bundle: true,
     minify: true,
     platform: 'browser',
     sourcemap: true,
     target: 'esnext',
-    plugins: [
-        sassPlugin({
-            async transform(source) {
-                const { css } = await postcss([autoprefixer]).process(source, {
-                    from: undefined,
-                });
-                return css;
-            },
-        }),
-    ],
     loader: {
         '.woff2': 'dataurl',
     },

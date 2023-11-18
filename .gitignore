@@ -291,6 +291,7 @@ __pycache__/
 *.db-shm
 *.db-wal
 
-# Ignore wwwroot files that are built
-**/wwwroot/*.js*
-**/wwwroot/*.css*
+# Ignore wwwroot/dist files that are built
+**/wwwroot/
+**/wwwroot/
+**/Assets/dist/

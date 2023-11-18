@@ -4,8 +4,6 @@ import * as htmx from 'htmx.org';
 import onHtmxConfirm from './eventHandlers/onHtmxConfirm';
 import onTableUpdated from './eventHandlers/onTableUpdated';
 
-import '../css/main.scss';
-
 // disable some htmx features for security
 htmx.config.allowScriptTags = false;
 htmx.config.selfRequestsOnly = true;

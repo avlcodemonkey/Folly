@@ -21,13 +21,13 @@
     </head>
 
     <body hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header" hx-indicator="#htmx-indicator">
-        <header id="luxbar" class="luxbar-fixed">
-            <input type="checkbox" class="luxbar-checkbox" id="luxbar-checkbox" />
-            <div class="luxbar-menu luxbar-menu-right">
+        <header id="luxbar" class="luxbar">
+            <input type="checkbox" id="luxbar-checkbox" />
+            <div class="luxbar-menu">
                 <ul class="luxbar-navigation">
                     <li authorize-roles="dashboard.index" class="luxbar-header">
                         <a asp-controller="Dashboard" asp-action="Index" class="luxbar-brand"><icon name="Sun" class="mi-mr" aria-hidden="true" /><span>@Core.Brand</span></a>
-                        <label class="luxbar-hamburger luxbar-hamburger-doublespin" id="luxbar-hamburger" for="luxbar-checkbox"> <span></span> </label>
+                        <label class="luxbar-hamburger" for="luxbar-checkbox"> <span></span> </label>
                     </li>
 
                     @if (User.Identity?.IsAuthenticated == true)

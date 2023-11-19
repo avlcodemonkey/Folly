@@ -28,7 +28,7 @@ body {
 }
 
 #main {
-    padding: 2rem;
+    padding: calc(var(--luxbar-height) + 1rem) var(--luxbar-height) var(--luxbar-height) var(--luxbar-height);
 }
 
 #content {

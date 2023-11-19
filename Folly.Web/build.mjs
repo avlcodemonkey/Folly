@@ -4,7 +4,7 @@ const watch = process.argv.includes("--watch");
 
 const args = {
     entryPoints: ['./Assets/ts/index.ts', './Assets/css/index.css'],
-    outdir: 'Assets/dist',
+    outdir: 'wwwroot',
     bundle: true,
     minify: true,
     platform: 'browser',

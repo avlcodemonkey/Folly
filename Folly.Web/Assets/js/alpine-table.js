@@ -1,4 +1,4 @@
-import { AlpineComponent } from 'alpinejs';
+//import { AlpineComponent } from 'alpinejs';
 
 const TableSetting = Object.freeze({
     CurrentPage: 'currentPage',
@@ -7,58 +7,58 @@ const TableSetting = Object.freeze({
     Sort: 'sort',
 });
 
-enum SortOrder {
-    Asc = 'asc',
-    Desc = 'desc',
-}
+const SortOrder = Object.freeze({
+    Asc: 'asc',
+    Desc: 'desc',
+});
 
-interface IndexedRow {
-    _index: number;
-}
+//interface IndexedRow {
+//    _index: number;
+//}
 
-interface SortColumn {
-    property: string;
-    sortOrder: SortOrder;
-}
+//interface SortColumn {
+//    property: string;
+//    sortOrder: SortOrder;
+//}
 
-const alpineTable: AlpineComponent = (key: string, src: string) => ({
+const alpineTable/*: AlpineComponent*/ = (key/*: string*/, src/*: string*/) => ({
     // from html placeholder for the table
     key,
     src,
 
     // internal state
-    rows: [] as Array<IndexedRow>,
-    filteredRows: [] as Array<IndexedRow>,
+    rows: []/* as Array<IndexedRow>*/,
+    filteredRows: []/* as Array<IndexedRow>*/,
     filteredRowTotal: 0,
-    sortColumns: [] as Array<SortColumn>,
+    sortColumns: []/* as Array<SortColumn>*/,
     currentPage: 0,
     perPage: 10,
     maxPage: 0,
     searchQuery: '',
     debounceTimer: 0,
 
-    fetchSetting(name: string) {
+    fetchSetting(name/*: string*/) {
         return sessionStorage.getItem(`${this.key}_${name}`);
     },
 
-    saveSetting(name: string, value: string | number) {
+    saveSetting(name/*: string*/, value/*: string | number*/) {
         sessionStorage.setItem(`${this.key}_${name}`, value.toString());
     },
 
-    defaultCompare(a: IndexedRow, b: IndexedRow) {
+    defaultCompare(a/*: IndexedRow*/, b/*: IndexedRow*/) {
         if (a._index > b._index) {
             return 1;
         }
         return a._index < b._index ? -1 : 0;
     },
 
-    compare(this: Array<SortColumn>, a: unknown, b: unknown) {
+    compare(/*this: Array<SortColumn>, */a/*: unknown*/, b/*: unknown*/) {
         let i = 0;
         const len = this.length;
         for (; i < len; i += 1) {
             const sort = this[i];
-            const aa = a[sort.property as keyof typeof a];
-            const bb = b[sort.property as keyof typeof b];
+            const aa = a[sort.property/* as keyof typeof a*/];
+            const bb = b[sort.property/* as keyof typeof b*/];
 
             if (aa === null) {
                 return 1;
@@ -76,11 +76,11 @@ const alpineTable: AlpineComponent = (key: string, src: string) => ({
         return 0;
     },
 
-    filterArray(this: string, obj: IndexedRow) {
+    filterArray(/*this: string, */obj/*: IndexedRow*/) {
         const tokens = (this || '').split(' ');
         return Array.from(Object.values(obj)).some((x) => {
             if (x.indexOf('_') < 0 && Object.prototype.hasOwnProperty.call(obj, x)) {
-                const objVal = (`${obj[x as keyof typeof obj]}`).toLowerCase();
+                const objVal = (`${obj[x/* as keyof typeof obj*/]}`).toLowerCase();
                 if (tokens.every((y) => objVal.indexOf(y) > -1)) {
                     return true;
                 }
@@ -91,7 +91,7 @@ const alpineTable: AlpineComponent = (key: string, src: string) => ({
 
     filterData() {
         // create a new array and filter by the search query
-        
+
         const filteredData = this.searchQuery ? (this.rows?.filter(this.filterArray.bind(this.searchQuery.toLowerCase())) ?? []) : [...(this.rows ?? [])];
 
         // sort the new array
@@ -112,8 +112,8 @@ const alpineTable: AlpineComponent = (key: string, src: string) => ({
         });
     },
 
-    onSearchQueryInput(event: InputEvent) {
-        const val = (event?.target as HTMLInputElement)?.value;
+    onSearchQueryInput(event/*: InputEvent*/) {
+        const val = (event?.target/* as HTMLInputElement*/)?.value;
         if (this.debounceTimer) {
             clearTimeout(this.debounceTimer);
         }
@@ -127,8 +127,8 @@ const alpineTable: AlpineComponent = (key: string, src: string) => ({
         }, 250);
     },
 
-    onPerPageInput(event: InputEvent) {
-        const newVal = parseInt((event?.target as HTMLInputElement)?.value ?? '10', 10) ?? 10;
+    onPerPageInput(event/*: InputEvent*/) {
+        const newVal = parseInt((event?.target/* as HTMLInputElement*/)?.value ?? '10', 10) ?? 10;
         if (this.perPage !== newVal) {
             this.currentPage = 0;
             this.saveSetting(TableSetting.PerPage, newVal);
@@ -154,13 +154,13 @@ const alpineTable: AlpineComponent = (key: string, src: string) => ({
         this.setPage(Math.min(this.currentPage + 1, this.maxPage));
     },
 
-    setPage(page: number) {
+    setPage(page/*: number*/) {
         this.currentPage = page;
         this.saveSetting(TableSetting.CurrentPage, this.currentPage);
         this.filterData();
     },
 
-    onSortClick(property: string) {
+    onSortClick(property/*: string*/) {
         if (!property) {
             return;
         }
@@ -179,7 +179,7 @@ const alpineTable: AlpineComponent = (key: string, src: string) => ({
         this.filterData();
     },
 
-    sortClass(property: string) {
+    sortClass(property/*: string*/) {
         const index = property ? this.sortColumns.findIndex((x) => x.property === property) : -1;
         if (index === -1) {
             return '';
@@ -227,7 +227,7 @@ const alpineTable: AlpineComponent = (key: string, src: string) => ({
         try {
             this.rows = (await fetch(this.src, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
                 .then((res) => res.json()))
-                .map((x: object, index: number) => ({ ...x, _index: index })) ?? [];
+                .map((x/*: object*/, index/*: number*/) => ({ ...x, _index: index })) ?? [];
         } catch {
             this.rows = [];
         }

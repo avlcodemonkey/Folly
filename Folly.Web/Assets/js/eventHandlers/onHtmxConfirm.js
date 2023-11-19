@@ -2,13 +2,13 @@
  * Add custom behavior to htmx:confirm event to enable alert/confirm dialogs.
  * @param {CustomEvent} e
  */
-const onHtmxConfirm = async (e: CustomEvent) => {
+const onHtmxConfirm = async (e) => {
     const { elt } = e.detail;
 
     if (elt.hasAttribute('hx-confirm-content')) {
         e.preventDefault();
 
-        const dialog = document.getElementById('confirm-dialog') as HTMLDialogElement;
+        const dialog = document.getElementById('confirm-dialog')/* as HTMLDialogElement*/;
         const content = document.getElementById('confirm-dialog-content');
         const okBtn = document.getElementById('confirm-dialog-ok');
         const cancelBtn = document.getElementById('confirm-dialog-cancel');
@@ -32,7 +32,7 @@ const onHtmxConfirm = async (e: CustomEvent) => {
     } else if (elt.hasAttribute('hx-alert-content')) {
         e.preventDefault();
 
-        const dialog = document.getElementById('alert-dialog') as HTMLDialogElement;
+        const dialog = document.getElementById('alert-dialog')/* as HTMLDialogElement*/;
         const content = document.getElementById('alert-dialog-content');
         const okBtn = document.getElementById('alert-dialog-ok');
         if (!(dialog && content && okBtn)) {

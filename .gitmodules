@@ -4,3 +4,6 @@
 [submodule "Folly.Web/Assets/external/luxbar"]
 	path = Folly.Web/Assets/external/luxbar
 	url = https://github.com/avlcodemonkey/luxbar
+[submodule "Folly.Web/Assets/external/htmx"]
+	path = Folly.Web/Assets/external/htmx
+	url = https://github.com/bigskysoftware/htmx

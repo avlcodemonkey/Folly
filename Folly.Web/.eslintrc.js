@@ -1,7 +1,7 @@
 module.exports = {
     /* See all the pre-defined configs here: https://www.npmjs.com/package/eslint-config-defaults */
     "extends": [
-        "airbnb-typescript/base"
+        "eslint-config-airbnb-base"
     ],
     "plugins": [
         "import"
@@ -18,15 +18,12 @@ module.exports = {
         "project": "./tsconfig.json"
     },
     "rules": {
-        "indent": "off",
-        "@typescript-eslint/indent": [
+        "indent": [
             "error",
             4
         ],
         "lines-between-class-members": "off",
-        "@typescript-eslint/lines-between-class-members": "off",
         "space-before-function-paren": "off",
-        "@typescript-eslint/space-before-function-paren": "off",
         "linebreak-style": [
             "error",
             "windows"
@@ -36,5 +33,5 @@ module.exports = {
             "all"
         ]
     },
-    "ignorePatterns": [ "*.js" ]
+    "ignorePatterns": [ ".eslintrc.js", "./Assets/external" ]
 }

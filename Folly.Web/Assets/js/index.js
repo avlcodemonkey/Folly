@@ -1,9 +1,9 @@
-import alpine from '../external/alpine.js';
-import '../external/htmx/src/htmx.js';
+import Alpine from 'alpinejs';
+import * as htmx from 'htmx.org';
 
-import alpineTable from './alpine-table.js';
-import onHtmxConfirm from './eventHandlers/onHtmxConfirm.js';
-import onTableUpdated from './eventHandlers/onTableUpdated.js';
+import alpineTable from './alpine-table';
+import onHtmxConfirm from './eventHandlers/onHtmxConfirm';
+import onTableUpdated from './eventHandlers/onTableUpdated';
 
 // disable some htmx features for security
 htmx.config.allowScriptTags = false;
@@ -15,6 +15,6 @@ document.body.addEventListener('alpine-table-updated', onTableUpdated);
 
 document.body.addEventListener('htmx:confirm', onHtmxConfirm);
 
-alpine.data('table', alpineTable);
+Alpine.data('table', alpineTable);
 
-alpine.start();
+Alpine.start();

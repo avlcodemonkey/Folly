@@ -29,7 +29,9 @@ module.exports = {
         "curly": [
             "error",
             "all"
-        ]
+        ],
+        "max-len": ["error", { "code": 160 }],
+        "no-underscore-dangle": [ "error", { "allow": [ "_index" ] } ]
     },
     "ignorePatterns": [ ".eslintrc.js", "node_modules", "wwwroot" ]
 }

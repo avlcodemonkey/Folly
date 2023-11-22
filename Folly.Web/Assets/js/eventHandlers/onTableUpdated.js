@@ -1,12 +1,13 @@
-import * as htmx from '../../external/htmx/src/htmx.js';
+import * as htmx from 'htmx.org';
 
 /**
  * Listen for updates to alpine-table and process the table content with htmx.
- * @param {Event} e
+ * @param {Event} event
  */
-const onTableUpdated = (e) => {
-    if (e?.target) {
-        htmx.process(e.target/* as Element*/);
+const onTableUpdated = (event) => {
+    if (event?.target) {
+        htmx.default.process(event.target);
     }
 };
+
 export default onTableUpdated;

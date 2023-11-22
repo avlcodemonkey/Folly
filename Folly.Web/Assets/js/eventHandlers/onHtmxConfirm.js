@@ -1,17 +1,20 @@
 /**
  * Add custom behavior to htmx:confirm event to enable alert/confirm dialogs.
- * @param {CustomEvent} e
+ * @param {CustomEvent} event
  */
-const onHtmxConfirm = async (e) => {
-    const { elt } = e.detail;
+const onHtmxConfirm = async (event) => {
+    const { elt } = event.detail;
 
     if (elt.hasAttribute('hx-confirm-content')) {
-        e.preventDefault();
+        event.preventDefault();
 
-        const dialog = document.getElementById('confirm-dialog')/* as HTMLDialogElement*/;
+        /** @type {HTMLDialogElement} */
+        const dialog = document.getElementById('confirm-dialog');
+
         const content = document.getElementById('confirm-dialog-content');
         const okBtn = document.getElementById('confirm-dialog-ok');
         const cancelBtn = document.getElementById('confirm-dialog-cancel');
+
         if (!(dialog && content && okBtn && cancelBtn)) {
             return;
         }
@@ -23,18 +26,21 @@ const onHtmxConfirm = async (e) => {
         const closeHandler = () => {
             dialog.removeEventListener('close', closeHandler);
             if (dialog.returnValue === 'ok') {
-                e.detail.issueRequest();
+                event.detail.issueRequest();
             }
         };
         dialog.addEventListener('close', closeHandler);
 
         dialog.showModal();
     } else if (elt.hasAttribute('hx-alert-content')) {
-        e.preventDefault();
+        event.preventDefault();
 
-        const dialog = document.getElementById('alert-dialog')/* as HTMLDialogElement*/;
+        /** @type {HTMLDialogElement} */
+        const dialog = document.getElementById('alert-dialog');
+
         const content = document.getElementById('alert-dialog-content');
         const okBtn = document.getElementById('alert-dialog-ok');
+
         if (!(dialog && content && okBtn)) {
             return;
         }

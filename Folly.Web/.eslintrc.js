@@ -13,9 +13,7 @@ module.exports = {
     },
     "parserOptions": {
         "sourceType": "module",
-        "ecmaVersion": "latest",
-        "tsconfigRootDir": __dirname,
-        "project": "./tsconfig.json"
+        "ecmaVersion": "latest"
     },
     "rules": {
         "indent": [

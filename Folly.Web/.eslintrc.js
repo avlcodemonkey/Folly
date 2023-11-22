@@ -31,5 +31,5 @@ module.exports = {
             "all"
         ]
     },
-    "ignorePatterns": [ ".eslintrc.js", "./Assets/external" ]
+    "ignorePatterns": [ ".eslintrc.js", "node_modules", "wwwroot" ]
 }

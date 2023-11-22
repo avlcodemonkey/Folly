@@ -44,7 +44,7 @@ app
     .UseExceptionHandling(builder)
     .UseSession()
     .UseResponseCompression()
-    .UseStaticFilesForEnvironment(builder)
+    .UseStaticFiles()
     .UseRequestLocalization()
     .UseRouting()
     .UseAuthentication()

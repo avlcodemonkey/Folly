@@ -15,3 +15,7 @@ It is possible to use the CSS without a build step if needed.  But the build wil
 Javascript is used instead of typescript for this project.  Using javascript removes one layer of compilation and makes the code easier to write and debug.  JSDoc comments are used extensively, along with `@ts-check` to provide much of the functionality of typescript in javascript though.
 
 The custom javascript is written as ES6 modules.  Because the project also contains external javascript using UMD format, a build step is required for the javascript.
+
+## Fav Icon
+
+Favicon.ico exists in both `Assets` and `wwwroot`.  It should always be the same file in both places.  Could create a build step to copy it from `Assets` to `wwwroot` but that seems like overkill.

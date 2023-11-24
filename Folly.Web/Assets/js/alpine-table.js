@@ -1,3 +1,5 @@
+// @ts-check
+
 /**
  * Enum for table setting keys.
  * @readonly
@@ -37,7 +39,7 @@ const SortOrder = Object.freeze({
  * Component for rendering tables dynamically from HTML markup.
  * @param {string} key
  * @param {string} src
- * @returns {AlpineComponent}
+ * @returns {import("alpinejs").AlpineComponent}
  */
 const alpineTable = (key, src) => ({
     // from html placeholder for the table
@@ -83,7 +85,7 @@ const alpineTable = (key, src) => ({
      * Sorts rows by their original index.
      * @param {IndexedRow} a
      * @param {IndexedRow} b
-     * @returns {boolean}
+     * @returns {number} Negative if a is less than b, positive if a is greater than b, and zero if they are equal
      */
     defaultCompare(a, b) {
         if (a._index > b._index) {
@@ -97,7 +99,7 @@ const alpineTable = (key, src) => ({
      * @this {Array<SortColumn>}
      * @param {object} a First element for comparison.
      * @param {object} b Second element for comparison.
-     * @returns Negative if a is less than b, positive if a is greater than b, and zero if they are equal
+     * @returns {number} Negative if a is less than b, positive if a is greater than b, and zero if they are equal
      */
     compare(a, b) {
         let i = 0;

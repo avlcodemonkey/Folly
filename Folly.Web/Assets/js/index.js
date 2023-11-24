@@ -1,3 +1,5 @@
+// @ts-check
+
 import Alpine from 'alpinejs';
 import * as htmx from 'htmx.org';
 

@@ -7,13 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Moq;
 
-namespace Folly.Web.Tests.Services;
+namespace Folly.Web.Tests.Fixtures;
 
 /// <summary>
 /// See https://learn.microsoft.com/en-us/ef/core/testing/testing-with-the-database
 /// for more details about using a database fixture for testing with xUnit.
 /// </summary>
-public class DatabaseFixture : IDisposable {
+public class RoleDatabaseFixture : IDisposable {
     private const string _ConnectionString = "Filename=:memory:";
     private readonly SqliteConnection _Connection;
     private readonly Mock<IConfiguration> _MockConfiguration;
@@ -28,7 +28,7 @@ public class DatabaseFixture : IDisposable {
         return mockHttpContextAccessor.Object;
     }
 
-    public DatabaseFixture() {
+    public RoleDatabaseFixture() {
         _MockConfiguration = new Mock<IConfiguration>();
         _MockConfiguration.Setup(x => x.GetSection("App").GetSection("Database")["FilePath"]).Returns(_ConnectionString);
 
@@ -39,12 +39,12 @@ public class DatabaseFixture : IDisposable {
         // lock allows us to use this fixture safely with multiple classes of tests if needed
         lock (_Lock) {
             if (!_DatabaseInitialized) {
-                // create the schema and user data we will need for each test
+                // create the schema and data we will need for each test
                 using (var dbContext = CreateContext()) {
                     dbContext.Database.Migrate();
-                    dbContext.Users.Add(UserForCreate);
-                    dbContext.Users.Add(UserForUpdate);
-                    dbContext.Users.Add(UserForDelete);
+                    dbContext.Users.Add(User);
+                    dbContext.Permissions.Add(TestPermission);
+                    dbContext.Roles.Add(TestRole);
                     dbContext.SaveChanges();
                 }
 
@@ -56,15 +56,16 @@ public class DatabaseFixture : IDisposable {
     public FollyDbContext CreateContext(User? user = null)
         => new(new DbContextOptionsBuilder<FollyDbContext>().UseSqlite(_Connection).Options, _MockConfiguration.Object, CreateHttpContextAccessor(user));
 
-    public FollyDbContext CreateContextForCreate() => CreateContext(UserForCreate);
+    public FollyDbContext CreateContext() => CreateContext(User);
 
-    public FollyDbContext CreateContextForUpdate() => CreateContext(UserForUpdate);
+    public User User { get; } = new() { Id = -1, UserName = "user", Email = "user@fake.com", LanguageId = -1, FirstName = "User" };
 
-    public FollyDbContext CreateContextForDelete() => CreateContext(UserForDelete);
+    public Role TestRole { get; } = new() {
+        Id = -1, Name = "Test", IsDefault = false,
+        RolePermissions = new List<RolePermission> { new() { Id = -2, RoleId = -1, PermissionId = -3 } }
+    };
 
-    public User UserForCreate { get; } = new() { Id = -1, UserName = "create_user", Email = "create_user@fake.com", LanguageId = -1, FirstName = "Create" };
-    public User UserForUpdate { get; } = new() { Id = -2, UserName = "update_user", Email = "update_user@fake.com", LanguageId = -1, FirstName = "Update" };
-    public User UserForDelete { get; } = new() { Id = -3, UserName = "delete_user", Email = "delete_user@fake.com", LanguageId = -1, FirstName = "Delete" };
+    public Permission TestPermission { get; } = new() { Id = -3, ControllerName = "controller", ActionName = "action" };
 
     public void Dispose() {
         _Connection.Dispose();

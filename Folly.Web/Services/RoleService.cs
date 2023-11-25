@@ -9,23 +9,6 @@ namespace Folly.Services;
 public sealed class RoleService : IRoleService {
     private readonly FollyDbContext _DbContext;
 
-    private async Task MapUpdates(DTO.Role roleDTO, Role role) {
-        role.Name = roleDTO.Name;
-        role.IsDefault = roleDTO.IsDefault;
-
-        var existingPermissions = new Dictionary<int, RolePermission>();
-        if (role.Id > 0 && roleDTO.PermissionIds?.Any() == true) {
-            existingPermissions = (await _DbContext.RolePermissions.Where(x => x.RoleId == role.Id).ToListAsync()).ToDictionary(x => x.PermissionId, x => x);
-        }
-
-        role.RolePermissions = roleDTO.PermissionIds?.Select(x => {
-            if (existingPermissions.TryGetValue(x, out var rolePermission)) {
-                return rolePermission;
-            }
-            return new RolePermission { PermissionId = x, RoleId = roleDTO.Id };
-        }).ToList() ?? new List<RolePermission>();
-    }
-
     public RoleService(FollyDbContext dbContext) => _DbContext = dbContext;
 
     public async Task<bool> CopyRoleAsync(DTO.CopyRole copyRoleDTO) {
@@ -72,5 +55,22 @@ public sealed class RoleService : IRoleService {
         var defaultRole = await _DbContext.Roles.FirstAsync(x => x.IsDefault);
         defaultRole.RolePermissions = permissionIds.Select(x => new RolePermission { PermissionId = x, RoleId = defaultRole.Id }).ToList();
         return await _DbContext.SaveChangesAsync() > 0;
+    }
+
+    private async Task MapUpdates(DTO.Role roleDTO, Role role) {
+        role.Name = roleDTO.Name;
+        role.IsDefault = roleDTO.IsDefault;
+
+        var existingPermissions = new Dictionary<int, RolePermission>();
+        if (role.Id > 0 && roleDTO.PermissionIds?.Any() == true) {
+            existingPermissions = (await _DbContext.RolePermissions.Where(x => x.RoleId == role.Id).ToListAsync()).ToDictionary(x => x.PermissionId, x => x);
+        }
+
+        role.RolePermissions = roleDTO.PermissionIds?.Select(x => {
+            if (existingPermissions.TryGetValue(x, out var rolePermission)) {
+                return rolePermission;
+            }
+            return new RolePermission { PermissionId = x, RoleId = roleDTO.Id };
+        }).ToList() ?? new List<RolePermission>();
     }
 }

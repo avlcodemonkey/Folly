@@ -1,5 +1,7 @@
 // @ts-check
 
+import ky from 'ky';
+
 /**
  * Enum for table setting keys.
  * @readonly
@@ -35,6 +37,8 @@ const SortOrder = Object.freeze({
  * @property {SortOrder} sortOrder Order to sort this property.
  */
 
+class FetchError extends Error { }
+
 /**
  * Component for rendering tables dynamically from HTML markup.
  * @param {string} key
@@ -62,6 +66,8 @@ const alpineTable = (key, src) => ({
     maxPage: 0,
     searchQuery: '',
     debounceTimer: 0,
+    loading: false,
+    error: false,
 
     /**
      * Load a value from session storage.
@@ -339,6 +345,22 @@ const alpineTable = (key, src) => ({
     },
 
     /**
+     * Check if data is still loading.
+     * @returns {boolean} True if still loading data from server, else false.
+     */
+    get isLoading() {
+        return this.loading;
+    },
+
+    /**
+     * Check if any errors occurred loading data.
+     * @returns {boolean} True if errors occurred, else false.
+     */
+    get hasError() {
+        return this.error;
+    },
+
+    /**
      * Fetch data from the server at the URL specified in the `src` property.
      */
     async fetchData() {
@@ -346,15 +368,32 @@ const alpineTable = (key, src) => ({
             return;
         }
 
+        this.loading = true;
+        this.error = false;
+
         try {
-            this.rows = (await fetch(this.src, { headers: { 'X-Requested-With': 'XMLHttpRequest' } })
-                .then((res) => res.json()))
-                .map((x, index) => ({ ...x, _index: index })) ?? [];
+            const json = await ky.get(this.src, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).json();
+            if (!(json && Array.isArray(json))) {
+                throw new FetchError(`Request to '${this.src}' returned invalid response.`);
+            }
+            this.rows = json.map((x, index) => ({ ...x, _index: index })) ?? [];
         } catch {
             this.rows = [];
+            this.error = true;
+        } finally {
+            this.loading = false;
         }
 
         this.filterData();
+    },
+
+    /**
+     * Lets user try to reload data in case of a failure.
+     */
+    async onRetryClick() {
+        if (!this.loading) {
+            await this.fetchData();
+        }
     },
 
     /**

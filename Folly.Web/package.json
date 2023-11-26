@@ -15,6 +15,7 @@
     },
     "dependencies": {
         "alpinejs": "^3.13.3",
-        "htmx.org": "^1.9.8"
+        "htmx.org": "^1.9.8",
+        "ky": "^1.1.3"
     }
 }

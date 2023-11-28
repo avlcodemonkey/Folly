@@ -23,10 +23,9 @@ public sealed class ViewService : IViewService {
         var permissions = await _PermissionService.GetAllPermissionsAsync();
 
         foreach (var permission in permissions) {
-            if (!controllerPermissions.ContainsKey(permission.ControllerName)) {
+            if (!controllerPermissions.TryGetValue(permission.ControllerName, out _)) {
                 controllerPermissions.Add(permission.ControllerName, new List<Permission>());
             }
-
             controllerPermissions[permission.ControllerName].Add(permission);
         }
 

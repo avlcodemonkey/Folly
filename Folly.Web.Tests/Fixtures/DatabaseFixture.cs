@@ -13,7 +13,7 @@ namespace Folly.Web.Tests.Fixtures;
 /// See https://learn.microsoft.com/en-us/ef/core/testing/testing-with-the-database
 /// for more details about using a database fixture for testing with xUnit.
 /// </summary>
-public class RoleDatabaseFixture : IDisposable {
+public class DatabaseFixture : IDisposable {
     private const string _ConnectionString = "Filename=:memory:";
     private readonly SqliteConnection _Connection;
     private readonly Mock<IConfiguration> _MockConfiguration;
@@ -28,7 +28,7 @@ public class RoleDatabaseFixture : IDisposable {
         return mockHttpContextAccessor.Object;
     }
 
-    public RoleDatabaseFixture() {
+    public DatabaseFixture() {
         _MockConfiguration = new Mock<IConfiguration>();
         _MockConfiguration.Setup(x => x.GetSection("App").GetSection("Database")["FilePath"]).Returns(_ConnectionString);
 

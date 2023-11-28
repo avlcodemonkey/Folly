@@ -5,11 +5,12 @@ using DTO = Folly.Models;
 
 namespace Folly.Web.Tests.Services;
 
-public class RoleServiceTests : IClassFixture<RoleDatabaseFixture> {
-    private readonly RoleDatabaseFixture _Fixture;
+[Collection(nameof(DatabaseCollection))]
+public class RoleServiceTests {
+    private readonly DatabaseFixture _Fixture;
     private readonly RoleService _RoleService;
 
-    public RoleServiceTests(RoleDatabaseFixture fixture) {
+    public RoleServiceTests(DatabaseFixture fixture) {
         _Fixture = fixture;
         _RoleService = new RoleService(fixture.CreateContext());
     }

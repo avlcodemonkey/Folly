@@ -36,25 +36,25 @@ public sealed class PermissionManager {
             .ToDictionary(x => x.ToLower(CultureInfo.InvariantCulture), x => x);
 
         // query all permissions from db
-        var permissions = (await _PermissionService.GetAll())
+        var permissions = (await _PermissionService.GetAllPermissionsAsync())
             .ToDictionary(x => $"{x.ControllerName?.Trim()}.{x.ActionName?.Trim()}".ToLower(CultureInfo.InvariantCulture), x => x);
 
         // save any actions not in db
         var missingActionList = actionList.Where(x => !permissions.ContainsKey(x.Key));
         foreach (var permission in missingActionList) {
             var parts = permission.Value.Split('.');
-            await _PermissionService.Save(new Permission { ControllerName = parts[0], ActionName = parts[1] });
+            await _PermissionService.SavePermissionAsync(new Permission { ControllerName = parts[0], ActionName = parts[1] });
         }
 
         // delete any permission not in action list
         var removedPermissions = permissions.Where(x => !actionList.ContainsKey(x.Key));
         foreach (var permission in removedPermissions) {
-            await _PermissionService.Delete(permission.Value.Id);
+            await _PermissionService.DeletePermissionAsync(permission.Value.Id);
         }
 
         // if there are no permissions in the db, then set the default role with all permissions now that we've added them
         if (!permissions.Any()) {
-            var permissionIds = (await _PermissionService.GetAll()).Select(x => x.Id);
+            var permissionIds = (await _PermissionService.GetAllPermissionsAsync()).Select(x => x.Id);
             await _RoleService.AddPermissionsToDefaultRoleAsync(permissionIds);
         }
 

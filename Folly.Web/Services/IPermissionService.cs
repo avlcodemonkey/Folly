@@ -3,9 +3,9 @@ using Folly.Models;
 namespace Folly.Services;
 
 public interface IPermissionService {
-    Task<bool> Delete(int permissionId);
+    Task<bool> DeletePermissionAsync(int permissionId);
 
-    Task<IEnumerable<Permission>> GetAll();
+    Task<IEnumerable<Permission>> GetAllPermissionsAsync();
 
-    Task<bool> Save(Permission permissionDTO);
+    Task<bool> SavePermissionAsync(Permission permissionDTO);
 }

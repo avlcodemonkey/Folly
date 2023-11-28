@@ -20,7 +20,7 @@ public sealed class ViewService : IViewService {
 
     public async Task<Dictionary<string, List<Permission>>> GetControllerPermissionsAsync() {
         var controllerPermissions = new Dictionary<string, List<Permission>>();
-        var permissions = await _PermissionService.GetAll();
+        var permissions = await _PermissionService.GetAllPermissionsAsync();
 
         foreach (var permission in permissions) {
             if (!controllerPermissions.ContainsKey(permission.ControllerName)) {

@@ -3,21 +3,17 @@ using Folly.Models;
 namespace Folly.Services;
 
 public interface IUserService {
-    Task<bool> AddUser(User userDTO);
+    Task<bool> DeleteUserAsync(int id);
 
-    Task<bool> DeleteUser(User userDTO);
+    Task<IEnumerable<User>> GetAllUsersAsync();
 
-    Task<IEnumerable<User>> GetAllUsers();
+    Task<IEnumerable<UserClaim>> GetClaimsByUserIdAsync(int id);
 
-    Task<IEnumerable<UserClaim>> GetClaimsByUserId(int id);
+    Task<User> GetUserByIdAsync(int id);
 
-    Task<User?> GetCurrentUser();
+    Task<User> GetUserByUserNameAsync(string userName);
 
-    Task<User> GetUserById(int id);
+    Task<bool> SaveUserAsync(User userDTO);
 
-    Task<User> GetUserByUserName(string userName);
-
-    Task<bool> SaveUser(User userDTO);
-
-    Task<string> UpdateAccount(UpdateAccount account);
+    Task<string> UpdateAccountAsync(UpdateAccount account);
 }

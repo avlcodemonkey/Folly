@@ -33,6 +33,4 @@ public sealed record User : BaseModel {
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
     [IsUniqueUserName]
     public string UserName { get; init; } = "";
-
-    public bool? Status { get; init; }
 }

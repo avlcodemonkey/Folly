@@ -47,7 +47,7 @@ public class AccountController : BaseController {
 
     [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName)]
     public async Task<IActionResult> UpdateAccount() {
-        var user = await _UserService.GetUserByUserName(User.Identity!.Name!);
+        var user = await _UserService.GetUserByUserNameAsync(User.Identity!.Name!);
         return View("UpdateAccount", new UpdateAccount(user));
     }
 
@@ -56,7 +56,7 @@ public class AccountController : BaseController {
         if (!ModelState.IsValid)
             return View("UpdateAccount", model);
 
-        var result = await _UserService.UpdateAccount(model);
+        var result = await _UserService.UpdateAccountAsync(model);
         if (result.IsEmpty()) {
             var language = await _LanguageService.GetLanguageByIdAsync(model.LanguageId);
             Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName, CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(new CultureInfo(language.LanguageCode))));

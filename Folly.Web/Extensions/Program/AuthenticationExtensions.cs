@@ -49,17 +49,16 @@ public static class AuthenticationExtensions {
                         return;
                     }
 
-                    var user = await userService.GetUserByUserName(username);
+                    var user = await userService.GetUserByUserNameAsync(username);
                     var languages = await languageService.GetAllLanguagesAsync();
                     if (user == null) {
                         user = new Models.User {
                             UserName = username,
                             FirstName = context.Principal.FindFirst(ClaimTypes.Name)?.Value ?? context.Principal.FindFirst(ClaimTypes.Name)?.Value ?? "",
                             Email = context.Principal.FindFirst(ClaimTypes.Email)?.Value ?? "",
-                            LanguageId = languages.FirstOrDefault(x => x.IsDefault)?.Id ?? 0,
-                            Status = true
+                            LanguageId = languages.FirstOrDefault(x => x.IsDefault)?.Id ?? 0
                         };
-                        await userService.AddUser(user);
+                        await userService.SaveUserAsync(user);
                     }
 
                     var languageCode = languages.FirstOrDefault(x => x.Id == user.LanguageId)?.LanguageCode ?? "en";

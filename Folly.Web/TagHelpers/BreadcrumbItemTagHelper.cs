@@ -1,5 +1,4 @@
 using Folly.Controllers;
-using Folly.Extensions;
 using Folly.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -23,7 +22,7 @@ public sealed class BreadcrumbItemTagHelper : BaseTagHelper {
             HtmlHelper!.ViewData[BaseController.TitleProperty] = Label;
             output.Content.Append(Label);
 
-            if (!Label.IsEmpty() && HtmlHelper.ViewContext.HttpContext.Request.Headers.Any(x => x.Key == HtmxHeaders.Request)) {
+            if (!string.IsNullOrWhiteSpace(Label) && HtmlHelper.ViewContext.HttpContext.Request.Headers.Any(x => x.Key == HtmxHeaders.Request)) {
                 // create a new title tag that htmx will swap out
                 var title = new TagBuilder("title");
                 title.MergeAttribute("id", "page-title");

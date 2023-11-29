@@ -57,7 +57,7 @@ public class AccountController : BaseController {
             return View("UpdateAccount", model);
 
         var result = await _UserService.UpdateAccountAsync(model);
-        if (result.IsEmpty()) {
+        if (string.IsNullOrWhiteSpace(result)) {
             var language = await _LanguageService.GetLanguageByIdAsync(model.LanguageId);
             Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName, CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(new CultureInfo(language.LanguageCode))));
             ViewData[MessageProperty] = Account.AccountUpdated;

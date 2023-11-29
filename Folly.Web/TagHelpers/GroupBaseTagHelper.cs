@@ -28,32 +28,42 @@ public class GroupBaseTagHelper : BaseTagHelper {
 
     public static int GetMaxLength(IReadOnlyList<object> validatorMetadata) {
         for (var i = 0; i < validatorMetadata.Count; i++) {
-            if (validatorMetadata[i] is StringLengthAttribute stringLengthAttribute && stringLengthAttribute.MaximumLength > 0)
+            if (validatorMetadata[i] is StringLengthAttribute stringLengthAttribute && stringLengthAttribute.MaximumLength > 0) {
                 return stringLengthAttribute.MaximumLength;
-            if (validatorMetadata[i] is MaxLengthAttribute maxLengthAttribute && maxLengthAttribute.Length > 0)
+            }
+
+            if (validatorMetadata[i] is MaxLengthAttribute maxLengthAttribute && maxLengthAttribute.Length > 0) {
                 return maxLengthAttribute.Length;
+            }
         }
         return 0;
     }
 
     public static int GetMinLength(IReadOnlyList<object> validatorMetadata) {
         for (var i = 0; i < validatorMetadata.Count; i++) {
-            if (validatorMetadata[i] is StringLengthAttribute stringLengthAttribute && stringLengthAttribute.MinimumLength > 0)
+            if (validatorMetadata[i] is StringLengthAttribute stringLengthAttribute && stringLengthAttribute.MinimumLength > 0) {
                 return stringLengthAttribute.MinimumLength;
-            if (validatorMetadata[i] is MinLengthAttribute minLengthAttribute && minLengthAttribute.Length > 0)
+            }
+
+            if (validatorMetadata[i] is MinLengthAttribute minLengthAttribute && minLengthAttribute.Length > 0) {
                 return minLengthAttribute.Length;
+            }
         }
         return 0;
     }
 
     public IHtmlContent BuildHelp() {
-        if (HtmlHelper!.ViewContext.HttpContext?.WantsHelp() != true)
+        if (HtmlHelper!.ViewContext.HttpContext?.WantsHelp() != true) {
             return HtmlString.Empty;
+        }
 
-        if (HelpText.IsEmpty() && For != null)
+        if (string.IsNullOrWhiteSpace(HelpText) && For != null) {
             HelpText = ContextHelp.ResourceManager.GetString($"{For.Metadata.ContainerType!.Name}_{For.Metadata.PropertyName}", CultureInfo.InvariantCulture) ?? "";
-        if (HelpText.IsEmpty())
+        }
+
+        if (string.IsNullOrWhiteSpace(HelpText)) {
             return HtmlString.Empty;
+        }
 
         var icon = new TagBuilder("i");
         icon.AddCssClass("mi");
@@ -76,13 +86,16 @@ public class GroupBaseTagHelper : BaseTagHelper {
     }
 
     public IHtmlContent BuildLabel(string? forField = null) {
-        if (string.IsNullOrWhiteSpace(FieldTitle))
+        if (string.IsNullOrWhiteSpace(FieldTitle)) {
             return HtmlString.Empty;
+        }
 
         var label = new TagBuilder("label");
-        if (!string.IsNullOrWhiteSpace(forField ?? FieldName))
+        if (!string.IsNullOrWhiteSpace(forField ?? FieldName)) {
             label.MergeAttribute("for", forField ?? FieldName);
+        }
         label.InnerHtml.Append(FieldTitle);
+
         return label;
     }
 

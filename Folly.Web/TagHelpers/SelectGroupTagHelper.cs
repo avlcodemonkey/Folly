@@ -9,8 +9,9 @@ namespace Folly.TagHelpers;
 
 public sealed class SelectGroupTagHelper : GroupBaseTagHelper {
     private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
-        if (string.IsNullOrWhiteSpace(FieldName))
+        if (string.IsNullOrWhiteSpace(FieldName)) {
             return HtmlString.Empty;
+        }
 
         var input = new TagBuilder("select");
         // add any attributes passed in first. we'll overwrite ones we need as we build
@@ -42,8 +43,9 @@ public sealed class SelectGroupTagHelper : GroupBaseTagHelper {
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 
-        if (Options != null)
-            Options = Options.Where(x => !x.Value.IsEmpty()).GroupBy(x => x.Value).Select(x => x.First());
+        if (Options != null) {
+            Options = Options.Where(x => !string.IsNullOrWhiteSpace(x.Value)).GroupBy(x => x.Value).Select(x => x.First());
+        }
 
         var inputGroup = BuildInputGroup();
         inputGroup.InnerHtml.AppendHtml(BuildInput(output.Attributes));

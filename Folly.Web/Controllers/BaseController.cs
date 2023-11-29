@@ -36,6 +36,6 @@ public abstract class BaseController : Controller {
             ViewData[ErrorProperty] = Core.ErrorGeneric;
             return View("Error");
         }
-        return message.IsEmpty() ? Ok(new { result = true }) : Ok(new { message });
+        return string.IsNullOrWhiteSpace(message) ? Ok(new { result = true }) : Ok(new { message });
     }
 }

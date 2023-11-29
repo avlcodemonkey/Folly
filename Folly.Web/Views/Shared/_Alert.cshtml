@@ -18,11 +18,11 @@
     }
 }
 
-@if (!GetData(BaseController.MessageProperty).IsEmpty())
+@if (!string.IsNullOrWhiteSpace(GetData(BaseController.MessageProperty)))
 {
     <partial name="_AlpineAlert" model="new AlpineAlert { Content = GetData(BaseController.MessageProperty) }" />
 }
-@if (!GetData(BaseController.ErrorProperty).IsEmpty())
+@if (!string.IsNullOrWhiteSpace(GetData(BaseController.ErrorProperty)))
 {
     <partial name="_AlpineAlert" model="new AlpineAlert { Content = GetData(BaseController.ErrorProperty), AlertType = AlertType.Error }" />
 }

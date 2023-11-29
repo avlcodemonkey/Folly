@@ -1,8 +1,6 @@
 using System.Data;
-using System.Linq.Expressions;
 using System.Text;
 using Folly.Models;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -27,21 +25,6 @@ public static class ControllerExtensions {
         }
 
         return false;
-    }
-
-    /// <summary>
-    /// Redirect to an action, without using magic strings.
-    /// </summary>
-    /// <typeparam name="TController">Type of controller to redirect to.</typeparam>
-    /// <param name="controller">Controller to redirect to.</param>
-    /// <param name="expression">Evaluates to name of action to invoke.</param>
-    /// <returns>Redirect action result.</returns>
-    public static IActionResult Redirect<TController>(this Controller controller, Expression<Func<TController, string>> expression, object? routeValues = null)
-        where TController : Controller {
-        if (expression.Body is not ConstantExpression constant) {
-            throw new ArgumentException("Expression must be a constant expression.");
-        }
-        return controller.RedirectToAction(constant.ToString(), typeof(TController).Name.StripController(), routeValues);
     }
 
     /// <summary>
@@ -75,7 +58,8 @@ public static class ControllerExtensions {
     /// <param name="text">Function to get the option text.</param>
     /// <param name="value">Funciton to get the option value.</param>
     /// <returns>List of select list items.</returns>
-    public static List<SelectListItem> ToSelectList<T>(this IEnumerable<T> enumerable, Func<T, string> text, Func<T, string> value) => enumerable.Select(f => new SelectListItem { Text = text(f), Value = value(f) }).ToList();
+    public static List<SelectListItem> ToSelectList<T>(this IEnumerable<T> enumerable, Func<T, string> text, Func<T, string> value)
+        => enumerable.Select(f => new SelectListItem { Text = text(f), Value = value(f) }).ToList();
 
     /// <summary>
     /// Check if user has help enabled.

@@ -25,7 +25,7 @@ public sealed class AutocompleteGroupTagHelper : GroupBaseTagHelper {
         input.MergeAttribute("name", AutoCompleteName, true);
         input.MergeAttribute("type", "text", true);
         input.MergeAttribute("placeholder", Core.StartTyping, true);
-        input.SetAttributeIf("value", DefaultText, !DefaultText.IsEmpty());
+        input.SetAttributeIf("value", DefaultText, !string.IsNullOrWhiteSpace(DefaultText));
         input.SetAttributeIf("required", "true", Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true));
 
         // @todo attributes like required and maxlength might need to be on the hidden input instead
@@ -35,8 +35,8 @@ public sealed class AutocompleteGroupTagHelper : GroupBaseTagHelper {
             var minLength = GetMinLength(For.ModelExplorer.Metadata.ValidatorMetadata);
             input.SetAttributeIf("minLength", minLength.ToString(CultureInfo.InvariantCulture), minLength > 0);
         }
-        input.SetAttributeIf("data-url", Url, !Url.IsEmpty());
-        input.SetAttributeIf("data-params", Params, !Params.IsEmpty());
+        input.SetAttributeIf("data-url", Url, !string.IsNullOrWhiteSpace(Url));
+        input.SetAttributeIf("data-params", Params, !string.IsNullOrWhiteSpace(Params));
         input.SetAttributeIf("data-preload", "true", Preload);
 
         return input;

@@ -6,10 +6,10 @@ namespace Folly.Extensions;
 
 public static class TagHelperExtensions {
     private static readonly Regex _CssRegex = new(@"(?<!_)([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
-    private static readonly Regex _CaseRegex = new(@"([a-z])([A-Z])", RegexOptions.Compiled, TimeSpan.FromMilliseconds(250));
 
     /// <summary>
     /// Merge an attribute if condition is met.
+    /// Unline MergeAttribute, the attribute will not be added if set is false.
     /// </summary>
     /// <param name="key">The attribute key.</param>
     /// <param name="value">The attribute value.</param>
@@ -26,11 +26,4 @@ public static class TagHelperExtensions {
     /// <param name="val">String value to convert.</param>
     /// <returns>Css class name string.</returns>
     public static string ToCssClass(this Icon val) => _CssRegex.Replace(val.ToString(), "-$1").Trim('-').ToLower();
-
-    /// <summary>
-    /// Convert a pascal case string to hyphen case. IE "QuickBrownFoxJumpsOverTheLazyDog" to "quick-brown-fox-jumps-over-the-lazy-dog"
-    /// </summary>
-    /// <param name="value">Toggle enum value to convert.</param>
-    /// <returns>Converted string.</returns>
-    public static string ToHyphenCase(this DataToggle toggle) => _CaseRegex.Replace(toggle.ToString(), "$1-$2").ToLower();
 }

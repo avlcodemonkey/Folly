@@ -22,18 +22,18 @@ public sealed class PermissionService : IPermissionService {
     public async Task<bool> SavePermissionAsync(DTO.Permission permissionDTO) {
         if (permissionDTO.Id > 0) {
             var permission = await _DbContext.Permissions.Where(x => x.Id == permissionDTO.Id).FirstAsync();
-            MapUpdates(permissionDTO, permission);
+            MapToEntity(permissionDTO, permission);
             _DbContext.Permissions.Update(permission);
         } else {
             var permission = new Permission();
-            MapUpdates(permissionDTO, permission);
+            MapToEntity(permissionDTO, permission);
             _DbContext.Permissions.Add(permission);
         }
 
         return await _DbContext.SaveChangesAsync() > 0;
     }
 
-    private static void MapUpdates(DTO.Permission permissionDTO, Permission permission) {
+    private static void MapToEntity(DTO.Permission permissionDTO, Permission permission) {
         permission.Id = permissionDTO.Id;
         permission.ControllerName = permissionDTO.ControllerName;
         permission.ActionName = permissionDTO.ActionName;

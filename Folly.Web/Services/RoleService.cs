@@ -39,11 +39,11 @@ public sealed class RoleService : IRoleService {
     public async Task<bool> SaveRoleAsync(DTO.Role roleDTO) {
         if (roleDTO.Id > 0) {
             var role = await _DbContext.Roles.Include(x => x.RolePermissions).Where(x => x.Id == roleDTO.Id).FirstAsync();
-            await MapUpdates(roleDTO, role);
+            await MapToEntity(roleDTO, role);
             _DbContext.Roles.Update(role);
         } else {
             var role = new Role();
-            await MapUpdates(roleDTO, role);
+            await MapToEntity(roleDTO, role);
             _DbContext.Roles.Add(role);
         }
 
@@ -57,7 +57,7 @@ public sealed class RoleService : IRoleService {
         return await _DbContext.SaveChangesAsync() > 0;
     }
 
-    private async Task MapUpdates(DTO.Role roleDTO, Role role) {
+    private async Task MapToEntity(DTO.Role roleDTO, Role role) {
         role.Name = roleDTO.Name;
         role.IsDefault = roleDTO.IsDefault;
 

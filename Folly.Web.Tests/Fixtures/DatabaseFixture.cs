@@ -45,6 +45,7 @@ public class DatabaseFixture : IDisposable {
                     dbContext.Users.Add(User);
                     dbContext.Permissions.Add(TestPermission);
                     dbContext.Roles.Add(TestRole);
+                    dbContext.Users.Add(TestUser);
                     dbContext.SaveChanges();
                 }
 
@@ -58,7 +59,7 @@ public class DatabaseFixture : IDisposable {
 
     public FollyDbContext CreateContext() => CreateContext(User);
 
-    public User User { get; } = new() { Id = -1, UserName = "user", Email = "user@fake.com", LanguageId = -1, FirstName = "User" };
+    public User User { get; } = new() { Id = -1, UserName = "user", Email = "user@fake.com", LanguageId = -1, FirstName = "User", Status = true };
 
     public Role TestRole { get; } = new() {
         Id = -1, Name = "Test", IsDefault = false,
@@ -66,6 +67,11 @@ public class DatabaseFixture : IDisposable {
     };
 
     public Permission TestPermission { get; } = new() { Id = -3, ControllerName = "controller", ActionName = "action" };
+
+    public User TestUser { get; } = new() {
+        Id = -2, UserName = "Test", FirstName = "First", LastName = "Last", Email = "email@domain.com", Status = true,
+        LanguageId = 1, UserRoles = new List<UserRole> { new() { Id = -2, UserId = -2, RoleId = -1 } }
+    };
 
     public void Dispose() {
         _Connection.Dispose();

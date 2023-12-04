@@ -1,17 +1,13 @@
 .card {
-    & col, & [class*=" col-"], [class^="col-"] {
-        margin: 0 calc(var(--grid-gutter) / 2) 0 calc(var(--grid-gutter) / 2);
-    }
-
     & span {
-        padding-top: .75rem;
+        margin: 0;
     }
 
     .button-dismiss {
         border: none;
         color: inherit;
         background: inherit;
-        margin-top: -1rem;
+        padding: 0;
         font-weight: bold;
         font-size: 2rem;
     }

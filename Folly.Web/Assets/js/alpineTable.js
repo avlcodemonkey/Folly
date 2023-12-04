@@ -1,5 +1,6 @@
 // @ts-check
 
+import * as htmx from 'htmx.org';
 import ky from 'ky';
 
 /**
@@ -45,7 +46,7 @@ class FetchError extends Error { }
  * @param {string} src
  * @returns {import("alpinejs").AlpineComponent}
  */
-const alpineTable = (key, src) => ({
+const AlpineTable = (key, src) => ({
     // from html placeholder for the table
     key,
     src,
@@ -168,7 +169,7 @@ const alpineTable = (key, src) => ({
 
         // after rendering, notify that the table has been updated
         this.$nextTick(() => {
-            this.$root.dispatchEvent(new CustomEvent('alpine-table-updated', { bubbles: true, composed: true }));
+            htmx.default.process(this.$root);
         });
     },
 
@@ -410,4 +411,4 @@ const alpineTable = (key, src) => ({
     },
 });
 
-export default alpineTable;
+export default AlpineTable;

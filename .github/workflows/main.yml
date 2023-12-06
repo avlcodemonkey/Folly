@@ -1,0 +1,52 @@
+# Build and test solution
+name: Main
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 6.0.x
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --no-restore
+
+    - name: Test
+      run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" || true
+
+    - name: Test Report
+      uses: dorny/test-reporter@v1
+      if: always()
+      with:
+        name: DotNet Tests
+        path: "**/test-results.trx"                            
+        reporter: dotnet-trx
+        fail-on-error: true
+
+    - name: Increment Version
+      if: ${{ github.event_name == 'push' && success() }}
+      shell: pwsh
+      run: |
+        ./scripts/incrementVersion.ps1
+
+    - name: Commit Version
+      uses: stefanzweifel/git-auto-commit-action@v4
+      if: ${{ github.event_name == 'push' && success() }}
+      with:
+        commit_message: Automated version update [skip ci]
+

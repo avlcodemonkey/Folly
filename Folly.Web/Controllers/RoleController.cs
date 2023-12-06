@@ -1,5 +1,4 @@
 using Folly.Attributes;
-using Folly.Configuration;
 using Folly.Models;
 using Folly.Resources;
 using Folly.Services;
@@ -35,7 +34,7 @@ public class RoleController : BaseController {
         return Index();
     }
 
-    public RoleController(IAppConfiguration appConfig, IRoleService roleService, IPermissionService permissionService, ILogger<RoleController> logger) : base(appConfig, logger) {
+    public RoleController(IRoleService roleService, IPermissionService permissionService, ILogger<RoleController> logger) : base(logger) {
         _RoleService = roleService;
         _PermissionService = permissionService;
     }

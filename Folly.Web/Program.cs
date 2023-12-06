@@ -1,4 +1,3 @@
-using Folly.Configuration;
 using Folly.Controllers;
 using Folly.Extensions;
 using Folly.Extensions.Program;
@@ -9,17 +8,13 @@ using Microsoft.Extensions.Caching.Memory;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var appConfig = new AppConfiguration();
-builder.Configuration.Bind("App", appConfig);
-
 builder.Services
-    .AddSingleton((IAppConfiguration)appConfig)
     .Configure<IISServerOptions>(options => options.AllowSynchronousIO = true)
     .ConfigureDb()
     .ConfigureHealthChecks()
     .AddScoped<IViewService, ViewService>()
     .AddSession()
-    .ConfigureAuthentication(appConfig)
+    .ConfigureAuthentication(builder.Configuration)
     .AddAntiforgery()
     .AddSingleton(new MemoryCache(new MemoryCacheOptions()))
     .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()

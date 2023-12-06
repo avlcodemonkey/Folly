@@ -1,4 +1,3 @@
-using Folly.Configuration;
 using Folly.Models;
 using Folly.Resources;
 using Microsoft.AspNetCore.Diagnostics;
@@ -8,7 +7,7 @@ namespace Folly.Controllers;
 
 public class ErrorController : BaseController {
 
-    public ErrorController(IAppConfiguration appConfig, ILogger<ErrorController> logger) : base(appConfig, logger) { }
+    public ErrorController(ILogger<ErrorController> logger) : base(logger) { }
 
     public IActionResult Index(string? code = null) {
         if (!string.IsNullOrWhiteSpace(code))

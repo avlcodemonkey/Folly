@@ -1,4 +1,3 @@
-using Folly.Configuration;
 using Folly.Extensions;
 using Folly.Resources;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace Folly.Controllers;
 
 public abstract class BaseController : Controller {
-    protected IAppConfiguration AppConfig { get; set; }
     protected ILogger<Controller> Logger { get; set; }
 
     protected int ID { get; set; }
@@ -14,10 +12,7 @@ public abstract class BaseController : Controller {
     public const string MessageProperty = "Message";
     public const string TitleProperty = "Title";
 
-    public BaseController(IAppConfiguration appConfig, ILogger<Controller> logger) {
-        AppConfig = appConfig;
-        Logger = logger;
-    }
+    public BaseController(ILogger<Controller> logger) => Logger = logger;
 
     public IActionResult Data(object data) => Ok(data);
 

@@ -1,5 +1,4 @@
 using Folly.Attributes;
-using Folly.Configuration;
 using Folly.Models;
 using Folly.Resources;
 using Folly.Services;
@@ -37,8 +36,7 @@ public class UserController : BaseController {
         return Index();
     }
 
-    public UserController(IAppConfiguration appConfig, IUserService userService, ILanguageService languageService, ILogger<UserController> logger)
-        : base(appConfig, logger) {
+    public UserController(IUserService userService, ILanguageService languageService, ILogger<UserController> logger) : base(logger) {
         _UserService = userService;
         _LanguageService = languageService;
     }

@@ -1,7 +1,6 @@
 using System.Globalization;
 using System.Security.Claims;
 using Auth0.AspNetCore.Authentication;
-using Folly.Configuration;
 using Folly.Controllers;
 using Folly.Services;
 using Folly.Utils;
@@ -16,22 +15,27 @@ public static class AuthenticationExtensions {
     /// <summary>
     /// Configure authentication and session for app using Auth0.
     /// </summary>
-    public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, AppConfiguration appConfig) {
+    public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, ConfigurationManager configurationManager) {
         services.AddAuth0WebAppAuthentication(options => {
-            options.Domain = appConfig.Auth.Domain;
-            options.ClientId = appConfig.Auth.ClientId;
+            var authConfig = configurationManager.GetSection("App").GetSection("Auth");
+            var domain = authConfig["Domain"]!;
+            var clientId = authConfig["ClientId"]!;
+
+            options.Domain = domain;
+            options.ClientId = clientId;
             options.CallbackPath = new PathString($"/{nameof(AccountController).StripController()}/Callback");
             options.Scope = "openid profile email";
 
             options.OpenIdConnectEvents = new OpenIdConnectEvents {
                 // handle the logout redirection
                 OnRedirectToIdentityProviderForSignOut = (context) => {
-                    var logoutUri = $"https://{appConfig.Auth.Domain}/v2/logout?client_id={appConfig.Auth.ClientId}";
+                    var logoutUri = $"https://{domain}/v2/logout?client_id={clientId}";
                     var postLogoutUri = context.Properties.RedirectUri;
                     if (!string.IsNullOrWhiteSpace(postLogoutUri)) {
-                        if (postLogoutUri.StartsWith("/", StringComparison.InvariantCultureIgnoreCase))
+                        if (postLogoutUri.StartsWith("/", StringComparison.InvariantCultureIgnoreCase)) {
                             // transform to absolute
                             postLogoutUri = context.Request.Scheme + "://" + context.Request.Host + context.Request.PathBase + postLogoutUri;
+                        }
                         logoutUri += $"&returnTo={Uri.EscapeDataString(postLogoutUri)}";
                     }
 

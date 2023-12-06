@@ -1,7 +1,6 @@
 using System.Globalization;
 using Auth0.AspNetCore.Authentication;
 using Folly.Attributes;
-using Folly.Configuration;
 using Folly.Extensions;
 using Folly.Models;
 using Folly.Resources;
@@ -19,7 +18,7 @@ public class AccountController : BaseController {
     private readonly ILanguageService _LanguageService;
     private readonly IUserService _UserService;
 
-    public AccountController(IAppConfiguration appConfig, IUserService userService, ILanguageService languageService, ILogger<AccountController> logger) : base(appConfig, logger) {
+    public AccountController(IUserService userService, ILanguageService languageService, ILogger<AccountController> logger) : base(logger) {
         _UserService = userService;
         _LanguageService = languageService;
     }

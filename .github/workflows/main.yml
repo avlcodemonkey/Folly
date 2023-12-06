@@ -13,7 +13,7 @@ permissions:
   checks: write
 
 jobs:
-  build:
+  Build:
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
 
@@ -34,11 +34,11 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" || true
 
-    - name: Test Report
+    - name: Publish Test Results
       uses: dorny/test-reporter@v1
       if: always()
       with:
-        name: DotNet Tests
+        name: Test Results
         path: "**/test-results.trx"                            
         reporter: dotnet-trx
         fail-on-error: true

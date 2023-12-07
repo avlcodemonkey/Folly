@@ -82,37 +82,68 @@ const registerTabTrap = (dialog) => {
     });
 };
 
-/**
- * Add custom behavior to htmx:confirm event to enable alert/confirm dialogs.
- * @param {CustomEvent} event
- */
-const onHtmxConfirm = async (event) => {
-    const { elt } = event.detail;
+const createElement = (htmlString) => {
+    const div = document.createElement('div');
+    div.innerHTML = htmlString.trim();
+    return div.firstChild;
+};
 
-    if (elt.hasAttribute('hx-confirm-content')) {
+// Extend the HTMLElement class to create the web component
+class Alert extends HTMLElement {
+    /**
+     * The class constructor object
+     */
+    constructor() {
+        // Always call super first in constructor
+        super();
+
+        const dialogHtml = `<dialog id="alert-dialog" hx-disable>
+            <p id="alert-dialog-content" class="p-2"></p>
+            <form method="dialog" class="ml-2">
+                <button class="button success" value="ok" id="alert-dialog-ok" autofocus="">Okay</button>
+            </form>
+        </dialog>`;
+
+        /** @type {HTMLDialogElement} */
+        const dialog = document.getElementById('alert-dialog');
+        if (!dialog) {
+            document.body.appendChild(createElement(dialogHtml));
+        }
+
+        console.log('Constructed', this);
+    }
+
+    /**
+     * Runs each time the element is appended to or moved in the DOM
+     */
+    connectedCallback() {
+        this.querySelectorAll('[hx-alert-content]').forEach((x) => {
+            x.addEventListener('click', this.onClick);
+        });
+
+        console.log('connected!', this);
+    }
+
+    onClick(event) {
         event.preventDefault();
 
         /** @type {HTMLDialogElement} */
-        const dialog = document.getElementById('confirm-dialog');
+        const dialog = document.getElementById('alert-dialog');
 
-        const content = document.getElementById('confirm-dialog-content');
-        const okBtn = document.getElementById('confirm-dialog-ok');
-        const cancelBtn = document.getElementById('confirm-dialog-cancel');
+        const content = document.getElementById('alert-dialog-content');
+        const okBtn = document.getElementById('alert-dialog-ok');
 
-        if (!(dialog && content && okBtn && cancelBtn)) {
+        if (!(dialog && content && okBtn)) {
             return;
         }
 
-        content.innerHTML = elt.getAttribute('hx-confirm-content');
-        okBtn.innerHTML = elt.getAttribute('hx-confirm-ok');
-        cancelBtn.innerHTML = elt.getAttribute('hx-confirm-cancel');
+        content.innerHTML = this.getAttribute('hx-alert-content');
+        okBtn.innerHTML = this.getAttribute('hx-alert-ok');
 
         const closeHandler = () => {
             removeDocumentEventListeners();
             dialog.removeEventListener('close', closeHandler);
-            if (dialog.returnValue === 'ok') {
-                event.detail.issueRequest();
-            }
+            this.focus();
         };
 
         registerTabTrap(dialog);
@@ -120,6 +151,22 @@ const onHtmxConfirm = async (event) => {
 
         dialog.showModal();
     }
-};
 
-export default onHtmxConfirm;
+    /**
+     * Runs when the element is removed from the DOM
+     */
+    disconnectedCallback() {
+        this.querySelectorAll('[hx-alert-content]').forEach((x) => {
+            x.removeEventListener('click', this.onClick);
+        });
+
+        console.log('disconnected', this);
+    }
+}
+
+// Define the new web component
+if ('customElements' in window) {
+    customElements.define('fw-alert', Alert);
+}
+
+export default Alert;

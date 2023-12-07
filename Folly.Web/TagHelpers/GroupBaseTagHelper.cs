@@ -73,14 +73,18 @@ public class GroupBaseTagHelper : BaseTagHelper {
         button.AddCssClass("button success icon-only");
         button.MergeAttribute("type", "button");
         button.MergeAttribute("role", "button");
+        // @todo rename or remove these for use with the web component
         button.MergeAttribute("hx-get", "#");
         button.MergeAttribute("hx-alert-content", HelpText!.Replace("\"", "&quot;"));
         button.MergeAttribute("hx-alert-ok", Core.Okay);
         button.InnerHtml.AppendHtml(icon);
 
+        var alert = new TagBuilder("fw-alert");
+        alert.InnerHtml.AppendHtml(button);
+
         var span = new TagBuilder("span");
         span.AddCssClass("input-group-addon");
-        span.InnerHtml.AppendHtml(button);
+        span.InnerHtml.AppendHtml(alert);
 
         return span;
     }

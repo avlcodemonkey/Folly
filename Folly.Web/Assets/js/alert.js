@@ -117,7 +117,7 @@ class Alert extends HTMLElement {
      * Runs each time the element is appended to or moved in the DOM
      */
     connectedCallback() {
-        this.querySelectorAll('[hx-alert-content]').forEach((x) => {
+        this.querySelectorAll('[fw-alert-content]').forEach((x) => {
             x.addEventListener('click', this.onClick);
         });
 
@@ -137,8 +137,8 @@ class Alert extends HTMLElement {
             return;
         }
 
-        content.innerHTML = this.getAttribute('hx-alert-content');
-        okBtn.innerHTML = this.getAttribute('hx-alert-ok');
+        content.innerHTML = this.getAttribute('fw-alert-content');
+        okBtn.innerHTML = this.getAttribute('fw-alert-ok');
 
         const closeHandler = () => {
             removeDocumentEventListeners();

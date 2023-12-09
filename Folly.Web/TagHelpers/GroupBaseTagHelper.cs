@@ -73,11 +73,11 @@ public class GroupBaseTagHelper : BaseTagHelper {
         button.AddCssClass("button success icon-only");
         button.MergeAttribute("type", "button");
         button.MergeAttribute("role", "button");
-        button.MergeAttribute("fw-alert-content", HelpText!.Replace("\"", "&quot;"));
-        button.MergeAttribute("fw-alert-ok", Core.Okay);
         button.InnerHtml.AppendHtml(icon);
 
         var alert = new TagBuilder("fw-alert");
+        alert.MergeAttribute("data-content", HelpText!.Replace("\"", "&quot;"));
+        alert.MergeAttribute("data-ok", Core.Okay);
         alert.InnerHtml.AppendHtml(button);
 
         var span = new TagBuilder("span");

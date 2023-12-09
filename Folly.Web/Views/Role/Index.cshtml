@@ -17,11 +17,13 @@
                         <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary" title="@Roles.CreateRole">
                             <icon name="Add" />
                         </a>
-                        <a authorize-roles="role.refreshpermissions" href="@Url.Action("RefreshPermissions", "Role")" class="button primary" title="@Roles.RefreshPermissions"
-                            hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel" hx-confirm-content="@Roles.ConfirmRefreshPermissions"
+                        <fw-confirm authorize-roles="role.refreshpermissions" hx-get="@Url.Action("RefreshPermissions", "Role")"
+                            data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@Roles.ConfirmRefreshPermissions"
                         >
-                            <icon name="Refresh" />
-                        </a>
+                            <a class="button primary" title="@Roles.RefreshPermissions">
+                                <icon name="Refresh" />
+                            </a>
+                        </fw-confirm>
                     </th>
                     <alpine-th property="id">@Core.Id</alpine-th>
                     <alpine-th property="name">@Roles.Name</alpine-th>
@@ -37,11 +39,13 @@
                         <a authorize-roles="role.edit" class="button primary" title="@Core.Copy" :href="`@Url.Action("Index")/Copy/${row.id}`">
                             <icon name="Copy" />
                         </a>
-                        <a authorize-roles="role.delete" class="button dark" title="@Core.Delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
-                            hx-confirm-ok="@Core.Okay" hx-confirm-cancel="@Core.Cancel" hx-confirm-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
+                        <fw-confirm authorize-roles="role.delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
+                            data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
                         >
-                            <icon name="DeleteAlt" />
-                        </a>
+                            <a class="button dark" title="@Core.Delete">
+                                <icon name="DeleteAlt" />
+                            </a>
+                        </fw-confirm>
                     </td>
                     <alpine-td property="id" />
                     <alpine-td property="name" />

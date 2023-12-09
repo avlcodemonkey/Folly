@@ -70,7 +70,7 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to This will be the default language in which this user will see the site..
+        ///   Looks up a localized string similar to Default language in which this user will see the site..
         /// </summary>
         public static string User_LanguageId {
             get {

@@ -1,5 +1,3 @@
-using Folly.Extensions;
-using Folly.Resources;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Controllers;
@@ -7,30 +5,9 @@ namespace Folly.Controllers;
 public abstract class BaseController : Controller {
     protected ILogger<Controller> Logger { get; set; }
 
-    protected int ID { get; set; }
     public const string ErrorProperty = "Error";
     public const string MessageProperty = "Message";
     public const string TitleProperty = "Title";
 
     public BaseController(ILogger<Controller> logger) => Logger = logger;
-
-    public IActionResult Data(object data) => Ok(data);
-
-    public IActionResult Error(string error) {
-        if (Request.IsAjaxRequest())
-            return Ok(new { error });
-
-        ViewData[ErrorProperty] = error;
-        return View("Error");
-    }
-
-    public IActionResult Rows(IEnumerable<object> rows) => Ok(new { Rows = rows });
-
-    public IActionResult Success(string message = "") {
-        if (!Request.IsAjaxRequest()) {
-            ViewData[ErrorProperty] = Core.ErrorGeneric;
-            return View("Error");
-        }
-        return string.IsNullOrWhiteSpace(message) ? Ok(new { result = true }) : Ok(new { message });
-    }
 }

@@ -52,8 +52,9 @@ public class AccountController : BaseController {
 
     [HttpPost, Authorize(Policy = PermissionRequirementHandler.PolicyName), ValidModel]
     public async Task<IActionResult> UpdateAccount(UpdateAccount model) {
-        if (!ModelState.IsValid)
+        if (!ModelState.IsValid) {
             return View("UpdateAccount", model);
+        }
 
         var result = await _UserService.UpdateAccountAsync(model);
         if (string.IsNullOrWhiteSpace(result)) {

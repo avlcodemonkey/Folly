@@ -10,8 +10,10 @@ public class ErrorController : BaseController {
     public ErrorController(ILogger<ErrorController> logger) : base(logger) { }
 
     public IActionResult Index(string? code = null) {
-        if (!string.IsNullOrWhiteSpace(code))
+        if (!string.IsNullOrWhiteSpace(code)) {
             Logger.LogError(Core.UnhandledError, code, HttpContext.Features.Get<IStatusCodeReExecuteFeature>()?.OriginalPath);
+        }
+
         return View("Error");
     }
 

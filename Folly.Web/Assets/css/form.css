@@ -3,6 +3,10 @@ form {
         border-color: var(--color-error) !important;
     }
 
+    & select:invalid:not(.button) {
+        border-color: var(--color-error) !important;
+    }
+
     .input-group {
         display: flex;
 

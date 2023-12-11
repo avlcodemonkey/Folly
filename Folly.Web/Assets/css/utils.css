@@ -30,10 +30,6 @@
     cursor: pointer;
 }
 
-.button + .button {
-    margin-left: 1rem;
-}
-
 .button + fw-confirm {
     margin-left: 1rem;
 }

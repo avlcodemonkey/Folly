@@ -8,16 +8,15 @@
     <partial name="_Alert" />
 
     <alpine-table-data id="users" src="@Url.Action("List", "User")">
-        <partial name="_AlpineTableHeader" />
-
+        <alpine-table-header />
         <alpine-table>
             <thead>
                 <tr>
-                    <th class="alpine-no-sort">
+                    <alpine-th>
                         <a authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button primary" title="@Users.CreateUser">
                             <icon name="Add" />
                         </a>
-                    </th>
+                    </alpine-th>
                     <alpine-th property="id">@Core.Id</alpine-th>
                     <alpine-th property="userName">@Users.UserName</alpine-th>
                     <alpine-th property="firstName">@Users.FirstName</alpine-th>
@@ -26,20 +25,20 @@
                 </tr>
             </thead>
             <tbody>
-                <partial name="_AlpineTableStatus" model="6" />
+                <alpine-table-status colspan="6" />
                 <alpine-table-row>
-                    <td>
-                        <a authorize-roles="user.edit" class="button primary" title="@Users.EditUser" :href="`@Url.Action("Index")/Edit/${row.id}`">
+                    <alpine-td>
+                        <a authorize-roles="user.edit" class="button primary" title="@Users.EditUser" :href="`@Url.Action("Edit")/${row.id}`">
                             <icon name="EditAlt" />
                         </a>
-                        <fw-confirm authorize-roles="user.delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`" data-ok="@Core.Okay"
+                        <fw-confirm authorize-roles="user.delete" :hx-delete="`@Url.Action("Delete")/${row.id}`" data-ok="@Core.Okay"
                             data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
                         >
                             <a class="button dark" title="@Core.Delete">
                                 <icon name="DeleteAlt" />
                             </a>
                         </fw-confirm>
-                    </td>
+                    </alpine-td>
                     <alpine-td property="id" />
                     <alpine-td property="userName" />
                     <alpine-td property="firstName" />
@@ -48,7 +47,6 @@
                 </alpine-table-row>
             </tbody>
         </alpine-table>
-
-        <partial name="_AlpineTableFooter" />
+        <alpine-table-footer />
     </alpine-table-data>
 </content>

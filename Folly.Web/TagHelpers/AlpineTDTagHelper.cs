@@ -8,17 +8,12 @@ public sealed class AlpineTDTagHelper : TagHelper {
     public string? Property { get; set; }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
-        if (string.IsNullOrWhiteSpace(Property)) {
-            output.SuppressOutput();
-            await base.ProcessAsync(context, output);
-            return;
-        }
-
         output.TagName = "td";
         output.TagMode = TagMode.StartTagAndEndTag;
-        output.Attributes.SetAttribute("x-text", $"row.{Property}");
+        if (!string.IsNullOrWhiteSpace(Property)) {
+            output.Attributes.SetAttribute("x-text", $"row.{Property}");
+        }
         output.Content.AppendHtml(await output.GetChildContentAsync());
-
         await base.ProcessAsync(context, output);
     }
 }

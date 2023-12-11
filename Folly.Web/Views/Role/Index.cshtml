@@ -8,12 +8,11 @@
     <partial name="_Alert" />
 
     <alpine-table-data id="roles" src="@Url.Action("List", "Role")">
-        <partial name="_AlpineTableHeader" />
-
+        <alpine-table-header />
         <alpine-table>
             <thead>
                 <tr>
-                    <th class="alpine-no-sort">
+                    <alpine-th>
                         <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary" title="@Roles.CreateRole">
                             <icon name="Add" />
                         </a>
@@ -24,35 +23,34 @@
                                 <icon name="Refresh" />
                             </a>
                         </fw-confirm>
-                    </th>
+                    </alpine-th>
                     <alpine-th property="id">@Core.Id</alpine-th>
                     <alpine-th property="name">@Roles.Name</alpine-th>
                 </tr>
             </thead>
             <tbody>
-                <partial name="_AlpineTableStatus" model="3" />
+                <alpine-table-status colspan="3" />
                 <alpine-table-row>
-                    <td>
-                        <a authorize-roles="role.edit" class="button primary" title="@Roles.EditRole" :href="`@Url.Action("Index")/Edit/${row.id}`">
+                    <alpine-td>
+                        <a authorize-roles="role.edit" class="button primary" title="@Roles.EditRole" :href="`@Url.Action("Edit")/${row.id}`">
                             <icon name="EditAlt" />
                         </a>
-                        <a authorize-roles="role.edit" class="button primary" title="@Core.Copy" :href="`@Url.Action("Index")/Copy/${row.id}`">
+                        <a authorize-roles="role.edit" class="button primary" title="@Core.Copy" :href="`@Url.Action("Copy")/${row.id}`">
                             <icon name="Copy" />
                         </a>
-                        <fw-confirm authorize-roles="role.delete" :hx-delete="`@Url.Action("Index")/Delete/${row.id}`"
+                        <fw-confirm authorize-roles="role.delete" :hx-delete="`@Url.Action("Delete")/${row.id}`"
                             data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
                         >
                             <a class="button dark" title="@Core.Delete">
                                 <icon name="DeleteAlt" />
                             </a>
                         </fw-confirm>
-                    </td>
+                    </alpine-td>
                     <alpine-td property="id" />
                     <alpine-td property="name" />
                 </alpine-table-row>
             </tbody>
         </alpine-table>
-
-        <partial name="_AlpineTableFooter" />
+        <alpine-table-footer />
     </alpine-table-data>
 </content>

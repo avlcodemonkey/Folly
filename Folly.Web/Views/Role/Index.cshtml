@@ -16,13 +16,13 @@
                         <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary" title="@Roles.CreateRole">
                             <icon name="Add" />
                         </a>
-                        <fw-confirm authorize-roles="role.refreshpermissions" hx-get="@Url.Action("RefreshPermissions", "Role")"
+                        <fw-confirm-dialog authorize-roles="role.refreshpermissions" hx-get="@Url.Action("RefreshPermissions", "Role")"
                             data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@Roles.ConfirmRefreshPermissions"
                         >
                             <a class="button primary" title="@Roles.RefreshPermissions">
                                 <icon name="Refresh" />
                             </a>
-                        </fw-confirm>
+                        </fw-confirm-dialog>
                     </alpine-th>
                     <alpine-th property="id">@Core.Id</alpine-th>
                     <alpine-th property="name">@Roles.Name</alpine-th>
@@ -38,13 +38,13 @@
                         <a authorize-roles="role.edit" class="button primary" title="@Core.Copy" :href="`@Url.Action("Copy")/${row.id}`">
                             <icon name="Copy" />
                         </a>
-                        <fw-confirm authorize-roles="role.delete" :hx-delete="`@Url.Action("Delete")/${row.id}`"
+                        <fw-confirm-dialog authorize-roles="role.delete" :hx-delete="`@Url.Action("Delete")/${row.id}`"
                             data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
                         >
                             <a class="button dark" title="@Core.Delete">
                                 <icon name="DeleteAlt" />
                             </a>
-                        </fw-confirm>
+                        </fw-confirm-dialog>
                     </alpine-td>
                     <alpine-td property="id" />
                     <alpine-td property="name" />

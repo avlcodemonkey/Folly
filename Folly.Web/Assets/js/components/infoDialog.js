@@ -1,20 +1,16 @@
 // @ts-check
 
-import Dialog from './dialog';
+import BaseDialog from './baseDialog';
 
 /**
- * Extend the custom dialog class to create the confirm web component.
+ * Extend the custom dialog class to create the alert web component.
  */
-class Confirm extends Dialog {
-    static observedAttributes = ['data-content', 'data-ok', 'data-cancel'];
-
-    /** @type {string} */
-    cancel;
+class InfoDialog extends BaseDialog {
+    static observedAttributes = ['data-content', 'data-ok'];
 
     constructor() {
         super();
 
-        this.cancel = this.getAttribute('data-cancel');
         this.addEventListener('click', this);
     }
 
@@ -22,24 +18,19 @@ class Confirm extends Dialog {
         return `<dialog hx-disable>
             <p class="p-2">${this.content}</p>
             <form method="dialog" class="ml-2">
-                <button class="button primary" value="cancel" autofocus>${this.cancel}</button>
-                <button class="button dark" value="ok">${this.ok}</button>
+                <button class="button success" value="ok" autofocus>${this.ok}</button>
             </form>
         </dialog>`;
     }
 
     /**
-     * Update the okay, content, and cancel properties when their attributes on the element change.
+     * Update the okay and content properties when their attributes on the element change.
      * @param {string} name Name of attribute that changed.
      * @param {string} oldValue Old value of the attribute.
      * @param {string} newValue New value of the attribute.
      */
     attributeChangedCallback(name, oldValue, newValue) {
         this.baseAttributeChangedCallback(name, oldValue, newValue);
-
-        if (name === 'data-cancel' && oldValue !== newValue) {
-            this.cancel = newValue;
-        }
     }
 
     /**
@@ -47,16 +38,11 @@ class Confirm extends Dialog {
      * @param {Event} event Click event that triggers the dialog.
      */
     handleEvent(event) {
-        if (event.isConfirmed) {
-            return;
-        }
-
-        if (!(this.content && this.ok && this.cancel)) {
+        if (!(this.content && this.ok)) {
             return;
         }
 
         event.preventDefault();
-        event.stopImmediatePropagation();
 
         if (!this.dialog) {
             this.dialog = this.createDialog();
@@ -64,17 +50,11 @@ class Confirm extends Dialog {
         }
 
         const closeHandler = () => {
-            const { returnValue } = this.dialog;
             this.removeDocumentEventListeners();
             this.dialog.removeEventListener('close', closeHandler);
             this.dialog.remove();
             this.dialog = undefined;
-
-            if (returnValue === 'ok') {
-                // eslint-disable-next-line no-param-reassign
-                event.isConfirmed = true;
-                this.dispatchEvent(event);
-            }
+            this.focus();
         };
 
         this.registerTabTrap();
@@ -85,7 +65,7 @@ class Confirm extends Dialog {
 
 // Define the new web component
 if ('customElements' in window) {
-    customElements.define('fw-confirm', Confirm);
+    customElements.define('fw-info-dialog', InfoDialog);
 }
 
-export default Confirm;
+export default InfoDialog;

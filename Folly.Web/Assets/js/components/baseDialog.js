@@ -10,7 +10,7 @@
 /**
  * Extend the HTMLElement class to create custom dialogs.
  */
-class Dialog extends HTMLElement {
+class BaseDialog extends HTMLElement {
     /** @type {HTMLDialogElement} */
     dialog;
 
@@ -26,7 +26,6 @@ class Dialog extends HTMLElement {
         this.content = this.getAttribute('data-content');
         this.ok = this.getAttribute('data-ok');
     }
-
 
     /**
      * Update the okay and content properties when their attributes on the element change.
@@ -133,4 +132,4 @@ class Dialog extends HTMLElement {
     }
 }
 
-export default Dialog;
+export default BaseDialog;

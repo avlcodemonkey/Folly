@@ -31,13 +31,13 @@
                         <a authorize-roles="user.edit" class="button primary" title="@Users.EditUser" :href="`@Url.Action("Edit")/${row.id}`">
                             <icon name="EditAlt" />
                         </a>
-                        <fw-confirm authorize-roles="user.delete" :hx-delete="`@Url.Action("Delete")/${row.id}`" data-ok="@Core.Okay"
+                        <fw-confirm-dialog authorize-roles="user.delete" :hx-delete="`@Url.Action("Delete")/${row.id}`" data-ok="@Core.Okay"
                             data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
                         >
                             <a class="button dark" title="@Core.Delete">
                                 <icon name="DeleteAlt" />
                             </a>
-                        </fw-confirm>
+                        </fw-confirm-dialog>
                     </alpine-td>
                     <alpine-td property="id" />
                     <alpine-td property="userName" />

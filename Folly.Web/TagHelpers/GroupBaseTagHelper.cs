@@ -75,14 +75,14 @@ public class GroupBaseTagHelper : BaseTagHelper {
         button.MergeAttribute("role", "button");
         button.InnerHtml.AppendHtml(icon);
 
-        var alert = new TagBuilder("fw-alert");
-        alert.MergeAttribute("data-content", HelpText!.Replace("\"", "&quot;"));
-        alert.MergeAttribute("data-ok", Core.Okay);
-        alert.InnerHtml.AppendHtml(button);
+        var dialog = new TagBuilder("fw-info-dialog");
+        dialog.MergeAttribute("data-content", HelpText!.Replace("\"", "&quot;"));
+        dialog.MergeAttribute("data-ok", Core.Okay);
+        dialog.InnerHtml.AppendHtml(button);
 
         var span = new TagBuilder("span");
         span.AddCssClass("input-group-addon");
-        span.InnerHtml.AppendHtml(alert);
+        span.InnerHtml.AppendHtml(dialog);
 
         return span;
     }

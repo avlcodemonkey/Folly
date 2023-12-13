@@ -13,6 +13,7 @@ const args = {
     loader: {
         '.woff2': 'dataurl',
     },
+    logLevel: 'info'
 };
 
 (async () => {

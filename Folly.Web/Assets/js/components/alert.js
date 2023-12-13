@@ -16,7 +16,7 @@ class Alert extends HTMLElement {
      * Hide the alert when the dismiss button is clicked.
      */
     handleEvent() {
-        this.style.display = 'none';
+        this.classList.add('is-hidden');
     }
 }
 

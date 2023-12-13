@@ -1,0 +1,28 @@
+@using Folly.Controllers;
+@using Folly.Utils;
+@using Folly.Extensions;
+
+@{
+    string GetData(string key)
+    {
+        if (ViewData.ContainsKey(key))
+        {
+            return (ViewData[key] ?? "").ToString() ?? "";
+        }
+        if (TempData.ContainsKey(key))
+        {
+            return (TempData[key] ?? "").ToString() ?? "";
+        }
+
+        return "";
+    }
+}
+
+@if (!string.IsNullOrWhiteSpace(GetData(BaseController.MessageProperty)))
+{
+    <partial name="_Alert" model="new Alert { Content = GetData(BaseController.MessageProperty) }" />
+}
+@if (!string.IsNullOrWhiteSpace(GetData(BaseController.ErrorProperty)))
+{
+    <partial name="_Alert" model="new Alert { Content = GetData(BaseController.ErrorProperty), AlertType = AlertType.Error }" />
+}

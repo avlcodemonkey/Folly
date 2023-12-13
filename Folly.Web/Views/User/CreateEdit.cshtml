@@ -13,10 +13,10 @@
     </breadcrumb>
 
     @if (Model.IsCreate) {
-        <partial name="_AlpineAlert" model="new AlpineAlert { Content = @Users.ExplainCreate }" />
+        <partial name="_Alert" model="new Alert { Content = @Users.ExplainCreate }" />
     }
 
-    <partial name="_Alert" />
+    <partial name="_ViewAlerts" />
 
     <form-content for="Model">
         <input asp-for="Id" type="hidden" />

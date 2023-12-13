@@ -10,7 +10,7 @@
         <breadcrumb-item label="@Core.Copy" controller="Role" action="Copy" route-values="@(new { Id = Model.Id })" active="true" />
     </breadcrumb>
 
-    <partial name="_Alert" />
+    <partial name="_ViewAlerts" />
 
     <form-content controller="Role" action="Copy">
         <input asp-for="Id" type="hidden" />

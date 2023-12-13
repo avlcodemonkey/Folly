@@ -6,7 +6,7 @@
         <breadcrumb-item label="@Core.ToggleHelp" controller="Account" action="ToggleContextHelp" active="true" />
     </breadcrumb>
 
-    <partial name="_Alert" />
+    <partial name="_ViewAlerts" />
 
-    <partial name="_AlpineAlert" model="new AlpineAlert { Content = Model.IsEnabled ? Core.HelpEnabled : Core.HelpDisabled, CanDismiss = false }" />
+    <partial name="_Alert" model="new Alert { Content = Model.IsEnabled ? Core.HelpEnabled : Core.HelpDisabled, CanDismiss = false }" />
 </content>

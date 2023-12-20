@@ -20,9 +20,9 @@
 
 @if (!string.IsNullOrWhiteSpace(GetData(BaseController.MessageProperty)))
 {
-    <partial name="_Alert" model="new Alert { Content = GetData(BaseController.MessageProperty) }" />
+    <partial name="_FwAlert" model="new Alert { Content = GetData(BaseController.MessageProperty) }" />
 }
 @if (!string.IsNullOrWhiteSpace(GetData(BaseController.ErrorProperty)))
 {
-    <partial name="_Alert" model="new Alert { Content = GetData(BaseController.ErrorProperty), AlertType = AlertType.Error }" />
+    <partial name="_FwAlert" model="new Alert { Content = GetData(BaseController.ErrorProperty), AlertType = AlertType.Error }" />
 }

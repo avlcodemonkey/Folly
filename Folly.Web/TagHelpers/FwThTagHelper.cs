@@ -4,18 +4,17 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class AlpineTHTagHelper : TagHelper {
-    public AlpineTHTagHelper() { }
+public sealed class FwThTagHelper : TagHelper {
+    public FwThTagHelper() { }
 
     public string? Property { get; set; }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         output.TagName = "th";
         if (string.IsNullOrWhiteSpace(Property)) {
-            output.AddClass("alpine-no-sort", HtmlEncoder.Default);
+            output.AddClass("table-no-sort", HtmlEncoder.Default);
         } else {
-            output.Attributes.SetAttribute(":class", $"sortClass('{Property}')");
-            output.Attributes.SetAttribute("@click", $"onSortClick('{Property}')");
+            output.Attributes.SetAttribute("data-property", Property);
         }
         output.Content.AppendHtml(await output.GetChildContentAsync());
 

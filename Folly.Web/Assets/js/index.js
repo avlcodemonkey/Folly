@@ -4,7 +4,7 @@
 import './components/infoDialog';
 import './components/confirmDialog';
 import './components/alert';
+import './components/table';
 
-// new set up htmx and alpine
+// now set up htmx
 import './htmxConfig';
-import './alpineConfig';

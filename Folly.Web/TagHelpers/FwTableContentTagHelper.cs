@@ -5,8 +5,8 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class AlpineTableTagHelper : TagHelper {
-    public AlpineTableTagHelper() { }
+public sealed class FwTableContentTagHelper : TagHelper {
+    public FwTableContentTagHelper() { }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         var table = new TagBuilder("table");

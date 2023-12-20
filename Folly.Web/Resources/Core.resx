@@ -288,7 +288,7 @@
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
-  <data name="AlpineTableRequestFailed" xml:space="preserve">
+  <data name="TableRequestFailed" xml:space="preserve">
     <value>An error occurred loading table data.</value>
   </data>
   <data name="Retry" xml:space="preserve">

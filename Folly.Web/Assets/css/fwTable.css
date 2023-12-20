@@ -1,8 +1,3 @@
-/* this should hide alpine content until its processed */
-[x-cloak] {
-    display: none !important;
-}
-
 .spinner {
     display: inline-block;
     width: 80px;
@@ -31,19 +26,19 @@
     }
 }
 
-.alpine-table {
+fw-table {
     & th {
         min-width: 100px;
 
-        &:not(.alpine-no-sort) {
+        &:not(.table-no-sort) {
             cursor: pointer;
         }
 
-        &.alpine-sort-asc::after {
+        &.table-sort-asc::after {
             content: ' \1f81d';
         }
 
-        &.alpine-sort-desc::after {
+        &.table-sort-desc::after {
             content: ' \1f81f';
         }
     }

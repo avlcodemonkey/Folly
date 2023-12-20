@@ -3,7 +3,6 @@
     "name": "folly",
     "private": true,
     "devDependencies": {
-        "@types/alpinejs": "^3.7.1",
         "esbuild": "0.17.18",
         "eslint": "^8.36.0",
         "eslint-config-airbnb": "^19.0.4",
@@ -14,8 +13,8 @@
         "watch": "node build.mjs --watch"
     },
     "dependencies": {
-        "alpinejs": "^3.13.3",
         "htmx.org": "^1.9.8",
-        "ky": "^1.1.3"
+        "ky": "^1.1.3",
+        "mustache": "^4.2.0"
     }
 }

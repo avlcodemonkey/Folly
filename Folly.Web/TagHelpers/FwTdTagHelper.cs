@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class AlpineTDTagHelper : TagHelper {
-    public AlpineTDTagHelper() { }
+public sealed class FwTdTagHelper : TagHelper {
+    public FwTdTagHelper() { }
 
     public string? Property { get; set; }
 
@@ -11,7 +11,7 @@ public sealed class AlpineTDTagHelper : TagHelper {
         output.TagName = "td";
         output.TagMode = TagMode.StartTagAndEndTag;
         if (!string.IsNullOrWhiteSpace(Property)) {
-            output.Attributes.SetAttribute("x-text", $"row.{Property}");
+            output.Content.Append($"{{{{{Property}}}}}");
         }
         output.Content.AppendHtml(await output.GetChildContentAsync());
         await base.ProcessAsync(context, output);

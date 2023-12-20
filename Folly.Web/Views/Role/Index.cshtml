@@ -1,3 +1,4 @@
+@using Folly.Extensions
 @using Folly.Resources
 
 <content>
@@ -7,12 +8,12 @@
 
     <partial name="_ViewAlerts" />
 
-    <alpine-table-data id="roles" src="@Url.Action("List", "Role")">
-        <alpine-table-header />
-        <alpine-table>
+    <fw-table key="roles" src="@Url.Action("List", "Role")">
+        <fw-table-header />
+        <fw-table-content>
             <thead>
                 <tr>
-                    <alpine-th>
+                    <fw-th>
                         <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary" title="@Roles.CreateRole">
                             <icon name="Add" />
                         </a>
@@ -23,34 +24,34 @@
                                 <icon name="Refresh" />
                             </a>
                         </fw-confirm-dialog>
-                    </alpine-th>
-                    <alpine-th property="id">@Core.Id</alpine-th>
-                    <alpine-th property="name">@Roles.Name</alpine-th>
+                    </fw-th>
+                    <fw-th property="id">@Core.Id</fw-th>
+                    <fw-th property="name">@Roles.Name</fw-th>
                 </tr>
             </thead>
             <tbody>
-                <alpine-table-status colspan="3" />
-                <alpine-table-row>
-                    <alpine-td>
-                        <a authorize-roles="role.edit" class="button primary" title="@Roles.EditRole" :href="`@Url.Action("Edit")/${row.id}`">
+                <fw-table-status colspan="3" />
+                <fw-table-row>
+                    <fw-td>
+                        <a authorize-roles="role.edit" class="button primary" title="@Roles.EditRole" href="@Url.ActionForMustache("Edit")">
                             <icon name="EditAlt" />
                         </a>
-                        <a authorize-roles="role.edit" class="button primary" title="@Core.Copy" :href="`@Url.Action("Copy")/${row.id}`">
+                        <a authorize-roles="role.edit" class="button primary" title="@Core.Copy" href="@Url.ActionForMustache("Copy")">
                             <icon name="Copy" />
                         </a>
-                        <fw-confirm-dialog authorize-roles="role.delete" :hx-delete="`@Url.Action("Delete")/${row.id}`"
+                        <fw-confirm-dialog authorize-roles="role.delete" hx-delete="@Url.ActionForMustache("Delete")"
                             data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
                         >
                             <a class="button dark" title="@Core.Delete">
                                 <icon name="DeleteAlt" />
                             </a>
                         </fw-confirm-dialog>
-                    </alpine-td>
-                    <alpine-td property="id" />
-                    <alpine-td property="name" />
-                </alpine-table-row>
+                    </fw-td>
+                    <fw-td property="id" />
+                    <fw-td property="name" />
+                </fw-table-row>
             </tbody>
-        </alpine-table>
-        <alpine-table-footer />
-    </alpine-table-data>
+        </fw-table-content>
+        <fw-table-footer />
+    </fw-table>
 </content>

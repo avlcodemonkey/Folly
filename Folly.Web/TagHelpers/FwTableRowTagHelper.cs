@@ -1,18 +1,19 @@
+using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class AlpineTableRowTagHelper : TagHelper {
-    public AlpineTableRowTagHelper() { }
+public sealed class FwTableRowTagHelper : TagHelper {
+    public FwTableRowTagHelper() { }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         var tr = new TagBuilder("tr");
         tr.InnerHtml.AppendHtml(await output.GetChildContentAsync());
 
         output.TagName = "template";
-        output.Attributes.SetAttribute("x-for", "row in filteredRows");
-        output.Attributes.SetAttribute(":key", "row._index");
+        output.AddClass("table-row-template", HtmlEncoder.Default);
         output.Content.AppendHtml(tr);
 
         await base.ProcessAsync(context, output);

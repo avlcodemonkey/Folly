@@ -6,11 +6,11 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Folly.TagHelpers;
 
 /// <summary>
-/// PartialTagHelper extension that build the alpine table header section.
+/// PartialTagHelper extension that builds the fw-table footer.
 /// </summary>
-public sealed class AlpineTableHeaderTagHelper : PartialTagHelper {
-    public AlpineTableHeaderTagHelper(ICompositeViewEngine viewEngine, IViewBufferScope viewBufferScope) : base(viewEngine, viewBufferScope)
-        => Name = "_AlpineTableHeader";
+public sealed class FwTableFooterTagHelper : PartialTagHelper {
+    public FwTableFooterTagHelper(ICompositeViewEngine viewEngine, IViewBufferScope viewBufferScope) : base(viewEngine, viewBufferScope)
+        => Name = "_FwTableFooter";
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output)
         => await base.ProcessAsync(context, output);

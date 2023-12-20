@@ -79,15 +79,6 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred loading table data..
-        /// </summary>
-        public static string AlpineTableRequestFailed {
-            get {
-                return ResourceManager.GetString("AlpineTableRequestFailed", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Are you sure?.
         /// </summary>
         public static string AreYouSure {
@@ -534,6 +525,15 @@ namespace Folly.Resources {
         public static string TableOf {
             get {
                 return ResourceManager.GetString("TableOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred loading table data..
+        /// </summary>
+        public static string TableRequestFailed {
+            get {
+                return ResourceManager.GetString("TableRequestFailed", resourceCulture);
             }
         }
         

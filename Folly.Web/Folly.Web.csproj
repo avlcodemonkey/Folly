@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <ScopedCssEnabled>false</ScopedCssEnabled>
     <RootNamespace>Folly</RootNamespace>
-    <AssemblyVersion>1.0.0.12</AssemblyVersion>
+    <AssemblyVersion>1.0.0.13</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TypeScriptTarget>ESNext</TypeScriptTarget>

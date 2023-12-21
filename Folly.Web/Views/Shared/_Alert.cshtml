@@ -2,7 +2,7 @@
 @using Folly.Models
 @model Alert
 
-<fw-alert>
+<x-alert>
     <div class="card bg-@Model.AlertType.ToString().ToLower() mb-2 text-white" role="alert">
         <div class="row">
             <span class="col-11">@Model.Content</span>
@@ -15,4 +15,4 @@
             </span>
         </div>
     </div>
-</fw-alert>
+</x-alert>

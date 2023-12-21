@@ -22,7 +22,7 @@ class Alert extends HTMLElement {
 
 // Define the new web component
 if ('customElements' in window) {
-    customElements.define('fw-alert', Alert);
+    customElements.define('x-alert', Alert);
 }
 
 export default Alert;

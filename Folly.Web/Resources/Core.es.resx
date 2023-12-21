@@ -162,9 +162,6 @@
   <data name="NextPage" xml:space="preserve">
     <value>Página Siguiente</value>
   </data>
-  <data name="NoData" xml:space="preserve">
-    <value>No hay resultados.</value>
-  </data>
   <data name="PerPage" xml:space="preserve">
     <value>Por página</value>
   </data>
@@ -185,9 +182,6 @@
   </data>
   <data name="HelpDisabled" xml:space="preserve">
     <value>Ayuda contextual está desactivada.</value>
-  </data>
-  <data name="LoadingError" xml:space="preserve">
-    <value>Hubo un problema esta tabla de carga.</value>
   </data>
   <data name="TryAgain" xml:space="preserve">
     <value>Vuelve a intentarlo</value>
@@ -287,5 +281,17 @@
   </data>
   <data name="UnhandledError" xml:space="preserve">
     <value>Unhandled error code `{0}` for request `{1}`.</value>
+  </data>
+  <data name="Retry" xml:space="preserve">
+    <value>Rever</value>
+  </data>
+  <data name="TableLoadingError" xml:space="preserve">
+    <value>Se produjo un error al cargar los datos de la tabla.</value>
+  </data>
+  <data name="TableHasNoData" xml:space="preserve">
+    <value>No hay datos para mostrar.</value>
+  </data>
+  <data name="TableTo" xml:space="preserve">
+    <value>a</value>
   </data>
 </root>

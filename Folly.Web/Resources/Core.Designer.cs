@@ -376,15 +376,6 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There was a problem loading this table..
-        /// </summary>
-        public static string LoadingError {
-            get {
-                return ResourceManager.GetString("LoadingError", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Move Down.
         /// </summary>
         public static string MoveDown {
@@ -417,15 +408,6 @@ namespace Folly.Resources {
         public static string No {
             get {
                 return ResourceManager.GetString("No", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to There are no results..
-        /// </summary>
-        public static string NoData {
-            get {
-                return ResourceManager.GetString("NoData", resourceCulture);
             }
         }
         
@@ -520,6 +502,24 @@ namespace Folly.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to There is no data to display..
+        /// </summary>
+        public static string TableHasNoData {
+            get {
+                return ResourceManager.GetString("TableHasNoData", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An error occurred loading table data..
+        /// </summary>
+        public static string TableLoadingError {
+            get {
+                return ResourceManager.GetString("TableLoadingError", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to of.
         /// </summary>
         public static string TableOf {
@@ -529,11 +529,11 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred loading table data..
+        ///   Looks up a localized string similar to to.
         /// </summary>
-        public static string TableRequestFailed {
+        public static string TableTo {
             get {
-                return ResourceManager.GetString("TableRequestFailed", resourceCulture);
+                return ResourceManager.GetString("TableTo", resourceCulture);
             }
         }
         

@@ -218,7 +218,7 @@ class Table extends HTMLElement {
 
         this.loading = true;
         this.error = false;
-        this.updateStatus();
+        this.update();
 
         try {
             const json = await ky.get(this.src, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).json();
@@ -240,6 +240,7 @@ class Table extends HTMLElement {
      * Updates the DOM based on the table properties.
      */
     update() {
+        this.updateSearch();
         this.updateRowNumbers();
         this.updatePageButtons();
         this.updateStatus();
@@ -248,9 +249,24 @@ class Table extends HTMLElement {
     }
 
     /**
+     * Enable/disable search input.
+     */
+    updateSearch() {
+        const searchInput = this.querySelector('.table-search-query');
+        if (searchInput) {
+            searchInput.disabled = this.loading || this.error;
+        }
+    }
+    /**
      * Updates the start, end, and total numbers.
      */
     updateRowNumbers() {
+        const rowNumbers = this.querySelector('.table-row-numbers');
+        if (!rowNumbers) {
+            return;
+        }
+        rowNumbers.classList.toggle('is-hidden', this.loading || this.error);
+
         const startRowNumber = this.querySelector('.table-start-row-number');
         if (startRowNumber) {
             startRowNumber.textContent = `${this.startRowNumber}`;
@@ -269,21 +285,27 @@ class Table extends HTMLElement {
      * Enable/disable paging buttons.
      */
     updatePageButtons() {
+        const shouldDisable = this.loading || this.error;
+
         const firstPageButton = this.querySelector('.table-first-page-button');
         if (firstPageButton) {
-            firstPageButton.disabled = this.isFirstPage;
+            firstPageButton.disabled = shouldDisable || this.isFirstPage;
         }
         const previousPageButton = this.querySelector('.table-previous-page-button');
         if (previousPageButton) {
-            previousPageButton.disabled = this.isFirstPage;
+            previousPageButton.disabled = shouldDisable || this.isFirstPage;
         }
         const nextPageButton = this.querySelector('.table-next-page-button');
         if (nextPageButton) {
-            nextPageButton.disabled = this.isLastPage;
+            nextPageButton.disabled = shouldDisable || this.isLastPage;
         }
         const lastPageButton = this.querySelector('.table-last-page-button');
         if (lastPageButton) {
-            lastPageButton.disabled = this.isLastPage;
+            lastPageButton.disabled = shouldDisable || this.isLastPage;
+        }
+        const tablePerPageInput = this.querySelector('.table-per-page');
+        if (tablePerPageInput) {
+            tablePerPageInput.disabled = shouldDisable;
         }
     }
 
@@ -291,19 +313,19 @@ class Table extends HTMLElement {
      * Shows/hides the table loading and error indicators.
      */
     updateStatus() {
-        const tableStatus = this.querySelector('.table-status');
-        if (tableStatus) {
-            tableStatus.classList.toggle('is-hidden', !(this.loading || this.error));
+        const isLoading = this.querySelector('.table-is-loading');
+        if (isLoading) {
+            isLoading.classList.toggle('is-hidden', !this.loading);
+        }
 
-            const isLoading = this.querySelector('.table-is-loading');
-            if (isLoading) {
-                isLoading.classList.toggle('is-hidden', !this.loading);
-            }
+        const hasError = this.querySelector('.table-has-error');
+        if (hasError) {
+            hasError.classList.toggle('is-hidden', !this.error);
+        }
 
-            const hasError = this.querySelector('.table-has-error');
-            if (hasError) {
-                hasError.classList.toggle('is-hidden', !this.error);
-            }
+        const hasNoData = this.querySelector('.table-has-no-data');
+        if (hasNoData) {
+            hasNoData.classList.toggle('is-hidden', this.loading || this.error || this.filteredRowTotal !== 0);
         }
     }
 
@@ -311,7 +333,7 @@ class Table extends HTMLElement {
      * Updates table headers to show correct sorting icons.
      */
     updateSortHeaders() {
-        const classList = ['table-sort-asc', 'table-sort-desc', 'table-no-sort'];
+        const classList = ['table-sort-asc', 'table-sort-desc'];
         this.querySelectorAll('th[data-property]').forEach((th) => {
             const property = th.getAttribute('data-property');
             const sortClass = this.sortClass(property);
@@ -344,13 +366,13 @@ class Table extends HTMLElement {
         const existingRows = this.querySelectorAll('tbody tr:not(.table-status)');
         existingRows.forEach((x) => x.remove());
 
-        const template = this.querySelector('.table-row-template');
         const tbody = this.querySelector('tbody');
-        if (!template) {
-            throw new DOMException('Table row template missing.');
-        }
         if (!tbody) {
             throw new DOMException('Table body missing.');
+        }
+        const template = tbody.querySelector('template');
+        if (!template) {
+            throw new DOMException('Table row template missing.');
         }
 
         const html = this.filteredRows.map((row) => mustache.render(template.innerHTML, row)).join('\n');
@@ -453,8 +475,7 @@ class Table extends HTMLElement {
 
         this.update();
 
-        // after rendering, notify that the table has been updated
-        // @todo make sure this timeout works as expected
+        // after rendering let htmx reprocess the table to add event listeners
         setTimeout(() => {
             htmx.default.process(this);
         }, 0);
@@ -465,6 +486,10 @@ class Table extends HTMLElement {
      * @param {InputEvent} event Input event to get search value from.
      */
     onSearchQueryInput(event) {
+        if (this.loading || this.error) {
+            return;
+        }
+
         const val = (event?.target)?.value;
         if (this.debounceTimer) {
             clearTimeout(this.debounceTimer);
@@ -472,9 +497,12 @@ class Table extends HTMLElement {
         this.debounceTimer = window.setTimeout(() => {
             if (this.searchQuery !== val) {
                 this.currentPage = 0;
-                this.saveSetting(TableSetting.SearchQuery, val);
+                this.saveSetting(TableSetting.CurrentPage, 0);
             }
+
             this.searchQuery = val;
+            this.saveSetting(TableSetting.SearchQuery, val);
+
             this.filterData();
         }, 250);
     }
@@ -484,12 +512,18 @@ class Table extends HTMLElement {
      * @param {InputEvent} event Input event to get per page value from.
      */
     onPerPageInput(event) {
+        if (this.loading || this.error) {
+            return;
+        }
+
         const newVal = parseInt((event?.target)?.value ?? '10', 10) ?? 10;
         if (this.perPage !== newVal) {
             this.currentPage = 0;
-            this.saveSetting(TableSetting.PerPage, newVal);
+            this.saveSetting(TableSetting.CurrentPage, 0);
         }
+
         this.perPage = newVal;
+        this.saveSetting(TableSetting.PerPage, newVal);
 
         this.filterData();
     }
@@ -527,6 +561,10 @@ class Table extends HTMLElement {
      * @param {number} page Page to move to, zero based.
      */
     setPage(page) {
+        if (this.loading || this.error) {
+            return;
+        }
+
         this.currentPage = page;
         this.saveSetting(TableSetting.CurrentPage, this.currentPage);
         this.filterData();
@@ -537,6 +575,10 @@ class Table extends HTMLElement {
      * @param {Element} elem TH that was clicked on.
      */
     onSortClick(elem) {
+        if (this.loading || this.error) {
+            return;
+        }
+
         const property = elem.getAttribute('data-property');
         if (!property) {
             return;
@@ -600,7 +642,7 @@ class Table extends HTMLElement {
 
 // Define the new web component
 if ('customElements' in window) {
-    customElements.define('fw-table', Table);
+    customElements.define('x-table', Table);
 }
 
 export default Table;

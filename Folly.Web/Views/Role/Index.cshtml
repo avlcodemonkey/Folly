@@ -8,50 +8,45 @@
 
     <partial name="_Alerts" />
 
-    <fw-table key="roles" src="@Url.Action("List", "Role")">
-        <fw-table-header />
-        <fw-table-content>
-            <thead>
-                <tr>
-                    <fw-th>
-                        <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary" title="@Roles.CreateRole">
-                            <icon name="Add" />
-                        </a>
-                        <fw-confirm-dialog authorize-roles="role.refreshpermissions" hx-get="@Url.Action("RefreshPermissions", "Role")"
-                            data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@Roles.ConfirmRefreshPermissions"
-                        >
-                            <a class="button primary" title="@Roles.RefreshPermissions">
-                                <icon name="Refresh" />
-                            </a>
-                        </fw-confirm-dialog>
-                    </fw-th>
-                    <fw-th property="id">@Core.Id</fw-th>
-                    <fw-th property="name">@Roles.Name</fw-th>
-                </tr>
-            </thead>
-            <tbody>
-                <fw-table-status colspan="3" />
-                <fw-table-row>
-                    <fw-td>
-                        <a authorize-roles="role.edit" class="button primary" title="@Roles.EditRole" href="@Url.ActionForMustache("Edit")">
-                            <icon name="EditAlt" />
-                        </a>
-                        <a authorize-roles="role.edit" class="button primary" title="@Core.Copy" href="@Url.ActionForMustache("Copy")">
-                            <icon name="Copy" />
-                        </a>
-                        <fw-confirm-dialog authorize-roles="role.delete" hx-delete="@Url.ActionForMustache("Delete")"
-                            data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
-                        >
-                            <a class="button dark" title="@Core.Delete">
-                                <icon name="DeleteAlt" />
-                            </a>
-                        </fw-confirm-dialog>
-                    </fw-td>
-                    <fw-td property="id" />
-                    <fw-td property="name" />
-                </fw-table-row>
-            </tbody>
-        </fw-table-content>
-        <fw-table-footer />
-    </fw-table>
+    <data-table key="roles" src="@Url.Action("List", "Role")">
+        <data-head>
+            <th>
+                <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary"
+                    title="@Roles.CreateRole" aria-label="@Roles.CreateRole"
+                >
+                    <icon name="Add" />
+                </a>
+                <x-confirm-dialog authorize-roles="role.refreshpermissions" hx-get="@Url.Action("RefreshPermissions", "Role")"
+                    data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@Roles.ConfirmRefreshPermissions"
+                >
+                    <a class="button primary" title="@Roles.RefreshPermissions" aria-label="@Roles.RefreshPermissions">
+                        <icon name="Refresh" />
+                    </a>
+                </x-confirm-dialog>
+            </th>
+            <th data-property="id">@Core.Id</th>
+            <th data-property="name">@Roles.Name</th>
+        </data-head>
+        <data-body colspan="3">
+            <td>
+                <a authorize-roles="role.edit" href="@Url.ActionForMustache("Edit")" class="button primary"
+                    title="@Roles.EditRole" aria-label="@Roles.EditRole"
+                >
+                    <icon name="EditAlt" />
+                </a>
+                <a authorize-roles="role.edit" href="@Url.ActionForMustache("Copy")" class="button primary" title="@Core.Copy" aria-label="@Core.Copy">
+                    <icon name="Copy" />
+                </a>
+                <x-confirm-dialog authorize-roles="role.delete" hx-delete="@Url.ActionForMustache("Delete")"
+                    data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
+                >
+                    <a class="button dark" title="@Core.Delete" aria-label="@Core.Delete">
+                        <icon name="DeleteAlt" />
+                    </a>
+                </x-confirm-dialog>
+            </td>
+            <td>{{id}}</td>
+            <td>{{name}}</td>
+        </data-body>
+    </data-table>
 </content>

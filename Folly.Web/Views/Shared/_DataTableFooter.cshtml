@@ -1,21 +1,23 @@
+@using Folly.Resources
+
 <div class="row mt-1">
     <div class="col col-10-md">
-        <button class="button primary table-first-page-button" title="First">
+        <button class="button primary table-first-page-button" title="@Core.FirstPage">
             <icon name="ChevronDoubleLeft" />
         </button>
-        <button class="button primary table-previous-page-button" title="Previous">
+        <button class="button primary table-previous-page-button" title="@Core.PreviousPage">
             <icon name="ChevronLeft" />
         </button>
-        <button class="button primary table-next-page-button" title="Next">
+        <button class="button primary table-next-page-button" title="@Core.NextPage">
             <icon name="ChevronRight" />
         </button>
-        <button class="button primary table-last-page-button" title="Last">
+        <button class="button primary table-last-page-button" title="@Core.LastPage">
             <icon name="ChevronDoubleRight" />
         </button>
     </div>
     <div class="col col-2-md">
         <select name="tablePerPage" class="table-per-page">
-            <option disabled>Per Page</option>
+            <option disabled>@Core.PerPage</option>
             <option value="10">10</option>
             <option value="20">20</option>
             <option value="50">50</option>

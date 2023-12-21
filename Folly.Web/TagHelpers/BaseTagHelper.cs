@@ -17,8 +17,9 @@ public class BaseTagHelper : TagHelper {
     public ViewContext? ViewContext { get; set; }
 
     public void Contextualize() {
-        if (HtmlHelper != null && ViewContext != null)
+        if (HtmlHelper != null && ViewContext != null) {
             (HtmlHelper as IViewContextAware)!.Contextualize(ViewContext);
+        }
     }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) => await base.ProcessAsync(context, output);

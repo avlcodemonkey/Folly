@@ -26,11 +26,11 @@
     }
 }
 
-fw-table {
+x-table {
     & th {
         min-width: 100px;
 
-        &:not(.table-no-sort) {
+        &[data-property] {
             cursor: pointer;
         }
 

@@ -168,9 +168,6 @@
   <data name="NextPage" xml:space="preserve">
     <value>Next Page</value>
   </data>
-  <data name="NoData" xml:space="preserve">
-    <value>There are no results.</value>
-  </data>
   <data name="PerPage" xml:space="preserve">
     <value>Per Page</value>
   </data>
@@ -191,9 +188,6 @@
   </data>
   <data name="HelpDisabled" xml:space="preserve">
     <value>Context help has been disabled.</value>
-  </data>
-  <data name="LoadingError" xml:space="preserve">
-    <value>There was a problem loading this table.</value>
   </data>
   <data name="TryAgain" xml:space="preserve">
     <value>Try Again</value>
@@ -288,10 +282,16 @@
   <data name="Dashboard" xml:space="preserve">
     <value>Dashboard</value>
   </data>
-  <data name="TableRequestFailed" xml:space="preserve">
+  <data name="TableLoadingError" xml:space="preserve">
     <value>An error occurred loading table data.</value>
   </data>
   <data name="Retry" xml:space="preserve">
     <value>Retry</value>
+  </data>
+  <data name="TableHasNoData" xml:space="preserve">
+    <value>There is no data to display.</value>
+  </data>
+  <data name="TableTo" xml:space="preserve">
+    <value>to</value>
   </data>
 </root>

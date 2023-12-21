@@ -6,5 +6,7 @@ import './components/confirmDialog';
 import './components/alert';
 import './components/table';
 
+import './luxbar';
+
 // now set up htmx
 import './htmxConfig';

@@ -30,7 +30,7 @@
     cursor: pointer;
 }
 
-.button + fw-confirm-dialog {
+.button + x-confirm-dialog {
     margin-left: 1rem;
 }
 

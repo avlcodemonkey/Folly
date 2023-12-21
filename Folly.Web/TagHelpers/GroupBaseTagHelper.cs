@@ -75,7 +75,7 @@ public class GroupBaseTagHelper : BaseTagHelper {
         button.MergeAttribute("role", "button");
         button.InnerHtml.AppendHtml(icon);
 
-        var dialog = new TagBuilder("fw-info-dialog");
+        var dialog = new TagBuilder("x-info-dialog");
         dialog.MergeAttribute("data-content", HelpText!.Replace("\"", "&quot;"));
         dialog.MergeAttribute("data-ok", Core.Okay);
         dialog.InnerHtml.AppendHtml(button);

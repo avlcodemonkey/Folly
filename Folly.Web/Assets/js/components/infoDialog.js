@@ -65,7 +65,7 @@ class InfoDialog extends BaseDialog {
 
 // Define the new web component
 if ('customElements' in window) {
-    customElements.define('fw-info-dialog', InfoDialog);
+    customElements.define('x-info-dialog', InfoDialog);
 }
 
 export default InfoDialog;

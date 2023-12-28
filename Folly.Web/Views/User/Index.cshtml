@@ -33,7 +33,7 @@
                 <x-confirm-dialog authorize-roles="user.delete" hx-delete="@Url.ActionForMustache("Delete")" data-ok="@Core.Okay"
                     data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
                 >
-                    <a class="button dark" title="@Core.Delete" aria-label="@Core.Delete">
+                    <a href="#" class="button dark" title="@Core.Delete" aria-label="@Core.Delete">
                         <icon name="DeleteAlt" />
                     </a>
                 </x-confirm-dialog>

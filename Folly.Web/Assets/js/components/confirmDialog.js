@@ -3,6 +3,10 @@
 import BaseDialog from './baseDialog';
 
 /**
+ * @typedef {import("./confirmClickEvent").default} ConfirmClickEvent
+ */
+
+/**
  * Extend the custom dialog class to create the confirm web component.
  */
 class ConfirmDialog extends BaseDialog {
@@ -44,7 +48,7 @@ class ConfirmDialog extends BaseDialog {
 
     /**
      * Open alert dialog when user clicks on the element.
-     * @param {Event} event Click event that triggers the dialog.
+     * @param {ConfirmClickEvent} event Click event that triggers the dialog.
      */
     handleEvent(event) {
         if (event.isConfirmed) {

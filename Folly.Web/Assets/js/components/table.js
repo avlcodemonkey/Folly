@@ -1,6 +1,7 @@
 // @ts-check
 
 import * as htmx from 'htmx.org';
+// @ts-ignore VS doesn't like this import but it builds fine
 import ky from 'ky';
 import mustache from 'mustache';
 import FetchError from './fetchError';
@@ -153,10 +154,11 @@ class Table extends HTMLElement {
      * Sets the default value and adds event handler for the search input.
      */
     setupHeader() {
+        /** @type {HTMLInputElement} */
         const searchInput = this.querySelector('.table-search-query');
         if (searchInput) {
             searchInput.value = this.searchQuery;
-            searchInput.addEventListener('input', (e) => this.onSearchQueryInput(e));
+            searchInput.addEventListener('input', (/** @type {InputEvent} */ e) => this.onSearchQueryInput(e));
             searchInput.focus();
         }
     }
@@ -182,10 +184,11 @@ class Table extends HTMLElement {
             lastPageButton.addEventListener('click', () => this.onLastPageClick());
         }
 
+        /** @type {HTMLSelectElement} */
         const tablePerPageInput = this.querySelector('.table-per-page');
         if (tablePerPageInput) {
-            tablePerPageInput.value = this.perPage;
-            tablePerPageInput.addEventListener('click', (e) => this.onPerPageInput(e));
+            tablePerPageInput.value = `${this.perPage}`;
+            tablePerPageInput.addEventListener('change', (/** @type {InputEvent} */ e) => this.onPerPageChange(e));
         }
     }
 
@@ -252,6 +255,7 @@ class Table extends HTMLElement {
      * Enable/disable search input.
      */
     updateSearch() {
+        /** @type {HTMLInputElement} */
         const searchInput = this.querySelector('.table-search-query');
         if (searchInput) {
             searchInput.disabled = this.loading || this.error;
@@ -287,22 +291,31 @@ class Table extends HTMLElement {
     updatePageButtons() {
         const shouldDisable = this.loading || this.error;
 
+        /** @type {HTMLButtonElement} */
         const firstPageButton = this.querySelector('.table-first-page-button');
         if (firstPageButton) {
             firstPageButton.disabled = shouldDisable || this.isFirstPage;
         }
+
+        /** @type {HTMLButtonElement} */
         const previousPageButton = this.querySelector('.table-previous-page-button');
         if (previousPageButton) {
             previousPageButton.disabled = shouldDisable || this.isFirstPage;
         }
+
+        /** @type {HTMLButtonElement} */
         const nextPageButton = this.querySelector('.table-next-page-button');
         if (nextPageButton) {
             nextPageButton.disabled = shouldDisable || this.isLastPage;
         }
+
+        /** @type {HTMLButtonElement} */
         const lastPageButton = this.querySelector('.table-last-page-button');
         if (lastPageButton) {
             lastPageButton.disabled = shouldDisable || this.isLastPage;
         }
+
+        /** @type {HTMLSelectElement} */
         const tablePerPageInput = this.querySelector('.table-per-page');
         if (tablePerPageInput) {
             tablePerPageInput.disabled = shouldDisable;
@@ -477,7 +490,7 @@ class Table extends HTMLElement {
 
         // after rendering let htmx reprocess the table to add event listeners
         setTimeout(() => {
-            htmx.default.process(this);
+            htmx.process(this);
         }, 0);
     }
 
@@ -490,6 +503,7 @@ class Table extends HTMLElement {
             return;
         }
 
+        // @ts-ignore target will be a HTMLInputElement with a value
         const val = (event?.target)?.value;
         if (this.debounceTimer) {
             clearTimeout(this.debounceTimer);
@@ -511,11 +525,12 @@ class Table extends HTMLElement {
      * Handle input for per page select box and update data to display.
      * @param {InputEvent} event Input event to get per page value from.
      */
-    onPerPageInput(event) {
+    onPerPageChange(event) {
         if (this.loading || this.error) {
             return;
         }
 
+        // @ts-ignore target will be a HTMLSelectElement with a value
         const newVal = parseInt((event?.target)?.value ?? '10', 10) ?? 10;
         if (this.perPage !== newVal) {
             this.currentPage = 0;

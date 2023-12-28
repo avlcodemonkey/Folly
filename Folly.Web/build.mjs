@@ -21,7 +21,7 @@ const args = {
     if (watch) {
         ctx = await esbuild.context(args);
         await ctx.watch();
-        console.log("watching...");
+        console.log("\nwatching...\n");
     } else {
         ctx = await esbuild.build(args);
         console.log("build successful");

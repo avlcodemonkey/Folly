@@ -75,15 +75,19 @@ class BaseDialog extends HTMLElement {
      */
     registerTabTrap() {
         /** @type {HTMLElement[]} */
+        // @ts-ignore target type is HTMLElement but VS can't infer that
         const tabbableElements = Array.from(this.dialog.querySelectorAll('a, button, input'))
             .filter((tabbableElement) => {
+                // @ts-ignore disabled doesn't exist on Element but does exist on button/input
+                if (['button', 'input'].some((x) => x === tabbableElement.tagName) && tabbableElement.disabled === true) {
+                    return false;
+                }
+
                 const computedStyle = window.getComputedStyle(tabbableElement);
                 if (computedStyle.display === 'none' || computedStyle.visibility === 'hidden') {
                     return false;
                 }
-                if (['button', 'input'].includes(tabbableElement.tagName) && tabbableElement.disabled === true) {
-                    return false;
-                }
+
                 return true;
             });
 
@@ -95,6 +99,7 @@ class BaseDialog extends HTMLElement {
         const lastTabbableElement = tabbableElements[tabbableElements.length - 1];
 
         this.addDocumentEventListener('focusin', (event) => {
+            // @ts-ignore target type is Node but VS can't infer that
             if (!this.dialog.contains(event.target)) {
                 event.preventDefault();
                 firstTabbableElement.focus();
@@ -128,6 +133,7 @@ class BaseDialog extends HTMLElement {
     createDialog() {
         const div = document.createElement('div');
         div.innerHTML = this.makeDialogHtml();
+        // @ts-ignore HTMLDialogElement is the correct type but VS can't infer that
         return div.firstChild;
     }
 }

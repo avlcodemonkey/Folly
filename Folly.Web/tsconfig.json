@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "module": "NodeNext",
+        "moduleResolution": "NodeNext",
+        "lib": [ "DOM", "ES2017" ],
+        "noEmit": true
+    },
+    "exclude": [
+        "node_modules",
+        "wwwroot"
+    ],
+    "compileOnSave": false
+}

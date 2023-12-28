@@ -1,5 +1,3 @@
-// @ts-check
-
 // import custom elements first so they get defined as soon as possible.
 import './components/infoDialog';
 import './components/confirmDialog';

@@ -1,5 +1,3 @@
-// @ts-check
-
 import * as htmx from 'htmx.org';
 
 // disable some htmx features for security

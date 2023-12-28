@@ -1,5 +1,3 @@
-// @ts-check
-
 import * as htmx from 'htmx.org';
 // @ts-ignore VS doesn't like this import but it builds fine
 import ky from 'ky';

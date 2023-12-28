@@ -1,5 +1,3 @@
-// @ts-check
-
 /**
  * @typedef TrackedListener
  * @type {object}

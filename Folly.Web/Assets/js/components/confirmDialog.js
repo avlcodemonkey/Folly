@@ -1,5 +1,3 @@
-// @ts-check
-
 import BaseDialog from './baseDialog';
 
 /**

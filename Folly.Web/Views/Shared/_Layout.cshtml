@@ -1,6 +1,8 @@
 @using System.Globalization;
 @using Folly.Controllers;
+@using Folly.Extensions
 @using Folly.Resources;
+@using Folly.Utils
 
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +16,7 @@
         <script src="~/js/index.js" asp-append-version="true" defer></script>
     </head>
 
-    <body hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header" hx-indicator="#htmx-indicator" data-environment>
+    <body hx-boost="true" hx-target="#main" hx-history="false" hx-ext="ajax-header" hx-indicator="#htmx-indicator" hx-headers='{"@HtmxHeaders.Version": "@Html.ApplicationVersionNumber()"}' data-environment>
         <header id="luxbar" class="luxbar">
             <input type="checkbox" id="luxbar-checkbox" />
             <div class="luxbar-menu">
@@ -40,6 +42,11 @@
                                 </li>
                                 <li authorize-roles="account.updateAccount">
                                     <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" label="@Account.UpdateAccount" show-label /></a>
+                                </li>
+                                <li>
+                                    <x-info-dialog data-content="@Html.ApplicationVersionName()" data-ok="@Core.Okay">
+                                        <a href="#"><icon name="CircleInformation" label="@Core.About" show-label /></a>
+                                    </x-info-dialog>
                                 </li>
                                 <li>
                                     <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" label="@Account.Logout" show-label /></a>

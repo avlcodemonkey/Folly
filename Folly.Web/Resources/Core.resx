@@ -294,4 +294,7 @@
   <data name="TableTo" xml:space="preserve">
     <value>to</value>
   </data>
+  <data name="About" xml:space="preserve">
+    <value>About</value>
+  </data>
 </root>

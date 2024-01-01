@@ -2,6 +2,7 @@ using Folly.Controllers;
 using Folly.Extensions;
 using Folly.Extensions.Program;
 using Folly.Services;
+using Folly.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Caching.Memory;
@@ -44,7 +45,8 @@ app
     .UseRouting()
     .UseAuthentication()
     .UseAuthorization()
-    .UseLocalization();
+    .UseLocalization()
+    .UseMiddleware<VersionCheckMiddleware>();
 
 app.MapControllerRoute("parentChild", "{controller}/{action}/{parentId:int}/{id:int}");
 app.MapControllerRoute("default", $"{{controller={nameof(DashboardController).StripController()}}}/{{action={nameof(DashboardController.Index)}}}/{{id:int?}}");

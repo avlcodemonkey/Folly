@@ -1,0 +1,24 @@
+.icon {
+    height: 1.6rem;
+    width: 1.6rem;
+    display: block;
+
+    & svg {
+        margin-left: -.4rem;
+        margin-top: -.4rem;
+
+        & path {
+            fill: currentColor;
+        }
+    }
+}
+
+.button-icon {
+    padding: .5rem .6rem;
+
+    & svg {
+        & path {
+            fill: currentColor;
+        }
+    }
+}

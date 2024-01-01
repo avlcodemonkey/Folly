@@ -10,5 +10,6 @@
         padding: 0;
         font-weight: bold;
         font-size: 2rem;
+        vertical-align: middle;
     }
 }

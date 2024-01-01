@@ -14,13 +14,13 @@
                 <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary"
                     title="@Roles.CreateRole" aria-label="@Roles.CreateRole"
                 >
-                    <icon name="Add" />
+                    <icon name="Add" label="@Roles.CreateRole" />
                 </a>
                 <x-confirm-dialog authorize-roles="role.refreshpermissions" hx-get="@Url.Action("RefreshPermissions", "Role")"
                     data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@Roles.ConfirmRefreshPermissions"
                 >
                     <a href="#" class="button primary" title="@Roles.RefreshPermissions" aria-label="@Roles.RefreshPermissions">
-                        <icon name="Refresh" />
+                        <icon name="Refresh" label="@Roles.RefreshPermissions" />
                     </a>
                 </x-confirm-dialog>
             </th>
@@ -32,16 +32,16 @@
                 <a authorize-roles="role.edit" href="@Url.ActionForMustache("Edit")" class="button primary"
                     title="@Roles.EditRole" aria-label="@Roles.EditRole"
                 >
-                    <icon name="EditAlt" />
+                    <icon name="EditAlt" label="@Roles.EditRole" />
                 </a>
                 <a authorize-roles="role.edit" href="@Url.ActionForMustache("Copy")" class="button primary" title="@Core.Copy" aria-label="@Core.Copy">
-                    <icon name="Copy" />
+                    <icon name="Copy" label="@Core.Copy" />
                 </a>
                 <x-confirm-dialog authorize-roles="role.delete" hx-delete="@Url.ActionForMustache("Delete")"
                     data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
                 >
                     <a href="#" class="button dark" title="@Core.Delete" aria-label="@Core.Delete">
-                        <icon name="DeleteAlt" />
+                        <icon name="DeleteAlt" label="@Core.Delete" />
                     </a>
                 </x-confirm-dialog>
             </td>

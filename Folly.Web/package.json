@@ -6,11 +6,15 @@
         "esbuild": "0.17.18",
         "eslint": "^8.36.0",
         "eslint-config-airbnb": "^19.0.4",
-        "eslint-config-airbnb-base": "^15.0.0"
+        "eslint-config-airbnb-base": "^15.0.0",
+        "fs": "^0.0.1-security",
+        "path": "^0.12.7",
+        "svgo": "^3.1.0"
     },
     "scripts": {
         "build": "node build.mjs",
-        "watch": "node build.mjs --watch"
+        "watch": "node build.mjs --watch",
+        "svgo": "svgo -f Assets/icons/svg -o Assets/icons/optimized"
     },
     "dependencies": {
         "htmx.org": "^1.9.8",

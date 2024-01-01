@@ -49,7 +49,7 @@ public sealed class SelectGroupTagHelper : GroupBaseTagHelper {
 
         var inputGroup = BuildInputGroup();
         inputGroup.InnerHtml.AppendHtml(BuildInput(output.Attributes));
-        inputGroup.InnerHtml.AppendHtml(BuildHelp());
+        inputGroup.InnerHtml.AppendHtml(await BuildHelp());
 
         output.TagName = "div";
         output.TagMode = TagMode.StartTagAndEndTag;

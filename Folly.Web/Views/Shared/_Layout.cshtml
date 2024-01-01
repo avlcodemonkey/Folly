@@ -20,29 +20,29 @@
             <div class="luxbar-menu">
                 <ul class="luxbar-navigation">
                     <li authorize-roles="dashboard.index" class="luxbar-header">
-                        <a asp-controller="Dashboard" asp-action="Index" class="luxbar-brand"><icon name="Sun" class="mi-mr" aria-hidden="true" /><span>@Core.Brand</span></a>
+                        <a asp-controller="Dashboard" asp-action="Index" class="luxbar-brand"><icon name="Sun" label="@Core.Brand" show-label /></a>
                         <label class="luxbar-hamburger" for="luxbar-checkbox"> <span></span> </label>
                     </li>
 
                     @if (User.Identity?.IsAuthenticated == true)
                     {
                         <li authorize-roles="role.index">
-                            <a asp-controller="Role" asp-action="Index"><icon name="Lock" class="mi-mr" aria-hidden="true" /><span>@Roles.MenuItem</span></a>
+                            <a asp-controller="Role" asp-action="Index"><icon name="Lock" label="@Roles.MenuItem" show-label /></a>
                         </li>
                         <li authorize-roles="user.index">
-                            <a asp-controller="User" asp-action="Index"><icon name="Users" class="mi-mr" aria-hidden="true" /><span>@Users.MenuItem</span></a>
+                            <a asp-controller="User" asp-action="Index"><icon name="Users" label="@Users.MenuItem" show-label /></a>
                         </li>
                         <li class="luxbar-dropdown">
-                            <a href="#"><icon name="Settings" class="mi-mr" aria-hidden="true" />@Account.Settings</a>
+                            <a href="#"><icon name="Settings" label="@Account.Settings" show-label /></a>
                             <ul>
                                 <li authorize-roles="account.updateAccount">
-                                    <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Flag" class="mi-mr" aria-hidden="true" /><span>@Core.ToggleHelp</span></a>
+                                    <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Flag" label="@Core.ToggleHelp" show-label /></a>
                                 </li>
                                 <li authorize-roles="account.updateAccount">
-                                    <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" class="mi-mr" aria-hidden="true" /><span>@Account.UpdateAccount</span></a>
+                                    <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" label="@Account.UpdateAccount" show-label /></a>
                                 </li>
                                 <li>
-                                    <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" class="mi-mr" aria-hidden="true" /><span>@Account.Logout</span></a>
+                                    <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" label="@Account.Logout" show-label /></a>
                                 </li>
                             </ul>
                         </li>
@@ -50,7 +50,7 @@
                     else
                     {
                         <li>
-                            <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="LogIn" class="mi-mr" aria-hidden="true" /><span>@Account.Login</span></a>
+                            <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="LogIn" label="@Account.Login" show-label /></a>
                         </li>
                     }
                 </ul>

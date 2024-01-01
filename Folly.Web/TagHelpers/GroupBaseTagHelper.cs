@@ -52,7 +52,7 @@ public class GroupBaseTagHelper : BaseTagHelper {
         return 0;
     }
 
-    public IHtmlContent BuildHelp() {
+    public async Task<IHtmlContent> BuildHelp() {
         if (HtmlHelper!.ViewContext.HttpContext?.WantsHelp() != true) {
             return HtmlString.Empty;
         }
@@ -65,15 +65,11 @@ public class GroupBaseTagHelper : BaseTagHelper {
             return HtmlString.Empty;
         }
 
-        var icon = new TagBuilder("i");
-        icon.AddCssClass("mi");
-        icon.AddCssClass("mi-flag");
-
         var button = new TagBuilder("button");
-        button.AddCssClass("button success icon-only");
+        button.AddCssClass("button success button-icon");
         button.MergeAttribute("type", "button");
         button.MergeAttribute("role", "button");
-        button.InnerHtml.AppendHtml(icon);
+        button.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("Icons/_Flag"));
 
         var dialog = new TagBuilder("x-info-dialog");
         dialog.MergeAttribute("data-content", HelpText!.Replace("\"", "&quot;"));

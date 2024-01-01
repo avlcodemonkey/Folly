@@ -40,7 +40,7 @@ public sealed class TextareaGroupTagHelper : GroupBaseTagHelper {
 
         var inputGroup = BuildInputGroup();
         inputGroup.InnerHtml.AppendHtml(BuildInput(output.Attributes));
-        inputGroup.InnerHtml.AppendHtml(BuildHelp());
+        inputGroup.InnerHtml.AppendHtml(await BuildHelp());
         inputGroup.InnerHtml.AppendHtml(output.GetChildContentAsync().Result);
 
         output.TagName = "div";

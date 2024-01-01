@@ -41,7 +41,7 @@ public sealed class CheckboxGroupTagHelper : GroupBaseTagHelper {
 
         var inputGroup = BuildInputGroup();
         inputGroup.InnerHtml.AppendHtml(BuildCheckbox(output.Attributes));
-        inputGroup.InnerHtml.AppendHtml(BuildHelp());
+        inputGroup.InnerHtml.AppendHtml(await BuildHelp());
 
         output.TagName = "div";
         output.TagMode = TagMode.StartTagAndEndTag;

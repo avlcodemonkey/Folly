@@ -1,5 +1,4 @@
 using System.Text.Encodings.Web;
-using Folly.Extensions;
 using Folly.Utils;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
@@ -12,11 +11,25 @@ public sealed class IconTagHelper : BaseTagHelper {
 
     public Icon Name { get; set; }
 
+    public string Label { get; set; } = "";
+
+    public bool ShowLabel { get; set; }
+
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
-        output.TagName = "i";
+        Contextualize();
+
+        output.TagName = "span";
         output.TagMode = TagMode.StartTagAndEndTag;
-        output.AddClass("mi", HtmlEncoder.Default);
-        output.AddClass($"mi-{Name.ToCssClass()}", HtmlEncoder.Default);
+        output.AddClass("icon", HtmlEncoder.Default);
+        output.Content.AppendHtml(await HtmlHelper!.PartialAsync($"Icons/_{Name}"));
+        if (!string.IsNullOrWhiteSpace(Label)) {
+            var label = new TagBuilder("span");
+            label.InnerHtml.Append(Label);
+            if (!ShowLabel) {
+                label.AddCssClass("visually-hidden");
+            }
+            output.Content.AppendHtml(label);
+        }
 
         await base.ProcessAsync(context, output);
     }

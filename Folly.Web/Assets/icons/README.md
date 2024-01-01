@@ -1,9 +1,15 @@
-# Creating Icon Enum
+# Creating Icons
 
-## mono-icons
+## Intro
+
+This project uses inline SVG for icons instead of an icon font.  This is more accessible without sacrificing much performance-wise.  Mono Icons is the base icon set.  All the icons in that set have been optimized and converted to `cshtml` partials to use with Razor.
+
+### mono-icons
 https://github.com/mono-company/mono-icons
 
 https://icons.mono.company/
+
+## C# Enum
 
 This snippet converts the icon JSON into a pascal case list that can be used to create a C# enum.
 
@@ -14,3 +20,10 @@ JSON is from `mono-icons/iconfont/icons.json` with filtering to remove `\\` and 
     
     console.log(Array.from(Object.keys(JSON.parse(icons))).map((x) => x.replace(/(^\w|-\w)/g, (y) => y.replace(/-/, '').toUpperCase())));
     
+## Razor Partials
+
+Optimized SVG files are stored in `Views/Shared/Icons` as `cshtml` files that can be used as a partial within Razor views.  New icons can be added by 1) adding the name to the enum, and 2) adding a `cshtml` file in the `Views/Shared/Icons` folder.
+
+SVGO is included as a dev dependency and can be used to optimize SVG files to use for the partials.  Run `npm run svgo` to optimize `svg` files in the `Assets/icons/svg` folder.  The `renameIcons.js` script was also created to bulk rename Mono Icon files.
+
+Icon partials should include `aria-hidden="true" focusable="false"` in the `svg` element for better accessibility.  See https://www.sarasoueidan.com/blog/accessible-icon-buttons/ for more details.

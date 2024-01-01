@@ -8,12 +8,11 @@
 /* menu styles */
 @import "../external/luxbar/css/luxbar.css";
 
-/* icon font */
-@import "../font/icons.css";
-
 /* custom styles */
 @import "./root.css";
 @import "./layout.css";
+@import "./luxbar.css";
+@import "./icons.css";
 @import "./form.css";
 @import "./breadcrumbs.css";
 @import "./utils.css";

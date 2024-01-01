@@ -73,7 +73,7 @@ public sealed class AutocompleteGroupTagHelper : GroupBaseTagHelper {
         var inputGroup = BuildInputGroup();
         inputGroup.InnerHtml.AppendHtml(BuildHidden());
         inputGroup.InnerHtml.AppendHtml(BuildInput(output.Attributes));
-        inputGroup.InnerHtml.AppendHtml(BuildHelp());
+        inputGroup.InnerHtml.AppendHtml(await BuildHelp());
         inputGroup.InnerHtml.AppendHtml(output.GetChildContentAsync().Result);
 
         output.TagName = "div";

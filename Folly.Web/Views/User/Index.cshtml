@@ -14,7 +14,7 @@
                 <a authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button primary"
                     title="@Users.CreateUser" aria-label="@Users.CreateUser"
                 >
-                    <icon name="Add" />
+                    <icon name="Add" label="@Users.CreateUser" />
                 </a>
             </th>
             <th data-property="id">@Core.Id</th>
@@ -28,13 +28,13 @@
                 <a authorize-roles="user.edit" href="@Url.ActionForMustache("Edit")" class="button primary"
                     title="@Users.EditUser" aria-label="@Users.EditUser"
                 >
-                    <icon name="EditAlt" />
+                    <icon name="EditAlt" label="@Users.EditUser" />
                 </a>
                 <x-confirm-dialog authorize-roles="user.delete" hx-delete="@Url.ActionForMustache("Delete")" data-ok="@Core.Okay"
                     data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
                 >
                     <a href="#" class="button dark" title="@Core.Delete" aria-label="@Core.Delete">
-                        <icon name="DeleteAlt" />
+                        <icon name="DeleteAlt" label="@Core.Delete" />
                     </a>
                 </x-confirm-dialog>
             </td>

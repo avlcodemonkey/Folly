@@ -56,6 +56,7 @@ public class RoleController : BaseController {
         }
 
         await _RoleService.CopyRoleAsync(model);
+        Response.Headers.Append(HtmxHeaders.ReplaceUrl, Url.Action(nameof(Index)));
         ViewData[MessageProperty] = Roles.SuccessCopyingRole;
         return Index();
     }

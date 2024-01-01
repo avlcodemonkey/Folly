@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
+/// <summary>
+/// Supresses output if the user doesn't have the specified role(s).
+/// </summary>
 [HtmlTargetElement(Attributes = "authorize-roles")]
 public sealed class AuthorizeTagHelper : TagHelper {
     private readonly IHttpContextAccessor _HttpContextAccessor;

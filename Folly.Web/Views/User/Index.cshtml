@@ -11,9 +11,7 @@
     <data-table key="users" src="@Url.Action("List", "User")">
         <data-head>
             <th>
-                <a authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button primary"
-                    title="@Users.CreateUser" aria-label="@Users.CreateUser"
-                >
+                <a authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button primary" label="@Users.CreateUser">
                     <icon name="Add" label="@Users.CreateUser" />
                 </a>
             </th>
@@ -25,15 +23,13 @@
         </data-head>
         <data-body colspan="6">
             <td>
-                <a authorize-roles="user.edit" href="@Url.ActionForMustache("Edit")" class="button primary"
-                    title="@Users.EditUser" aria-label="@Users.EditUser"
-                >
+                <a authorize-roles="user.edit" href="@Url.ActionForMustache("Edit")" class="button primary" label="@Users.EditUser">
                     <icon name="EditAlt" label="@Users.EditUser" />
                 </a>
                 <x-confirm-dialog authorize-roles="user.delete" hx-delete="@Url.ActionForMustache("Delete")" data-ok="@Core.Okay"
                     data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
                 >
-                    <a href="#" class="button dark" title="@Core.Delete" aria-label="@Core.Delete">
+                    <a href="#" class="button dark" label="@Core.Delete">
                         <icon name="DeleteAlt" label="@Core.Delete" />
                     </a>
                 </x-confirm-dialog>

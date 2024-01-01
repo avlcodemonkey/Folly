@@ -34,7 +34,7 @@ var app = builder.Build();
 app
     .UseHealthChecks()
     .UseHttpsRedirection()
-    .UseSecureHeaders()
+    .UseSecurityHeaders()
     .UseStatusCodePagesWithReExecute($"/{nameof(ErrorController).StripController()}", "?code={0}")
     .UseExceptionHandling(builder)
     .UseSession()

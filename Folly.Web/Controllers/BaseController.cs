@@ -10,4 +10,9 @@ public abstract class BaseController(ILogger<Controller> logger) : Controller {
     public const string MessageProperty = "Message";
     public const string TitleProperty = "Title";
 
+    public void PushAction(string action) {
+        if (!string.IsNullOrWhiteSpace(action)) {
+            Response.Headers.Append(HtmxHeaders.PushUrl, Url.Action(action));
+        }
+    }
 }

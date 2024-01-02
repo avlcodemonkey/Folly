@@ -30,7 +30,7 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
 
         await _RoleService.SaveRoleAsync(model);
         ViewData[MessageProperty] = Roles.SuccessSavingRole;
-        Response.Headers.Append(HtmxHeaders.PushUrl, Url.Action(nameof(Index)));
+        PushAction(nameof(Index));
         return Index();
     }
 
@@ -51,7 +51,7 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
         }
 
         await _RoleService.CopyRoleAsync(model);
-        Response.Headers.Append(HtmxHeaders.ReplaceUrl, Url.Action(nameof(Index)));
+        PushAction(nameof(Index));
         ViewData[MessageProperty] = Roles.SuccessCopyingRole;
         return Index();
     }
@@ -87,7 +87,6 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
     [HttpGet]
     public async Task<IActionResult> RefreshPermissions() {
         await new PermissionManager(_PermissionService, _RoleService).Register();
-        Response.Headers.Append(HtmxHeaders.ReplaceUrl, Url.Action(nameof(Index)));
         ViewData[MessageProperty] = Roles.SuccessRefreshingPermissions;
         return Index();
     }

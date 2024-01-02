@@ -32,7 +32,7 @@ public class UserController(IUserService userService, ILanguageService languageS
 
         await _UserService.SaveUserAsync(model);
         ViewData[MessageProperty] = Users.SuccessSavingUser;
-        Response.Headers.Append(HtmxHeaders.PushUrl, Url.Action(nameof(Index)));
+        PushAction(nameof(Index));
         return Index();
     }
 

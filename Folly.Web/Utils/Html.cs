@@ -1,34 +1,12 @@
 namespace Folly.Utils;
 
-public enum DataToggle {
-    Autocomplete,
-    CollapsibleList,
-    ContextHelp,
-    Dialog,
-    DoTable,
-    Dropdown,
-    Hide,
-    NavMenu,
-    Tab
-}
-
-public enum Button {
-    Primary,
-    Secondary,
-    Dark,
-    Error,
-    Success,
-    Icon,
-    IconOnly
-}
-
 public enum AlertType {
     Success,
     Error
 }
 
 /// <summary>
-/// All icons available from mono-icons. See README in Assets/mono-icons.
+/// All icons available from mono-icons. See README in Assets/icons.
 /// </summary>
 public enum Icon {
     Add,

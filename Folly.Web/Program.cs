@@ -27,6 +27,7 @@ builder.Services
         options.MimeTypes = new List<string>() { "text/css", "application/javascript", "text/javascript", "font/woff2" };
     })
     .AddMvc(options => options.Filters.Add(new RequireHttpsAttribute()))
+    .AddRazorRuntimeCompilation()
     .AddDataAnnotationsLocalization()
     .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNameCaseInsensitive = true);
 

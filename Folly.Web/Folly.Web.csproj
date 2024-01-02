@@ -19,10 +19,10 @@
     <TypeScriptCompileOnSaveEnabled>False</TypeScriptCompileOnSaveEnabled>
   </PropertyGroup>
   <ItemGroup>
-    <Content Remove="tsconfig.json" />
+    <Content Remove="jsconfig.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="tsconfig.json" />
+    <None Include="jsconfig.json" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Auth0.AspNetCore.Authentication" Version="1.4.0" />

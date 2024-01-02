@@ -7,6 +7,9 @@
         "lib": [ "DOM", "ES2017" ],
         "noEmit": true
     },
+    "include": [
+        "Assets/js"
+    ],
     "exclude": [
         "node_modules",
         "wwwroot",

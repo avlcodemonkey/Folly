@@ -297,4 +297,10 @@
   <data name="About" xml:space="preserve">
     <value>About</value>
   </data>
+  <data name="Ascending" xml:space="preserve">
+    <value>Ascending</value>
+  </data>
+  <data name="Descending" xml:space="preserve">
+    <value>Descending</value>
+  </data>
 </root>

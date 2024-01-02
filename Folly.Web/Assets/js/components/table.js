@@ -344,30 +344,52 @@ class Table extends HTMLElement {
      * Updates table headers to show correct sorting icons.
      */
     updateSortHeaders() {
-        const classList = ['table-sort-asc', 'table-sort-desc'];
+        const sortAscTemplate = this.querySelector('.sort-asc-template');
+        const sortDescTemplate = this.querySelector('.sort-desc-template');
+
         this.querySelectorAll('th[data-property]').forEach((th) => {
             const property = th.getAttribute('data-property');
-            const sortClass = this.sortClass(property);
-            // remove any classes the TH shouldn't have
-            classList.filter((x) => x !== sortClass).forEach((x) => th.classList.remove(x));
-            // make sure the TH does have the correct class
-            if (sortClass) {
-                th.classList.toggle(sortClass, true);
+            const sortOrder = this.sortOrder(property);
+            const sortAsc = th.querySelector('.sort-asc');
+            const sortDesc = th.querySelector('.sort-desc');
+
+            // make sure the TH has the correct sort icon
+            if (sortOrder === SortOrder.Asc) {
+                if (sortDesc) {
+                    sortDesc.remove();
+                }
+                if (!sortAsc) {
+                    th.insertAdjacentHTML('beforeend', sortAscTemplate.innerHTML);
+                }
+            } else if (sortOrder === SortOrder.Desc) {
+                if (sortAsc) {
+                    sortAsc.remove();
+                }
+                if (!sortDesc) {
+                    th.insertAdjacentHTML('beforeend', sortDescTemplate.innerHTML);
+                }
+            } else {
+                if (sortAsc) {
+                    sortAsc.remove();
+                }
+                if (sortDesc) {
+                    sortDesc.remove();
+                }
             }
         });
     }
 
     /**
-     * Determines which class to use to display sort icon.
+     * Determines which type of sorting to use to display sort icon.
      * @param {string} property Property to find sort icon for.
-     * @returns {string} Class name to use for this property.
+     * @returns {SortOrder|undefined} Order of sorting for this property.
      */
-    sortClass(property) {
+    sortOrder(property) {
         const index = property ? this.sortColumns.findIndex((x) => x.property === property) : -1;
         if (index === -1) {
-            return '';
+            return undefined;
         }
-        return this.sortColumns[index].sortOrder === SortOrder.Asc ? 'table-sort-asc' : 'table-sort-desc';
+        return this.sortColumns[index].sortOrder;
     }
 
     /**

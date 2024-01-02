@@ -29,18 +29,23 @@
 x-table {
     & th {
         min-width: 100px;
+        vertical-align: bottom;
 
         &[data-property] {
             cursor: pointer;
         }
 
-        &.table-sort-asc::after {
-            content: ' \1f81d';
+        .sort-icon {
+            & svg {
+                & path {
+                    fill: currentColor;
+                }
+            }
         }
+    }
 
-        &.table-sort-desc::after {
-            content: ' \1f81f';
-        }
+    & table {
+        table-layout: fixed;
     }
 
     & td {

@@ -219,3 +219,10 @@ public enum HttpVerb {
     Post,
     Delete
 }
+
+public enum ColumnWidth {
+    SingleIcon = 80,
+    DoubleIcon = 160,
+    TripleIcon = 240,
+    Id = 120
+}

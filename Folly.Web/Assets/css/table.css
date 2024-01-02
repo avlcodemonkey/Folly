@@ -44,10 +44,6 @@ x-table {
         }
     }
 
-    & table {
-        table-layout: fixed;
-    }
-
     & td {
         padding: 1rem .4rem;
     }

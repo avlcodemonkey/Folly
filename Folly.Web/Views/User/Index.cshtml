@@ -1,5 +1,6 @@
 @using Folly.Extensions
 @using Folly.Resources
+@using Folly.Utils
 
 <content>
     <breadcrumb>
@@ -10,12 +11,12 @@
 
     <data-table key="users" src="@Url.Action("List", "User")">
         <data-head>
-            <th>
+            <th width="@Html.Width(ColumnWidth.DoubleIcon)">
                 <a authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button primary" label="@Users.CreateUser">
                     <icon name="Add" label="@Users.CreateUser" />
                 </a>
             </th>
-            <th data-property="id">@Core.Id</th>
+            <th width="@Html.Width(ColumnWidth.Id)" data-property="id">@Core.Id</th>
             <th data-property="userName">@Users.UserName</th>
             <th data-property="firstName">@Users.FirstName</th>
             <th data-property="lastName">@Users.LastName</th>

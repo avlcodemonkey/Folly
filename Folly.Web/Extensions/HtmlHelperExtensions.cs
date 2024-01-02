@@ -1,4 +1,5 @@
 using System.Reflection;
+using Folly.Utils;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Folly.Extensions;
@@ -33,4 +34,9 @@ public static class HtmlHelperExtensions {
     public static string FriendlyVersionNumber(this Version? version)
         => version != null ? $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}" : "";
 
+    /// <summary>
+    /// Get the width as the correct type.
+    /// </summary>
+    /// <returns>Numeric width.</returns>
+    public static int Width(this IHtmlHelper _, ColumnWidth columnWidth) => (int)columnWidth;
 }

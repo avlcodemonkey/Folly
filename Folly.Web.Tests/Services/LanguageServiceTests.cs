@@ -5,14 +5,9 @@ using DTO = Folly.Models;
 namespace Folly.Web.Tests.Services;
 
 [Collection(nameof(DatabaseCollection))]
-public class LanguageServiceTests {
-    private readonly DatabaseFixture _Fixture;
-    private readonly LanguageService _LanguageService;
-
-    public LanguageServiceTests(DatabaseFixture fixture) {
-        _Fixture = fixture;
-        _LanguageService = new LanguageService(fixture.CreateContext());
-    }
+public class LanguageServiceTests(DatabaseFixture fixture) {
+    private readonly DatabaseFixture _Fixture = fixture;
+    private readonly LanguageService _LanguageService = new(fixture.CreateContext());
 
     [Fact]
     public async Task GetLanguageByIdAsync_ReturnsEnglishLanguageDTO() {

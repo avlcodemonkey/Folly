@@ -6,14 +6,9 @@ using DTO = Folly.Models;
 namespace Folly.Web.Tests.Services;
 
 [Collection(nameof(DatabaseCollection))]
-public class PermissionServiceTests {
-    private readonly DatabaseFixture _Fixture;
-    private readonly PermissionService _PermissionService;
-
-    public PermissionServiceTests(DatabaseFixture fixture) {
-        _Fixture = fixture;
-        _PermissionService = new PermissionService(fixture.CreateContext());
-    }
+public class PermissionServiceTests(DatabaseFixture fixture) {
+    private readonly DatabaseFixture _Fixture = fixture;
+    private readonly PermissionService _PermissionService = new(fixture.CreateContext());
 
     [Fact]
     public async Task GetAllPermissionsAsync_ReturnsManyDTOs() {

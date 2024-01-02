@@ -6,8 +6,8 @@ namespace Folly.Domain.Models;
 [Table("Role")]
 public class Role : AuditableEntity {
     public Role() {
-        RolePermissions = new List<RolePermission>();
-        UserRoles = new List<UserRole>();
+        RolePermissions = [];
+        UserRoles = [];
     }
 
     public bool IsDefault { get; set; }

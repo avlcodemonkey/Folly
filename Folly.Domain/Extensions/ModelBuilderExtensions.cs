@@ -18,7 +18,7 @@ public static class ModelBuilderExtensions {
                 }
 
                 var attributes = Attribute.GetCustomAttributes(info);
-                if (attributes?.Any() == true) {
+                if (attributes?.Length > 0) {
                     if (attributes.FirstOrDefault(x => x is DefaultValueSqlAttribute) is DefaultValueSqlAttribute defaultValueSqlAttr) {
                         property.SetDefaultValueSql(defaultValueSqlAttr.Sql);
                     }

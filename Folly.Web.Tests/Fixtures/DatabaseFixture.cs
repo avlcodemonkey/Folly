@@ -63,7 +63,7 @@ public class DatabaseFixture : IDisposable {
 
     public Role TestRole { get; } = new() {
         Id = -1, Name = "Test", IsDefault = false,
-        RolePermissions = new List<RolePermission> { new() { Id = -2, RoleId = -1, PermissionId = -3 } }
+        RolePermissions = [new() { Id = -2, RoleId = -1, PermissionId = -3 }]
     };
 
     public Permission TestPermission { get; } = new() { Id = -3, ControllerName = "controller", ActionName = "action" };

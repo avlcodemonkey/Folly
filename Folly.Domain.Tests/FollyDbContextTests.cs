@@ -3,10 +3,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Folly.Domain.Tests;
 
-public class FollyDbContextTests : IClassFixture<DatabaseFixture> {
-    private readonly DatabaseFixture _Fixture;
-
-    public FollyDbContextTests(DatabaseFixture fixture) => _Fixture = fixture;
+public class FollyDbContextTests(DatabaseFixture fixture) : IClassFixture<DatabaseFixture> {
+    private readonly DatabaseFixture _Fixture = fixture;
 
     [Fact]
     public async Task SaveChangesAsync_CreateLanguage_SetsCreatedAndUpdatedDate() {
@@ -187,7 +185,7 @@ public class FollyDbContextTests : IClassFixture<DatabaseFixture> {
         var rolePermissionForCreateAudit = new RolePermission { Id = -1, RoleId = -1, PermissionId = 1 };
         var roleForCreateAudit = new Role {
             Id = -1, Name = "audit create role", IsDefault = false,
-            RolePermissions = new List<RolePermission> { rolePermissionForCreateAudit }
+            RolePermissions = [rolePermissionForCreateAudit]
         };
 
         // act
@@ -227,7 +225,7 @@ public class FollyDbContextTests : IClassFixture<DatabaseFixture> {
         var rolePermissionForDeleteAudit = new RolePermission { Id = -2, RoleId = -2, PermissionId = 1 };
         var roleForDeleteAudit = new Role {
             Id = -2, Name = "audit delete role permission", IsDefault = false,
-            RolePermissions = new List<RolePermission> { rolePermissionForDeleteAudit }
+            RolePermissions = [rolePermissionForDeleteAudit]
         };
 
         // act

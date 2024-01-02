@@ -6,14 +6,9 @@ using DTO = Folly.Models;
 namespace Folly.Web.Tests.Services;
 
 [Collection(nameof(DatabaseCollection))]
-public class RoleServiceTests {
-    private readonly DatabaseFixture _Fixture;
-    private readonly RoleService _RoleService;
-
-    public RoleServiceTests(DatabaseFixture fixture) {
-        _Fixture = fixture;
-        _RoleService = new RoleService(fixture.CreateContext());
-    }
+public class RoleServiceTests(DatabaseFixture fixture) {
+    private readonly DatabaseFixture _Fixture = fixture;
+    private readonly RoleService _RoleService = new(fixture.CreateContext());
 
     [Fact]
     public async Task GetDefaultRoleAsync_ReturnsAdminRoleDTO() {

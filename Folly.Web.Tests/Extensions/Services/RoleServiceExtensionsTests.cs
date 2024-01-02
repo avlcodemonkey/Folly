@@ -11,7 +11,7 @@ public class RoleServiceExtensionsTests {
     public void SelectSingleAsDTO_ReturnsProjectedDTO() {
         // arrange
         var rolePermission = new RolePermission { Id = 1, RoleId = 2, PermissionId = 3 };
-        var role = new Role { Id = 4, Name = "test role", IsDefault = true, RolePermissions = new List<RolePermission> { rolePermission } };
+        var role = new Role { Id = 4, Name = "test role", IsDefault = true, RolePermissions = [rolePermission] };
         var roles = new List<Role> { role }.AsQueryable();
 
         // act
@@ -33,9 +33,9 @@ public class RoleServiceExtensionsTests {
     public void SelectMultipleAsDTO_ReturnsProjectedDTOs() {
         // arrange
         var rolePermission1 = new RolePermission { Id = 1, RoleId = 2, PermissionId = 3 };
-        var role1 = new Role { Id = 4, Name = "test role 1", IsDefault = true, RolePermissions = new List<RolePermission> { rolePermission1 } };
+        var role1 = new Role { Id = 4, Name = "test role 1", IsDefault = true, RolePermissions = [rolePermission1] };
         var rolePermission2 = new RolePermission { Id = 5, RoleId = 6, PermissionId = 7 };
-        var role2 = new Role { Id = 6, Name = "test role 2", IsDefault = false, RolePermissions = new List<RolePermission> { rolePermission2 } };
+        var role2 = new Role { Id = 6, Name = "test role 2", IsDefault = false, RolePermissions = [rolePermission2] };
         var roles = new List<Role> { role1, role2 }.AsQueryable();
 
         // act

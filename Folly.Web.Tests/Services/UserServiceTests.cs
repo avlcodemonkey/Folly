@@ -228,13 +228,9 @@ public class UserServiceTests {
         // assert
         Assert.NotEmpty(claims);
         Assert.IsAssignableFrom<IEnumerable<DTO.UserClaim>>(claims);
-        Assert.Single(claims);
-        Assert.Collection(claims,
-            x => Assert.Equal(testPermission.ControllerName, x.ControllerName)
-        );
-        Assert.Collection(claims,
-            x => Assert.Equal(testPermission.ActionName, x.ActionName)
-        );
+        var x = Assert.Single(claims);
+        Assert.Equal(testPermission.ControllerName, x.ControllerName);
+        Assert.Equal(testPermission.ActionName, x.ActionName);
     }
 
     [Fact]

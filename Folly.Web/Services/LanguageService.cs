@@ -9,10 +9,8 @@ namespace Folly.Services;
 /// Fetches languages from the DB.
 /// Use AsNoTracking since languages can't be modified.
 /// </summary>
-public sealed class LanguageService : ILanguageService {
-    private readonly FollyDbContext _DbContext;
-
-    public LanguageService(FollyDbContext dbContext) => _DbContext = dbContext;
+public sealed class LanguageService(FollyDbContext dbContext) : ILanguageService {
+    private readonly FollyDbContext _DbContext = dbContext;
 
     public async Task<IEnumerable<DTO.Language>> GetAllLanguagesAsync()
         => await _DbContext.Languages.AsNoTracking().SelectAsDTO().ToListAsync();

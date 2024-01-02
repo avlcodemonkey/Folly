@@ -15,5 +15,4 @@ public sealed class DataHeadTagHelper : BaseTagHelper {
 
         await base.ProcessAsync(context, output);
     }
-
 }

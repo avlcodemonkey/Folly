@@ -6,10 +6,8 @@ using DTO = Folly.Models;
 
 namespace Folly.Services;
 
-public sealed class RoleService : IRoleService {
-    private readonly FollyDbContext _DbContext;
-
-    public RoleService(FollyDbContext dbContext) => _DbContext = dbContext;
+public sealed class RoleService(FollyDbContext dbContext) : IRoleService {
+    private readonly FollyDbContext _DbContext = dbContext;
 
     public async Task<bool> CopyRoleAsync(DTO.CopyRole copyRoleDTO) {
         var role = await _DbContext.Roles.Include(x => x.RolePermissions).FirstAsync(x => x.Id == copyRoleDTO.Id);
@@ -71,6 +69,6 @@ public sealed class RoleService : IRoleService {
                 return rolePermission;
             }
             return new RolePermission { PermissionId = x, RoleId = roleDTO.Id };
-        }).ToList() ?? new List<RolePermission>();
+        }).ToList() ?? [];
     }
 }

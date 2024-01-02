@@ -11,10 +11,8 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class FormContentTagHelper : BaseTagHelper {
-    private readonly IUrlHelperFactory _UrlHelperFactory;
-
-    public FormContentTagHelper(IHtmlHelper htmlHelper, IUrlHelperFactory urlHelperFactory) : base(htmlHelper) => _UrlHelperFactory = urlHelperFactory;
+public sealed class FormContentTagHelper(IHtmlHelper htmlHelper, IUrlHelperFactory urlHelperFactory) : BaseTagHelper(htmlHelper) {
+    private readonly IUrlHelperFactory _UrlHelperFactory = urlHelperFactory;
 
     public string Action { get; set; } = "";
     public string Controller { get; set; } = "";

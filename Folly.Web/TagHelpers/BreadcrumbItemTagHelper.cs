@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class BreadcrumbItemTagHelper : BaseTagHelper {
-    public BreadcrumbItemTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
-
+public sealed class BreadcrumbItemTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelper) {
     public string? Action { get; set; }
     public string? Controller { get; set; }
     public bool Active { get; set; }

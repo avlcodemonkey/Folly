@@ -5,10 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Controllers;
 
-public class ErrorController : BaseController {
-
-    public ErrorController(ILogger<ErrorController> logger) : base(logger) { }
-
+public class ErrorController(ILogger<ErrorController> logger) : BaseController(logger) {
     public IActionResult Index(string? code = null) {
         if (!string.IsNullOrWhiteSpace(code)) {
             Logger.LogError(Core.UnhandledError, code, HttpContext.Features.Get<IStatusCodeReExecuteFeature>()?.OriginalPath);

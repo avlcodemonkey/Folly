@@ -16,9 +16,7 @@ public static class ControllerExtensions {
     /// <param name="request">Current request object.</param>
     /// <returns>True if is an ajax request, else false.</returns>
     public static bool IsAjaxRequest(this HttpRequest request) {
-        if (request == null) {
-            throw new ArgumentNullException(nameof(request));
-        }
+        ArgumentNullException.ThrowIfNull(request);
 
         if (request.Headers != null) {
             return request.Headers[_RequestedWithHeader] == _XmlHttpRequest;

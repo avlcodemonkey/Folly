@@ -8,14 +8,9 @@ using DTO = Folly.Models;
 
 namespace Folly.Services;
 
-public sealed class UserService : IUserService {
-    private readonly FollyDbContext _DbContext;
-    private readonly IHttpContextAccessor _HttpContextAccessor;
-
-    public UserService(FollyDbContext dbContext, IHttpContextAccessor httpContextAccessor) {
-        _DbContext = dbContext;
-        _HttpContextAccessor = httpContextAccessor;
-    }
+public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor httpContextAccessor) : IUserService {
+    private readonly FollyDbContext _DbContext = dbContext;
+    private readonly IHttpContextAccessor _HttpContextAccessor = httpContextAccessor;
 
     public async Task<bool> DeleteUserAsync(int id) {
         var user = await _DbContext.Users.FirstAsync(x => x.Id == id && x.Status == true);
@@ -90,6 +85,6 @@ public sealed class UserService : IUserService {
                 return userRole;
             }
             return new UserRole { RoleId = x, UserId = userDTO.Id };
-        }).ToList() ?? new List<UserRole>();
+        }).ToList() ?? [];
     }
 }

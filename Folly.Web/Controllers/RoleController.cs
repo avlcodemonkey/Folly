@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace Folly.Controllers;
 
 [Authorize(Policy = PermissionRequirementHandler.PolicyName)]
-public class RoleController : BaseController {
-    private readonly IPermissionService _PermissionService;
-    private readonly IRoleService _RoleService;
+public class RoleController(IRoleService roleService, IPermissionService permissionService, ILogger<RoleController> logger) : BaseController(logger) {
+    private readonly IPermissionService _PermissionService = permissionService;
+    private readonly IRoleService _RoleService = roleService;
 
-    private IActionResult CreateEditView(Role model) => View("CreateEdit", model);
+    private ViewResult CreateEditView(Role model) => View("CreateEdit", model);
 
     private async Task<Role?> LoadRole(int id) {
         var model = await _RoleService.GetRoleByIdAsync(id);
@@ -32,11 +32,6 @@ public class RoleController : BaseController {
         ViewData[MessageProperty] = Roles.SuccessSavingRole;
         Response.Headers.Append(HtmxHeaders.PushUrl, Url.Action(nameof(Index)));
         return Index();
-    }
-
-    public RoleController(IRoleService roleService, IPermissionService permissionService, ILogger<RoleController> logger) : base(logger) {
-        _RoleService = roleService;
-        _PermissionService = permissionService;
     }
 
     [HttpGet, ParentAction(nameof(Edit))]

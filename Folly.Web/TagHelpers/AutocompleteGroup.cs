@@ -9,12 +9,17 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class AutocompleteGroupTagHelper : GroupBaseTagHelper {
+/// <summary>
+/// @todo this is not actually working yet.  
+/// </summary>
+/// <param name="htmlHelper"></param>
+public sealed class AutocompleteGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
     private string AutoCompleteName => $"{FieldName}_AutoComplete";
 
     private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
-        if (string.IsNullOrWhiteSpace(FieldName))
+        if (string.IsNullOrWhiteSpace(FieldName)) {
             return HtmlString.Empty;
+        }
 
         var input = new TagBuilder("input");
         // add any attributes passed in first. we'll overwrite ones we need as we build
@@ -42,7 +47,7 @@ public sealed class AutocompleteGroupTagHelper : GroupBaseTagHelper {
         return input;
     }
 
-    private IHtmlContent BuildHidden() {
+    private TagBuilder BuildHidden() {
         var input = new TagBuilder("input");
         input.MergeAttribute("id", FieldName, true);
         input.MergeAttribute("name", FieldName, true);
@@ -59,8 +64,6 @@ public sealed class AutocompleteGroupTagHelper : GroupBaseTagHelper {
 
         return input;
     }
-
-    public AutocompleteGroupTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
     public string Params { get; set; } = "";
     public bool Preload { get; set; }

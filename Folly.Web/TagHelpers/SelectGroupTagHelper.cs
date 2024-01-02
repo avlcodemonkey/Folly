@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class SelectGroupTagHelper : GroupBaseTagHelper {
+public sealed class SelectGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
     private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
         if (string.IsNullOrWhiteSpace(FieldName)) {
             return HtmlString.Empty;
@@ -35,8 +35,6 @@ public sealed class SelectGroupTagHelper : GroupBaseTagHelper {
 
         return input;
     }
-
-    public SelectGroupTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
     public IEnumerable<SelectListItem> Options { get; set; } = Enumerable.Empty<SelectListItem>();
 

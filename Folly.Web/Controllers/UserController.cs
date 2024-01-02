@@ -9,11 +9,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace Folly.Controllers;
 
 [Authorize(Policy = PermissionRequirementHandler.PolicyName)]
-public class UserController : BaseController {
-    private readonly ILanguageService _LanguageService;
-    private readonly IUserService _UserService;
+public class UserController(IUserService userService, ILanguageService languageService, ILogger<UserController> logger) : BaseController(logger) {
+    private readonly ILanguageService _LanguageService = languageService;
+    private readonly IUserService _UserService = userService;
 
-    private IActionResult CreateEditView(User model) => View("CreateEdit", model);
+    private ViewResult CreateEditView(User model) => View("CreateEdit", model);
 
     private async Task<User?> LoadUser(int id) {
         var model = await _UserService.GetUserByIdAsync(id);
@@ -34,11 +34,6 @@ public class UserController : BaseController {
         ViewData[MessageProperty] = Users.SuccessSavingUser;
         Response.Headers.Append(HtmxHeaders.PushUrl, Url.Action(nameof(Index)));
         return Index();
-    }
-
-    public UserController(IUserService userService, ILanguageService languageService, ILogger<UserController> logger) : base(logger) {
-        _UserService = userService;
-        _LanguageService = languageService;
     }
 
     [HttpGet]

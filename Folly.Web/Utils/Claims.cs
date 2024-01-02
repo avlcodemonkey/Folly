@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Authentication;
 
 namespace Folly.Utils;
 
-public sealed class ClaimsTransformer : IClaimsTransformation {
-    private readonly IUserService _UserService;
-
-    public ClaimsTransformer(IUserService userService) => _UserService = userService;
+public sealed class ClaimsTransformer(IUserService userService) : IClaimsTransformation {
+    private readonly IUserService _UserService = userService;
 
     public async Task<ClaimsPrincipal> TransformAsync(ClaimsPrincipal principal) {
         if (principal.Identity == null) {

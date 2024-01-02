@@ -8,10 +8,11 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class TextareaGroupTagHelper : GroupBaseTagHelper {
+public sealed class TextareaGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
     private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
-        if (string.IsNullOrWhiteSpace(FieldName))
+        if (string.IsNullOrWhiteSpace(FieldName)) {
             return HtmlString.Empty;
+        }
 
         var textarea = new TagBuilder("textarea");
         // add any attributes passed in first. we'll overwrite ones we need as we build
@@ -32,8 +33,6 @@ public sealed class TextareaGroupTagHelper : GroupBaseTagHelper {
         textarea.InnerHtml.Append(For?.ModelExplorer.Model?.ToString() ?? "");
         return textarea;
     }
-
-    public TextareaGroupTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();

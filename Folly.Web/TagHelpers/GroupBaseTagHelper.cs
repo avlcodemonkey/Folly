@@ -9,9 +9,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public class GroupBaseTagHelper : BaseTagHelper {
-    public GroupBaseTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
-
+public class GroupBaseTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelper) {
     public string? FieldName => For?.Name ?? Name;
     public string? FieldTitle => For?.Metadata.DisplayName ?? Title;
     public ModelExpression? For { get; set; }

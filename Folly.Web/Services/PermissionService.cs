@@ -6,10 +6,8 @@ using DTO = Folly.Models;
 
 namespace Folly.Services;
 
-public sealed class PermissionService : IPermissionService {
-    private readonly FollyDbContext _DbContext;
-
-    public PermissionService(FollyDbContext dbContext) => _DbContext = dbContext;
+public sealed class PermissionService(FollyDbContext dbContext) : IPermissionService {
+    private readonly FollyDbContext _DbContext = dbContext;
 
     public async Task<bool> DeletePermissionAsync(int permissionId) {
         var permission = await _DbContext.Permissions.FirstAsync(x => x.Id == permissionId);

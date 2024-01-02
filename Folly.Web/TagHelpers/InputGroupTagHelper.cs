@@ -8,12 +8,13 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class InputGroupTagHelper : GroupBaseTagHelper {
-    private static readonly Type[] _NumberTypes = { typeof(int), typeof(long), typeof(decimal), typeof(double), typeof(int?), typeof(long?), typeof(decimal?), typeof(double?) };
+public sealed class InputGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
+    private static readonly Type[] _NumberTypes = [typeof(int), typeof(long), typeof(decimal), typeof(double), typeof(int?), typeof(long?), typeof(decimal?), typeof(double?)];
 
     private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
-        if (string.IsNullOrWhiteSpace(FieldName))
+        if (string.IsNullOrWhiteSpace(FieldName)) {
             return HtmlString.Empty;
+        }
 
         var input = new TagBuilder("input");
         // add any attributes passed in first. we'll overwrite ones we need as we build
@@ -25,14 +26,15 @@ public sealed class InputGroupTagHelper : GroupBaseTagHelper {
 
         var name = FieldName.ToLower(CultureInfo.InvariantCulture);
         var type = "text";
-        if (name.EndsWith("password", StringComparison.InvariantCultureIgnoreCase))
+        if (name.EndsWith("password", StringComparison.InvariantCultureIgnoreCase)) {
             type = "password";
-        else if (name.EndsWith("email", StringComparison.InvariantCultureIgnoreCase))
+        } else if (name.EndsWith("email", StringComparison.InvariantCultureIgnoreCase)) {
             type = "email";
-        else if (name.EndsWith("date", StringComparison.InvariantCultureIgnoreCase))
+        } else if (name.EndsWith("date", StringComparison.InvariantCultureIgnoreCase)) {
             type = "date";
-        else if (For != null && _NumberTypes.Contains(For.ModelExplorer.ModelType))
+        } else if (For != null && _NumberTypes.Contains(For.ModelExplorer.ModelType)) {
             type = "number";
+        }
 
         input.MergeAttribute("type", type, true);
         input.SetAttributeIf("value", type == "password" ? "" : For?.ModelExplorer.Model?.ToString(), true);
@@ -47,8 +49,6 @@ public sealed class InputGroupTagHelper : GroupBaseTagHelper {
 
         return input;
     }
-
-    public InputGroupTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();

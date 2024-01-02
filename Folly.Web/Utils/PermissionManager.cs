@@ -9,14 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Utils;
 
-public sealed class PermissionManager {
-    private readonly IPermissionService _PermissionService;
-    private readonly IRoleService _RoleService;
-
-    public PermissionManager(IPermissionService permissionService, IRoleService roleService) {
-        _PermissionService = permissionService;
-        _RoleService = roleService;
-    }
+public sealed class PermissionManager(IPermissionService permissionService, IRoleService roleService) {
+    private readonly IPermissionService _PermissionService = permissionService;
+    private readonly IRoleService _RoleService = roleService;
 
     /// <summary>
     /// Scans the assembly for all controllers and updates the permissions table to match the list of available actions.
@@ -53,7 +48,7 @@ public sealed class PermissionManager {
         }
 
         // if there are no permissions in the db, then set the default role with all permissions now that we've added them
-        if (!permissions.Any()) {
+        if (permissions.Count == 0) {
             var permissionIds = (await _PermissionService.GetAllPermissionsAsync()).Select(x => x.Id);
             await _RoleService.AddPermissionsToDefaultRoleAsync(permissionIds);
         }

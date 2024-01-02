@@ -4,9 +4,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class DataTableTagHelper : BaseTagHelper {
-    public DataTableTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
-
+public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelper) {
     public string? Key { get; set; }
 
     public string? Src { get; set; }

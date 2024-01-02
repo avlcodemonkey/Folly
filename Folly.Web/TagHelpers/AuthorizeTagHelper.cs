@@ -7,10 +7,8 @@ namespace Folly.TagHelpers;
 /// Supresses output if the user doesn't have the specified role(s).
 /// </summary>
 [HtmlTargetElement(Attributes = "authorize-roles")]
-public sealed class AuthorizeTagHelper : TagHelper {
-    private readonly IHttpContextAccessor _HttpContextAccessor;
-
-    public AuthorizeTagHelper(IHttpContextAccessor httpContextAccessor) => _HttpContextAccessor = httpContextAccessor;
+public sealed class AuthorizeTagHelper(IHttpContextAccessor httpContextAccessor) : TagHelper {
+    private readonly IHttpContextAccessor _HttpContextAccessor = httpContextAccessor;
 
     [HtmlAttributeName("authorize-roles")]
     public string Roles { get; set; } = "";

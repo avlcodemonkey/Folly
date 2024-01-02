@@ -14,14 +14,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Controllers;
 
-public class AccountController : BaseController {
-    private readonly ILanguageService _LanguageService;
-    private readonly IUserService _UserService;
-
-    public AccountController(IUserService userService, ILanguageService languageService, ILogger<AccountController> logger) : base(logger) {
-        _UserService = userService;
-        _LanguageService = languageService;
-    }
+public class AccountController(IUserService userService, ILanguageService languageService, ILogger<AccountController> logger) : BaseController(logger) {
+    private readonly ILanguageService _LanguageService = languageService;
+    private readonly IUserService _UserService = userService;
 
     public async Task Login(string returnUrl = "/") {
         var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
@@ -59,7 +54,9 @@ public class AccountController : BaseController {
         var result = await _UserService.UpdateAccountAsync(model);
         if (string.IsNullOrWhiteSpace(result)) {
             var language = await _LanguageService.GetLanguageByIdAsync(model.LanguageId);
-            Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName, CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(new CultureInfo(language.LanguageCode))));
+            Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(new CultureInfo(language.LanguageCode)))
+            );
             ViewData[MessageProperty] = Account.AccountUpdated;
             return View("UpdateAccount", model);
         }

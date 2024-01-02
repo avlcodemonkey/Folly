@@ -5,16 +5,10 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Folly.Services;
 
-public sealed class ViewService : IViewService {
-    private readonly ILanguageService _LanguageService;
-    private readonly IPermissionService _PermissionService;
-    private readonly IRoleService _RoleService;
-
-    public ViewService(ILanguageService languageService, IPermissionService permissionService, IRoleService roleService) {
-        _LanguageService = languageService;
-        _PermissionService = permissionService;
-        _RoleService = roleService;
-    }
+public sealed class ViewService(ILanguageService languageService, IPermissionService permissionService, IRoleService roleService) : IViewService {
+    private readonly ILanguageService _LanguageService = languageService;
+    private readonly IPermissionService _PermissionService = permissionService;
+    private readonly IRoleService _RoleService = roleService;
 
     public async Task<IEnumerable<Role>> GetAllRolesAsync() => await _RoleService.GetAllRolesAsync();
 
@@ -24,7 +18,7 @@ public sealed class ViewService : IViewService {
 
         foreach (var permission in permissions) {
             if (!controllerPermissions.TryGetValue(permission.ControllerName, out _)) {
-                controllerPermissions.Add(permission.ControllerName, new List<Permission>());
+                controllerPermissions.Add(permission.ControllerName, []);
             }
             controllerPermissions[permission.ControllerName].Add(permission);
         }

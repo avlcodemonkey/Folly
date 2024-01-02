@@ -3,14 +3,12 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class DataBodyTagHelper : BaseTagHelper {
+public sealed class DataBodyTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelper) {
     /// <summary>
     /// Number of columns for the table.
     /// </summary>
     [HtmlAttributeName("colspan")]
     public int ColSpan { get; set; }
-
-    public DataBodyTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();

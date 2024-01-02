@@ -6,9 +6,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
-public sealed class IconTagHelper : BaseTagHelper {
-    public IconTagHelper(IHtmlHelper htmlHelper) : base(htmlHelper) { }
-
+public sealed class IconTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelper) {
     public Icon Name { get; set; }
 
     public string Label { get; set; } = "";

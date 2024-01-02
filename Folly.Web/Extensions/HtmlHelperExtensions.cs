@@ -37,6 +37,7 @@ public static class HtmlHelperExtensions {
     /// <summary>
     /// Get the width as the correct type.
     /// </summary>
+    /// <remarks>Used with `table` `width` attribute to set column pixel width and prevent weird redraws when sorting table.</remarks>
     /// <returns>Numeric width.</returns>
     public static int Width(this IHtmlHelper _, ColumnWidth columnWidth) => (int)columnWidth;
 }

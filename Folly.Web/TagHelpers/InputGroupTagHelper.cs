@@ -8,6 +8,10 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
+/// <summary>
+/// Creates an input group for a input with label.
+/// </summary>
+/// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class InputGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
     private static readonly Type[] _NumberTypes = [typeof(int), typeof(long), typeof(decimal), typeof(double), typeof(int?), typeof(long?), typeof(decimal?), typeof(double?)];
 

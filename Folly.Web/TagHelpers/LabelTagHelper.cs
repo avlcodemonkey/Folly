@@ -5,7 +5,7 @@ namespace Folly.TagHelpers;
 /// <summary>
 /// Adds aria-label and title attributes.
 /// </summary>
-[HtmlTargetElement(Attributes = "label")]
+[HtmlTargetElement("a", Attributes = "label")]
 public sealed class LabelTagHelper : TagHelper {
     public LabelTagHelper() { }
 

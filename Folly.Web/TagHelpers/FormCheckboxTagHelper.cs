@@ -4,6 +4,10 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
+/// <summary>
+/// Creates a checkbox with label.
+/// </summary>
+/// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class FormCheckboxTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelper) {
     public string? Id { get; set; }
     public bool Checked { get; set; }

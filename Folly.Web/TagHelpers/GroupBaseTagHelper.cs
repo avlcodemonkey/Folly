@@ -9,6 +9,10 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
+/// <summary>
+/// Provides helpers for creating input groups.  Should not be used directly.
+/// </summary>
+/// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public class GroupBaseTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelper) {
     public string? FieldName => For?.Name ?? Name;
     public string? FieldTitle => For?.Metadata.DisplayName ?? Title;

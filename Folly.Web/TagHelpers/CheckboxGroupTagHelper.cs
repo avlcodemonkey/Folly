@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
+/// <summary>
+/// Creates an input group for a checkbox with label.
+/// </summary>
+/// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class CheckboxGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
     private IHtmlContent BuildCheckbox(TagHelperAttributeList attributes) {
         if (string.IsNullOrWhiteSpace(FieldName)) {

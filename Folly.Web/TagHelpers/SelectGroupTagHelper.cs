@@ -7,6 +7,10 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
 
+/// <summary>
+/// Creates an input group for a select with label.
+/// </summary>
+/// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class SelectGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
     private IHtmlContent BuildInput(TagHelperAttributeList attributes) {
         if (string.IsNullOrWhiteSpace(FieldName)) {

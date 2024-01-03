@@ -2,17 +2,17 @@
 @using Folly.Models
 @model Alert
 
-<x-alert>
-    <div class="card bg-@Model.AlertType.ToString().ToLower() mb-2 text-white" role="alert">
+<nilla-alert>
+    <div class="card bg-@Model.AlertType.ToString().ToLower() mb-2 text-white alert" role="alert">
         <div class="row">
             <span class="col-11">@Model.Content</span>
             <span class="col-1 text-right">
                 @if(Model.CanDismiss) {
-                    <button class="button button-dismiss" label="@Core.Close">
+                    <button class="button" label="@Core.Close" data-dismiss>
                         <icon name="Close" />
                     </button>
                 }
             </span>
         </div>
     </div>
-</x-alert>
+</nilla-alert>

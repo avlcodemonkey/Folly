@@ -53,7 +53,7 @@ public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(h
         containerDiv.InnerHtml.AppendHtml(rowDiv);
         containerDiv.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("_DataTableFooter"));
 
-        output.TagName = "x-table";
+        output.TagName = "nilla-table";
         output.Attributes.SetAttribute("data-key", Key);
         output.Attributes.SetAttribute("data-src", Src);
         output.Content.AppendHtml(containerDiv);

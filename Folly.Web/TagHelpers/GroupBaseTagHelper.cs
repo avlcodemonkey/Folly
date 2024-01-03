@@ -69,7 +69,7 @@ public class GroupBaseTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelp
         button.MergeAttribute("role", "button");
         button.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("Icons/_Flag"));
 
-        var dialog = new TagBuilder("x-info-dialog");
+        var dialog = new TagBuilder("nilla-info");
         dialog.MergeAttribute("data-content", HelpText!.Replace("\"", "&quot;"));
         dialog.MergeAttribute("data-ok", Core.Okay);
         dialog.InnerHtml.AppendHtml(button);

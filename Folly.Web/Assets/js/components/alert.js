@@ -20,7 +20,7 @@ class Alert extends HTMLElement {
 
 // Define the new web component
 if ('customElements' in window) {
-    customElements.define('x-alert', Alert);
+    customElements.define('nilla-alert', Alert);
 }
 
 export default Alert;

@@ -677,7 +677,7 @@ class Table extends HTMLElement {
 
 // Define the new web component
 if ('customElements' in window) {
-    customElements.define('x-table', Table);
+    customElements.define('nilla-table', Table);
 }
 
 export default Table;

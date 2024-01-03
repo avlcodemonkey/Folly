@@ -87,7 +87,7 @@ class ConfirmDialog extends BaseDialog {
 
 // Define the new web component
 if ('customElements' in window) {
-    customElements.define('x-confirm-dialog', ConfirmDialog);
+    customElements.define('nilla-confirm', ConfirmDialog);
 }
 
 export default ConfirmDialog;

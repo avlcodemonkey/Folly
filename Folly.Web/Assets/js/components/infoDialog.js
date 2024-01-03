@@ -63,7 +63,7 @@ class InfoDialog extends BaseDialog {
 
 // Define the new web component
 if ('customElements' in window) {
-    customElements.define('x-info-dialog', InfoDialog);
+    customElements.define('nilla-info', InfoDialog);
 }
 
 export default InfoDialog;

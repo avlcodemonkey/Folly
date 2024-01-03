@@ -44,9 +44,9 @@
                                     <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" label="@Account.UpdateAccount" show-label /></a>
                                 </li>
                                 <li>
-                                    <x-info-dialog data-content="@Html.ApplicationVersionName()" data-ok="@Core.Okay">
+                                    <nilla-info data-content="@Html.ApplicationVersionName()" data-ok="@Core.Okay">
                                         <a href="#"><icon name="CircleInformation" label="@Core.About" show-label /></a>
-                                    </x-info-dialog>
+                                    </nilla-info>
                                 </li>
                                 <li>
                                     <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" label="@Account.Logout" show-label /></a>

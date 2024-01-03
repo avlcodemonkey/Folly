@@ -30,7 +30,7 @@
     cursor: pointer;
 }
 
-.button + x-confirm-dialog {
+.button + nilla-confirm {
     margin-left: 1rem;
 }
 

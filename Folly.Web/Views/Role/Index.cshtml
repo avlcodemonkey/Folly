@@ -15,13 +15,13 @@
                 <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary" label="@Roles.CreateRole">
                     <icon name="Add" label="@Roles.CreateRole" />
                 </a>
-                <x-confirm-dialog authorize-roles="role.refreshpermissions" hx-get="@Url.Action("RefreshPermissions", "Role")"
+                <nilla-confirm authorize-roles="role.refreshpermissions" hx-get="@Url.Action("RefreshPermissions", "Role")"
                     data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@Roles.ConfirmRefreshPermissions"
                 >
                     <a href="#" class="button primary" label="@Roles.RefreshPermissions">
                         <icon name="Refresh" label="@Roles.RefreshPermissions" />
                     </a>
-                </x-confirm-dialog>
+                </nilla-confirm>
             </th>
             <th width="@Html.Width(ColumnWidth.Id)" data-property="id">@Core.Id</th>
             <th data-property="name">@Roles.Name</th>
@@ -34,13 +34,13 @@
                 <a authorize-roles="role.edit" href="@Url.ActionForMustache("Copy")" class="button primary" label="@Core.Copy">
                     <icon name="Copy" label="@Core.Copy" />
                 </a>
-                <x-confirm-dialog authorize-roles="role.delete" hx-delete="@Url.ActionForMustache("Delete")"
+                <nilla-confirm authorize-roles="role.delete" hx-delete="@Url.ActionForMustache("Delete")"
                     data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
                 >
                     <a href="#" class="button dark" label="@Core.Delete">
                         <icon name="DeleteAlt" label="@Core.Delete" />
                     </a>
-                </x-confirm-dialog>
+                </nilla-confirm>
             </td>
             <td>{{id}}</td>
             <td>{{name}}</td>

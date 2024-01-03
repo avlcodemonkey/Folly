@@ -5,7 +5,7 @@ class Alert extends HTMLElement {
     constructor() {
         super();
 
-        this.querySelectorAll('.button-dismiss').forEach((btn) => {
+        this.querySelectorAll('[data-dismiss]').forEach((btn) => {
             btn.addEventListener('click', this);
         });
     }

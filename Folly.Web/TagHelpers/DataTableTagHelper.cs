@@ -25,20 +25,20 @@ public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(h
 
         var sortAscSpan = new TagBuilder("span");
         sortAscSpan.AddCssClass("sort-icon");
-        sortAscSpan.AddCssClass("sort-asc");
+        sortAscSpan.Attributes.Add("data-table-sort-asc", "");
         sortAscSpan.Attributes.Add("aria-label", Core.Ascending);
         sortAscSpan.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("Icons/_CaretUp"));
         var sortAscTemplate = new TagBuilder("template");
-        sortAscTemplate.AddCssClass("sort-asc-template");
+        sortAscTemplate.Attributes.Add("data-table-sort-asc-template", "");
         sortAscTemplate.InnerHtml.AppendHtml(sortAscSpan);
 
         var sortDescSpan = new TagBuilder("span");
         sortDescSpan.AddCssClass("sort-icon");
-        sortDescSpan.AddCssClass("sort-desc");
+        sortDescSpan.Attributes.Add("data-table-sort-desc", "");
         sortDescSpan.Attributes.Add("aria-label", Core.Descending);
         sortDescSpan.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("Icons/_CaretDown"));
         var sortDescTemplate = new TagBuilder("template");
-        sortDescTemplate.AddCssClass("sort-desc-template");
+        sortDescTemplate.Attributes.Add("data-table-sort-desc-template", "");
         sortDescTemplate.InnerHtml.AppendHtml(sortDescSpan);
 
         var rowDiv = new TagBuilder("div");

@@ -12,7 +12,7 @@ import FetchError from './fetchError';
 const TableSetting = Object.freeze({
     CurrentPage: 'currentPage',
     PerPage: 'perPage',
-    SearchQuery: 'searchQuery',
+    Search: 'search',
     Sort: 'sort',
 });
 
@@ -101,7 +101,7 @@ class Table extends HTMLElement {
      * String to filter data for.
      * @type {string}
      */
-    searchQuery = '';
+    search = '';
 
     /**
      * Tracks the timeout for re-filtering data.
@@ -137,7 +137,7 @@ class Table extends HTMLElement {
         // check sessionStorage for saved settings
         this.perPage = parseInt(this.fetchSetting(TableSetting.PerPage) ?? '10', 10);
         this.currentPage = parseInt(this.fetchSetting(TableSetting.CurrentPage) ?? '0', 10);
-        this.searchQuery = this.fetchSetting(TableSetting.SearchQuery) ?? '';
+        this.search = this.fetchSetting(TableSetting.Search) ?? '';
         this.sortColumns = JSON.parse(this.fetchSetting(TableSetting.Sort) ?? '[]');
 
         this.setupHeader();
@@ -149,14 +149,69 @@ class Table extends HTMLElement {
     }
 
     /**
+     * Get the search input element.
+     * @returns {HTMLInputElement} Search input.
+     */
+    getSearchInput() {
+        return this.querySelector('[data-table-search]');
+    }
+
+    /**
+     * Get the button to go to the first page.
+     * @returns {HTMLButtonElement} First page button.
+     */
+    getFirstPageButton() {
+        return this.querySelector('[data-table-first-page]');
+    }
+
+    /**
+     * Get the button to go to the previous page.
+     * @returns {HTMLButtonElement} Previous page button.
+     */
+    getPreviousPageButton() {
+        return this.querySelector('[data-table-previous-page]');
+    }
+
+    /**
+     * Get the button to go to the next page.
+     * @returns {HTMLButtonElement} Next page button.
+     */
+    getNextPageButton() {
+        return this.querySelector('[data-table-next-page]');
+    }
+
+    /**
+     * Get the button to go to the last page.
+     * @returns {HTMLButtonElement} Last page button.
+     */
+    getLastPageButton() {
+        return this.querySelector('[data-table-last-page]');
+    }
+
+    /**
+     * Get the select to select the number of rows per page.
+     * @returns {HTMLSelectElement} Select element.
+     */
+    getPerPageSelect() {
+        return this.querySelector('[data-table-per-page]');
+    }
+
+    /**
+     * Get the button to trigger a refresh.
+     * @returns {HTMLSelectElement} Retry button.
+     */
+    getRetryButton() {
+        return this.querySelector('[data-table-retry]');
+    }
+
+    /**
      * Sets the default value and adds event handler for the search input.
      */
     setupHeader() {
-        /** @type {HTMLInputElement} */
-        const searchInput = this.querySelector('.table-search-query');
+        const searchInput = this.getSearchInput();
         if (searchInput) {
-            searchInput.value = this.searchQuery;
-            searchInput.addEventListener('input', (/** @type {InputEvent} */ e) => this.onSearchQueryInput(e));
+            searchInput.value = this.search;
+            searchInput.addEventListener('input', (/** @type {InputEvent} */ e) => this.onSearchInput(e));
             searchInput.focus();
         }
     }
@@ -165,25 +220,24 @@ class Table extends HTMLElement {
      * Add event handlers for the buttons for moving between pages.
      */
     setupFooter() {
-        const firstPageButton = this.querySelector('.table-first-page-button');
+        const firstPageButton = this.getFirstPageButton();
         if (firstPageButton) {
             firstPageButton.addEventListener('click', () => this.onFirstPageClick());
         }
-        const previousPageButton = this.querySelector('.table-previous-page-button');
+        const previousPageButton = this.getPreviousPageButton();
         if (previousPageButton) {
             previousPageButton.addEventListener('click', () => this.onPreviousPageClick());
         }
-        const nextPageButton = this.querySelector('.table-next-page-button');
+        const nextPageButton = this.getNextPageButton();
         if (nextPageButton) {
             nextPageButton.addEventListener('click', () => this.onNextPageClick());
         }
-        const lastPageButton = this.querySelector('.table-last-page-button');
+        const lastPageButton = this.getLastPageButton();
         if (lastPageButton) {
             lastPageButton.addEventListener('click', () => this.onLastPageClick());
         }
 
-        /** @type {HTMLSelectElement} */
-        const tablePerPageInput = this.querySelector('.table-per-page');
+        const tablePerPageInput = this.getPerPageSelect();
         if (tablePerPageInput) {
             tablePerPageInput.value = `${this.perPage}`;
             tablePerPageInput.addEventListener('change', (/** @type {InputEvent} */ e) => this.onPerPageChange(e));
@@ -194,7 +248,7 @@ class Table extends HTMLElement {
      * Add event handlers for table status functionality.
      */
     setupStatus() {
-        const tableRetryButton = this.querySelector('.table-retry-button');
+        const tableRetryButton = this.getRetryButton();
         if (tableRetryButton) {
             tableRetryButton.addEventListener('click', () => this.onRetryClick());
         }
@@ -253,8 +307,7 @@ class Table extends HTMLElement {
      * Enable/disable search input.
      */
     updateSearch() {
-        /** @type {HTMLInputElement} */
-        const searchInput = this.querySelector('.table-search-query');
+        const searchInput = this.getSearchInput();
         if (searchInput) {
             searchInput.disabled = this.loading || this.error;
         }
@@ -263,23 +316,23 @@ class Table extends HTMLElement {
      * Updates the start, end, and total numbers.
      */
     updateRowNumbers() {
-        const rowNumbers = this.querySelector('.table-row-numbers');
+        const rowNumbers = this.querySelector('[data-table-row-numbers]');
         if (!rowNumbers) {
             return;
         }
         rowNumbers.classList.toggle('is-hidden', this.loading || this.error);
 
-        const startRowNumber = this.querySelector('.table-start-row-number');
+        const startRowNumber = this.querySelector('[data-table-start-row]');
         if (startRowNumber) {
             startRowNumber.textContent = `${this.startRowNumber}`;
         }
-        const endRowNumber = this.querySelector('.table-end-row-number');
+        const endRowNumber = this.querySelector('[data-table-end-row]');
         if (endRowNumber) {
             endRowNumber.textContent = `${this.endRowNumber}`;
         }
-        const filteredRowTotal = this.querySelector('.table-filtered-row-total');
-        if (filteredRowTotal) {
-            filteredRowTotal.textContent = `${this.filteredRowTotal}`;
+        const filteredRowsNumber = this.querySelector('[data-table-filtered-rows');
+        if (filteredRowsNumber) {
+            filteredRowsNumber.textContent = `${this.filteredRowTotal}`;
         }
     }
 
@@ -289,34 +342,29 @@ class Table extends HTMLElement {
     updatePageButtons() {
         const shouldDisable = this.loading || this.error;
 
-        /** @type {HTMLButtonElement} */
-        const firstPageButton = this.querySelector('.table-first-page-button');
+        const firstPageButton = this.getFirstPageButton();
         if (firstPageButton) {
             firstPageButton.disabled = shouldDisable || this.isFirstPage;
         }
 
-        /** @type {HTMLButtonElement} */
-        const previousPageButton = this.querySelector('.table-previous-page-button');
+        const previousPageButton = this.getPreviousPageButton();
         if (previousPageButton) {
             previousPageButton.disabled = shouldDisable || this.isFirstPage;
         }
 
-        /** @type {HTMLButtonElement} */
-        const nextPageButton = this.querySelector('.table-next-page-button');
+        const nextPageButton = this.getNextPageButton();
         if (nextPageButton) {
             nextPageButton.disabled = shouldDisable || this.isLastPage;
         }
 
-        /** @type {HTMLButtonElement} */
-        const lastPageButton = this.querySelector('.table-last-page-button');
+        const lastPageButton = this.getLastPageButton();
         if (lastPageButton) {
             lastPageButton.disabled = shouldDisable || this.isLastPage;
         }
 
-        /** @type {HTMLSelectElement} */
-        const tablePerPageInput = this.querySelector('.table-per-page');
-        if (tablePerPageInput) {
-            tablePerPageInput.disabled = shouldDisable;
+        const tablePerPageSelect = this.getPerPageSelect();
+        if (tablePerPageSelect) {
+            tablePerPageSelect.disabled = shouldDisable;
         }
     }
 
@@ -324,17 +372,17 @@ class Table extends HTMLElement {
      * Shows/hides the table loading and error indicators.
      */
     updateStatus() {
-        const isLoading = this.querySelector('.table-is-loading');
+        const isLoading = this.querySelector('[data-table-loading]');
         if (isLoading) {
             isLoading.classList.toggle('is-hidden', !this.loading);
         }
 
-        const hasError = this.querySelector('.table-has-error');
+        const hasError = this.querySelector('[data-table-error]');
         if (hasError) {
             hasError.classList.toggle('is-hidden', !this.error);
         }
 
-        const hasNoData = this.querySelector('.table-has-no-data');
+        const hasNoData = this.querySelector('[data-table-empty]');
         if (hasNoData) {
             hasNoData.classList.toggle('is-hidden', this.loading || this.error || this.filteredRowTotal !== 0);
         }
@@ -344,14 +392,14 @@ class Table extends HTMLElement {
      * Updates table headers to show correct sorting icons.
      */
     updateSortHeaders() {
-        const sortAscTemplate = this.querySelector('.sort-asc-template');
-        const sortDescTemplate = this.querySelector('.sort-desc-template');
+        const sortAscTemplate = this.querySelector('[data-table-sort-asc-template]');
+        const sortDescTemplate = this.querySelector('[data-table-sort-desc-template]');
 
         this.querySelectorAll('th[data-property]').forEach((th) => {
             const property = th.getAttribute('data-property');
             const sortOrder = this.sortOrder(property);
-            const sortAsc = th.querySelector('.sort-asc');
-            const sortDesc = th.querySelector('.sort-desc');
+            const sortAsc = th.querySelector('[data-table-sort-asc]');
+            const sortDesc = th.querySelector('[data-table-sort-desc]');
 
             // make sure the TH has the correct sort icon
             if (sortOrder === SortOrder.Asc) {
@@ -396,7 +444,7 @@ class Table extends HTMLElement {
      * Removes existing table rows and renders new rows using the filtered data.
      */
     updateRows() {
-        const existingRows = this.querySelectorAll('tbody tr:not(.table-status)');
+        const existingRows = this.querySelectorAll('tbody tr:not([data-table-status])');
         existingRows.forEach((x) => x.remove());
 
         const tbody = this.querySelector('tbody');
@@ -493,7 +541,7 @@ class Table extends HTMLElement {
      * Create a new array of results, filter by the search query, and sort.
      */
     filterData() {
-        const filteredData = this.searchQuery ? (this.rows?.filter(this.filterArray.bind(this.searchQuery.toLowerCase())) ?? [])
+        const filteredData = this.search ? (this.rows?.filter(this.filterArray.bind(this.search.toLowerCase())) ?? [])
             : [...(this.rows ?? [])];
 
         // sort the new array
@@ -518,7 +566,7 @@ class Table extends HTMLElement {
      * Handle input in search box and filter data.
      * @param {InputEvent} event Input event to get search value from.
      */
-    onSearchQueryInput(event) {
+    onSearchInput(event) {
         if (this.loading || this.error) {
             return;
         }
@@ -529,13 +577,13 @@ class Table extends HTMLElement {
             clearTimeout(this.debounceTimer);
         }
         this.debounceTimer = window.setTimeout(() => {
-            if (this.searchQuery !== val) {
+            if (this.search !== val) {
                 this.currentPage = 0;
                 this.saveSetting(TableSetting.CurrentPage, 0);
             }
 
-            this.searchQuery = val;
-            this.saveSetting(TableSetting.SearchQuery, val);
+            this.search = val;
+            this.saveSetting(TableSetting.Search, val);
 
             this.filterData();
         }, 250);

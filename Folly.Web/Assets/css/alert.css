@@ -1,9 +1,9 @@
-.card {
+.alert {
     & span {
         margin: 0;
     }
 
-    .button-dismiss {
+    .button {
         border: none;
         color: inherit;
         background: inherit;

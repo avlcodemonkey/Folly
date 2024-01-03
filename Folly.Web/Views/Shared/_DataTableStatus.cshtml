@@ -1,20 +1,20 @@
 @using Folly.Resources
 @model int
 
-<tr class="table-status table-is-loading">
+<tr data-table-status data-table-loading>
     <td colspan="@Model">
         <h1 class="text-center">
             <span class="spinner"></span>
         </h1>
     </td>
 </tr>
-<tr class="table-status table-has-error is-hidden">
+<tr class="is-hidden" data-table-status data-table-error>
     <td colspan="@Model">
         <h4 class="text-center">@Core.TableLoadingError</h4>
-        <p class="is-center"><button class="button primary table-retry-button">@Core.Retry</button></p>
+        <p class="is-center"><button class="button primary" data-table-retry>@Core.Retry</button></p>
     </td>
 </tr>
-<tr class="table-status table-has-no-data is-hidden">
+<tr class="is-hidden" data-table-status data-table-empty>
     <td colspan="@Model">
         <h4 class="text-center">@Core.TableHasNoData</h4>
     </td>

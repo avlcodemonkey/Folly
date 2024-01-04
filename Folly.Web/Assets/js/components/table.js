@@ -27,6 +27,33 @@ const SortOrder = Object.freeze({
 });
 
 /**
+ * Enum for identifiers to query DOM elements.
+ * @readonly
+ * @enum {string}
+ */
+const Elements = Object.freeze({
+    Search: 'search',
+    FirstPage: 'first-page',
+    PreviousPage: 'previous-page',
+    NextPage: 'next-page',
+    LastPage: 'last-page',
+    PerPage: 'per-page',
+    Retry: 'retry',
+    RowNumbers: 'row-numbers',
+    StartRow: 'start-row',
+    EndRow: 'end-row',
+    FilteredRows: 'filtered-rows',
+    Loading: 'loading',
+    Error: 'error',
+    Empty: 'empty',
+    SortAscTemplate: 'sort-asc-template',
+    SortDescTemplate: 'sort-desc-template',
+    SortAsc: 'sort-asc',
+    SortDesc: 'sort-desc',
+    Status: 'status',
+});
+
+/**
  * @typedef IndexedRow
  * @type {object}
  * @property {number} _index Unique identifier for the row.
@@ -121,10 +148,24 @@ class Table extends HTMLElement {
      */
     error = false;
 
+    /**
+     * Stores commonly queried nodes to improve performance.
+     * @type {Node[]}
+     */
+    elementCache = [];
+
     constructor() {
         super();
 
         this.initializeTable();
+    }
+
+    /**
+     * Removes references to elements when the component is removed from the document.
+     * Doing this to help with garbage collection, but may not be strictly necessary.
+     */
+    disconnectedCallback() {
+        this.elementCache = [];
     }
 
     /**
@@ -149,66 +190,24 @@ class Table extends HTMLElement {
     }
 
     /**
-     * Get the search input element.
-     * @returns {HTMLInputElement} Search input.
+     * Gets the specified DOM element. Will load from cache, or find using querySelector and add to cache if not in cache.
+     * @param {Elements} elementKey Key for the element to find.
+     * @returns {HTMLElement} Element to find.
      */
-    getSearchInput() {
-        return this.querySelector('[data-table-search]');
-    }
-
-    /**
-     * Get the button to go to the first page.
-     * @returns {HTMLButtonElement} First page button.
-     */
-    getFirstPageButton() {
-        return this.querySelector('[data-table-first-page]');
-    }
-
-    /**
-     * Get the button to go to the previous page.
-     * @returns {HTMLButtonElement} Previous page button.
-     */
-    getPreviousPageButton() {
-        return this.querySelector('[data-table-previous-page]');
-    }
-
-    /**
-     * Get the button to go to the next page.
-     * @returns {HTMLButtonElement} Next page button.
-     */
-    getNextPageButton() {
-        return this.querySelector('[data-table-next-page]');
-    }
-
-    /**
-     * Get the button to go to the last page.
-     * @returns {HTMLButtonElement} Last page button.
-     */
-    getLastPageButton() {
-        return this.querySelector('[data-table-last-page]');
-    }
-
-    /**
-     * Get the select to select the number of rows per page.
-     * @returns {HTMLSelectElement} Select element.
-     */
-    getPerPageSelect() {
-        return this.querySelector('[data-table-per-page]');
-    }
-
-    /**
-     * Get the button to trigger a refresh.
-     * @returns {HTMLSelectElement} Retry button.
-     */
-    getRetryButton() {
-        return this.querySelector('[data-table-retry]');
+    getElement(elementKey) {
+        if (!this.elementCache[elementKey]) {
+            this.elementCache[elementKey] = this.querySelector(`[data-table-${elementKey}]`);
+        }
+        return this.elementCache[elementKey];
     }
 
     /**
      * Sets the default value and adds event handler for the search input.
      */
     setupHeader() {
-        const searchInput = this.getSearchInput();
+        /** @type {HTMLInputElement} */
+        // @ts-ignore HTMLInputElement is correct type but js can't cast
+        const searchInput = this.getElement(Elements.Search);
         if (searchInput) {
             searchInput.value = this.search;
             searchInput.addEventListener('input', (/** @type {InputEvent} */ e) => this.onSearchInput(e));
@@ -220,27 +219,32 @@ class Table extends HTMLElement {
      * Add event handlers for the buttons for moving between pages.
      */
     setupFooter() {
-        const firstPageButton = this.getFirstPageButton();
+        const firstPageButton = this.getElement(Elements.FirstPage);
         if (firstPageButton) {
             firstPageButton.addEventListener('click', () => this.onFirstPageClick());
         }
-        const previousPageButton = this.getPreviousPageButton();
+
+        const previousPageButton = this.getElement(Elements.PreviousPage);
         if (previousPageButton) {
             previousPageButton.addEventListener('click', () => this.onPreviousPageClick());
         }
-        const nextPageButton = this.getNextPageButton();
+
+        const nextPageButton = this.getElement(Elements.NextPage);
         if (nextPageButton) {
             nextPageButton.addEventListener('click', () => this.onNextPageClick());
         }
-        const lastPageButton = this.getLastPageButton();
+
+        const lastPageButton = this.getElement(Elements.LastPage);
         if (lastPageButton) {
             lastPageButton.addEventListener('click', () => this.onLastPageClick());
         }
 
-        const tablePerPageInput = this.getPerPageSelect();
-        if (tablePerPageInput) {
-            tablePerPageInput.value = `${this.perPage}`;
-            tablePerPageInput.addEventListener('change', (/** @type {InputEvent} */ e) => this.onPerPageChange(e));
+        /** @type {HTMLSelectElement} */
+        // @ts-ignore HTMLSelectElement is correct type but js can't cast
+        const tablePerPageSelect = this.getElement(Elements.PerPage);
+        if (tablePerPageSelect) {
+            tablePerPageSelect.value = `${this.perPage}`;
+            tablePerPageSelect.addEventListener('change', (/** @type {InputEvent} */ e) => this.onPerPageChange(e));
         }
     }
 
@@ -248,7 +252,7 @@ class Table extends HTMLElement {
      * Add event handlers for table status functionality.
      */
     setupStatus() {
-        const tableRetryButton = this.getRetryButton();
+        const tableRetryButton = this.getElement(Elements.Retry);
         if (tableRetryButton) {
             tableRetryButton.addEventListener('click', () => this.onRetryClick());
         }
@@ -307,7 +311,9 @@ class Table extends HTMLElement {
      * Enable/disable search input.
      */
     updateSearch() {
-        const searchInput = this.getSearchInput();
+        /** @type {HTMLInputElement} */
+        // @ts-ignore HTMLInputElement is correct type but js can't cast
+        const searchInput = this.getElement(Elements.Search);
         if (searchInput) {
             searchInput.disabled = this.loading || this.error;
         }
@@ -316,23 +322,25 @@ class Table extends HTMLElement {
      * Updates the start, end, and total numbers.
      */
     updateRowNumbers() {
-        const rowNumbers = this.querySelector('[data-table-row-numbers]');
-        if (!rowNumbers) {
+        const rowNumbersDiv = this.getElement(Elements.RowNumbers);
+        if (!rowNumbersDiv) {
             return;
         }
-        rowNumbers.classList.toggle('is-hidden', this.loading || this.error);
+        rowNumbersDiv.classList.toggle('is-hidden', this.loading || this.error);
 
-        const startRowNumber = this.querySelector('[data-table-start-row]');
-        if (startRowNumber) {
-            startRowNumber.textContent = `${this.startRowNumber}`;
+        const startRowSpan = this.getElement(Elements.StartRow);
+        if (startRowSpan) {
+            startRowSpan.textContent = `${this.startRowNumber}`;
         }
-        const endRowNumber = this.querySelector('[data-table-end-row]');
-        if (endRowNumber) {
-            endRowNumber.textContent = `${this.endRowNumber}`;
+
+        const endRowSpan = this.getElement(Elements.EndRow);
+        if (endRowSpan) {
+            endRowSpan.textContent = `${this.endRowNumber}`;
         }
-        const filteredRowsNumber = this.querySelector('[data-table-filtered-rows');
-        if (filteredRowsNumber) {
-            filteredRowsNumber.textContent = `${this.filteredRowTotal}`;
+
+        const filteredRowsSpan = this.getElement(Elements.FilteredRows);
+        if (filteredRowsSpan) {
+            filteredRowsSpan.textContent = `${this.filteredRowTotal}`;
         }
     }
 
@@ -342,27 +350,37 @@ class Table extends HTMLElement {
     updatePageButtons() {
         const shouldDisable = this.loading || this.error;
 
-        const firstPageButton = this.getFirstPageButton();
+        /** @type {HTMLButtonElement} */
+        // @ts-ignore HTMLButtonElement is correct type but js can't cast
+        const firstPageButton = this.getElement(Elements.FirstPage);
         if (firstPageButton) {
             firstPageButton.disabled = shouldDisable || this.isFirstPage;
         }
 
-        const previousPageButton = this.getPreviousPageButton();
+        /** @type {HTMLButtonElement} */
+        // @ts-ignore HTMLButtonElement is correct type but js can't cast
+        const previousPageButton = this.getElement(Elements.PreviousPage);
         if (previousPageButton) {
             previousPageButton.disabled = shouldDisable || this.isFirstPage;
         }
 
-        const nextPageButton = this.getNextPageButton();
+        /** @type {HTMLButtonElement} */
+        // @ts-ignore HTMLButtonElement is correct type but js can't cast
+        const nextPageButton = this.getElement(Elements.NextPage);
         if (nextPageButton) {
             nextPageButton.disabled = shouldDisable || this.isLastPage;
         }
 
-        const lastPageButton = this.getLastPageButton();
+        /** @type {HTMLButtonElement} */
+        // @ts-ignore HTMLButtonElement is correct type but js can't cast
+        const lastPageButton = this.getElement(Elements.LastPage);
         if (lastPageButton) {
             lastPageButton.disabled = shouldDisable || this.isLastPage;
         }
 
-        const tablePerPageSelect = this.getPerPageSelect();
+        /** @type {HTMLSelectElement} */
+        // @ts-ignore HTMLSelectElement is correct type but js can't cast
+        const tablePerPageSelect = this.getElement(Elements.PerPage);
         if (tablePerPageSelect) {
             tablePerPageSelect.disabled = shouldDisable;
         }
@@ -372,17 +390,17 @@ class Table extends HTMLElement {
      * Shows/hides the table loading and error indicators.
      */
     updateStatus() {
-        const isLoading = this.querySelector('[data-table-loading]');
+        const isLoading = this.getElement(Elements.Loading);
         if (isLoading) {
             isLoading.classList.toggle('is-hidden', !this.loading);
         }
 
-        const hasError = this.querySelector('[data-table-error]');
+        const hasError = this.getElement(Elements.Error);
         if (hasError) {
             hasError.classList.toggle('is-hidden', !this.error);
         }
 
-        const hasNoData = this.querySelector('[data-table-empty]');
+        const hasNoData = this.getElement(Elements.Empty);
         if (hasNoData) {
             hasNoData.classList.toggle('is-hidden', this.loading || this.error || this.filteredRowTotal !== 0);
         }
@@ -392,14 +410,14 @@ class Table extends HTMLElement {
      * Updates table headers to show correct sorting icons.
      */
     updateSortHeaders() {
-        const sortAscTemplate = this.querySelector('[data-table-sort-asc-template]');
-        const sortDescTemplate = this.querySelector('[data-table-sort-desc-template]');
+        const sortAscTemplate = this.getElement(Elements.SortAscTemplate);
+        const sortDescTemplate = this.getElement(Elements.SortDescTemplate);
 
         this.querySelectorAll('th[data-property]').forEach((th) => {
             const property = th.getAttribute('data-property');
             const sortOrder = this.sortOrder(property);
-            const sortAsc = th.querySelector('[data-table-sort-asc]');
-            const sortDesc = th.querySelector('[data-table-sort-desc]');
+            const sortAsc = th.querySelector(`[data-table-${Elements.SortAsc}]`);
+            const sortDesc = th.querySelector(`[data-table-${Elements.SortDesc}]`);
 
             // make sure the TH has the correct sort icon
             if (sortOrder === SortOrder.Asc) {
@@ -444,7 +462,7 @@ class Table extends HTMLElement {
      * Removes existing table rows and renders new rows using the filtered data.
      */
     updateRows() {
-        const existingRows = this.querySelectorAll('tbody tr:not([data-table-status])');
+        const existingRows = this.querySelectorAll(`tbody tr:not([data-table-${Elements.Status}])`);
         existingRows.forEach((x) => x.remove());
 
         const tbody = this.querySelector('tbody');

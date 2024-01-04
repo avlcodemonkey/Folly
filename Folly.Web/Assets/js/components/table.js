@@ -458,6 +458,9 @@ class Table extends HTMLElement {
 
         const html = this.filteredRows.map((row) => mustache.render(template.innerHTML, row)).join('\n');
         tbody.insertAdjacentHTML('beforeend', html);
+
+        // after rendering let htmx reprocess the table rows to add event listeners
+        htmx.process(tbody);
     }
 
     /**
@@ -555,11 +558,6 @@ class Table extends HTMLElement {
         this.filteredRows = filteredData.slice(this.perPage * this.currentPage, (this.perPage * this.currentPage) + this.perPage);
 
         this.update();
-
-        // after rendering let htmx reprocess the table to add event listeners
-        setTimeout(() => {
-            htmx.process(this);
-        }, 0);
     }
 
     /**

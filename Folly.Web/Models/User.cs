@@ -31,6 +31,6 @@ public sealed record User : BaseModel {
     [Display(ResourceType = typeof(Users), Name = nameof(Users.UserName))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
-    [IsUniqueUserName]
+    [IsUniqueUserNameAttribute]
     public string UserName { get; init; } = "";
 }

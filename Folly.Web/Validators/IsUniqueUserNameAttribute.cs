@@ -6,7 +6,7 @@ using Folly.Services;
 namespace Folly.Validators;
 
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false)]
-public sealed class IsUniqueUserName : ValidationAttribute {
+public sealed class IsUniqueUserNameAttribute : ValidationAttribute {
     protected override ValidationResult IsValid(object? value, ValidationContext validationContext) {
         var service = validationContext.GetService(typeof(IUserService)) as IUserService;
 

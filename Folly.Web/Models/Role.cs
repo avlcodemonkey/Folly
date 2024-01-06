@@ -8,11 +8,11 @@ public sealed record Role : BaseModel {
     [Display(ResourceType = typeof(Roles), Name = nameof(Roles.Name))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
-    [IsUniqueRoleName]
+    [IsUniqueRoleNameAttribute]
     public string Name { get; init; } = "";
 
     [Display(ResourceType = typeof(Roles), Name = nameof(Roles.IsDefault))]
-    [IsOnlyDefaultRole]
+    [IsOnlyDefaultRoleAttribute]
     public bool IsDefault { get; init; } = false;
 
     [Display(ResourceType = typeof(Roles), Name = nameof(Roles.Permissions))]

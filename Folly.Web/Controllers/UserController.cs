@@ -1,4 +1,5 @@
 using Folly.Attributes;
+using Folly.Extensions;
 using Folly.Models;
 using Folly.Resources;
 using Folly.Services;
@@ -21,17 +22,18 @@ public class UserController(IUserService userService, ILanguageService languageS
             return model;
         }
 
-        ViewData[ErrorProperty] = Core.ErrorInvalidId;
+        ViewData.AddError(Core.ErrorInvalidId);
         return null;
     }
 
     private async Task<IActionResult> Save(User model) {
         if (!ModelState.IsValid) {
+            ViewData.AddError(ModelState);
             return CreateEditView(model);
         }
 
         await _UserService.SaveUserAsync(model);
-        ViewData[MessageProperty] = Users.SuccessSavingUser;
+        ViewData.AddMessage(Users.SuccessSavingUser);
         PushAction(nameof(Index));
         return Index();
     }
@@ -39,13 +41,13 @@ public class UserController(IUserService userService, ILanguageService languageS
     [HttpGet]
     public IActionResult Create() => CreateEditView(new User());
 
-    [HttpPost, ValidateAntiForgeryToken, ValidModel]
+    [HttpPost, ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(User model) => await Save(model);
 
     [HttpDelete]
     public async Task<IActionResult> Delete(int id) {
         await _UserService.DeleteUserAsync(id);
-        ViewData[MessageProperty] = Users.SuccessDeletingUser;
+        ViewData.AddMessage(Users.SuccessDeletingUser);
         return Index();
     }
 
@@ -55,7 +57,7 @@ public class UserController(IUserService userService, ILanguageService languageS
         return model == null ? Index() : CreateEditView(model);
     }
 
-    [HttpPut, ValidateAntiForgeryToken, ValidModel]
+    [HttpPut, ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(User model) => await Save(model);
 
     [HttpGet]

@@ -45,9 +45,10 @@ public class AccountController(IUserService userService, ILanguageService langua
         return View("UpdateAccount", new UpdateAccount(user));
     }
 
-    [HttpPost, Authorize(Policy = PermissionRequirementHandler.PolicyName), ValidModel]
+    [HttpPost, Authorize(Policy = PermissionRequirementHandler.PolicyName)]
     public async Task<IActionResult> UpdateAccount(UpdateAccount model) {
         if (!ModelState.IsValid) {
+            ViewData.AddError(ModelState);
             return View("UpdateAccount", model);
         }
 
@@ -57,15 +58,15 @@ public class AccountController(IUserService userService, ILanguageService langua
             Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName,
                 CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(new CultureInfo(language.LanguageCode)))
             );
-            ViewData[MessageProperty] = Account.AccountUpdated;
+            ViewData.AddMessage(Account.AccountUpdated);
             return View("UpdateAccount", model);
         }
-        ViewData[MessageProperty] = result;
+        ViewData.AddMessage(result);
         return View("UpdateAccount", model);
     }
 
     public IActionResult AccessDenied() {
-        ViewData[MessageProperty] = Core.ErrorGeneric;
+        ViewData.AddMessage(Core.ErrorGeneric);
         return View("Error");
     }
 }

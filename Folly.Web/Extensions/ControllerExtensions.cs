@@ -1,8 +1,10 @@
 using System.Data;
 using System.Text;
+using Folly.Controllers;
 using Folly.Models;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
 
 namespace Folly.Extensions;
 
@@ -65,4 +67,37 @@ public static class ControllerExtensions {
     /// <param name="httpContext">Current request context.</param>
     /// <returns>True if user enabled help, else false.</returns>
     public static bool WantsHelp(this HttpContext httpContext) => httpContext.Session.GetString(Help.SettingName).ToBool();
+
+    /// <summary>
+    /// Adds an error message to the ViewData dictionary.
+    /// </summary>
+    /// <param name="viewData">ViewData to update.</param>
+    /// <param name="errorMsg">Error message to add.</param>
+    public static void AddError(this ViewDataDictionary viewData, ModelStateDictionary modelState) {
+        ArgumentNullException.ThrowIfNull(modelState);
+
+        viewData.AddError(modelState.ToErrorString());
+    }
+
+    /// <summary>
+    /// Adds an error message to the ViewData dictionary.
+    /// </summary>
+    /// <param name="viewData">ViewData to update.</param>
+    /// <param name="error">Error message to add.</param>
+    public static void AddError(this ViewDataDictionary viewData, string error) {
+        ArgumentNullException.ThrowIfNull(error);
+
+        viewData[BaseController.ErrorProperty] = error;
+    }
+
+    /// <summary>
+    /// Adds a message to the ViewData dictionary.
+    /// </summary>
+    /// <param name="viewData">ViewData to update.</param>
+    /// <param name="message">Message to add.</param>
+    public static void AddMessage(this ViewDataDictionary viewData, string message) {
+        ArgumentNullException.ThrowIfNull(message);
+
+        viewData[BaseController.MessageProperty] = message;
+    }
 }

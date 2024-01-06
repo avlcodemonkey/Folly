@@ -1,4 +1,5 @@
 using Folly.Attributes;
+using Folly.Extensions;
 using Folly.Models;
 using Folly.Resources;
 using Folly.Services;
@@ -18,18 +19,19 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
     private async Task<Role?> LoadRole(int id) {
         var model = await _RoleService.GetRoleByIdAsync(id);
         if (model == null) {
-            ViewData[ErrorProperty] = Core.ErrorInvalidId;
+            ViewData.AddError(Core.ErrorInvalidId);
         }
         return model;
     }
 
     private async Task<IActionResult> Save(Role model) {
         if (!ModelState.IsValid) {
+            ViewData.AddError(ModelState);
             return CreateEditView(model);
         }
 
         await _RoleService.SaveRoleAsync(model);
-        ViewData[MessageProperty] = Roles.SuccessSavingRole;
+        ViewData.AddMessage(Roles.SuccessSavingRole);
         PushAction(nameof(Index));
         return Index();
     }
@@ -44,28 +46,29 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
         return View("Copy", new CopyRole { Id = model.Id, Prompt = Core.CopyOf.Replace("{0}", model.Name) });
     }
 
-    [HttpPost, ParentAction(nameof(Edit)), ValidModel]
+    [HttpPost, ParentAction(nameof(Edit))]
     public async Task<IActionResult> Copy(CopyRole model) {
         if (!ModelState.IsValid) {
+            ViewData.AddError(ModelState);
             return Index();
         }
 
         await _RoleService.CopyRoleAsync(model);
         PushAction(nameof(Index));
-        ViewData[MessageProperty] = Roles.SuccessCopyingRole;
+        ViewData.AddMessage(Roles.SuccessCopyingRole);
         return Index();
     }
 
     [HttpGet, ParentAction(nameof(Edit))]
     public IActionResult Create() => CreateEditView(new Role());
 
-    [HttpPost, ParentAction(nameof(Edit)), ValidateAntiForgeryToken, ValidModel]
+    [HttpPost, ParentAction(nameof(Edit)), ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(Role model) => await Save(model);
 
     [HttpDelete]
     public async Task<IActionResult> Delete(int id) {
         await _RoleService.DeleteRoleAsync(id);
-        ViewData[MessageProperty] = Roles.SuccessDeletingRole;
+        ViewData.AddMessage(Roles.SuccessDeletingRole);
         return Index();
     }
 
@@ -75,7 +78,7 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
         return model == null ? Index() : CreateEditView(model);
     }
 
-    [HttpPut, ValidateAntiForgeryToken, ValidModel]
+    [HttpPut, ValidateAntiForgeryToken]
     public async Task<IActionResult> Edit(Role model) => await Save(model);
 
     [HttpGet]
@@ -87,7 +90,7 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
     [HttpGet]
     public async Task<IActionResult> RefreshPermissions() {
         await new PermissionManager(_PermissionService, _RoleService).Register();
-        ViewData[MessageProperty] = Roles.SuccessRefreshingPermissions;
+        ViewData.AddMessage(Roles.SuccessRefreshingPermissions);
         return Index();
     }
 }

@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Security.Principal;
 using Folly.Models;
+using Folly.Resources;
 using Folly.Services;
 using Folly.Validators;
 using Folly.Web.Tests.Fixtures;
@@ -61,6 +62,6 @@ public class IsUniqueUserNameAttributeTests {
 
         // assert
         Assert.NotNull(validationResult?.ErrorMessage);
-        Assert.False(string.IsNullOrWhiteSpace(validationResult?.ErrorMessage));
+        Assert.Equal(Users.ErrorDuplicateUserName, validationResult?.ErrorMessage);
     }
 }

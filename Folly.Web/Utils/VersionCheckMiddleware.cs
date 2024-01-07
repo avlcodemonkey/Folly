@@ -1,5 +1,4 @@
 using System.Reflection;
-using Folly.Extensions;
 
 namespace Folly.Utils;
 
@@ -12,7 +11,7 @@ public sealed class VersionCheckMiddleware {
 
     public VersionCheckMiddleware(RequestDelegate next) {
         _Next = next;
-        _VersionNumber = Assembly.GetExecutingAssembly().GetName().Version?.FriendlyVersionNumber() ?? "";
+        _VersionNumber = Assembly.GetExecutingAssembly().GetName().Version?.ToString() ?? "";
     }
 
     public async Task InvokeAsync(HttpContext context) {

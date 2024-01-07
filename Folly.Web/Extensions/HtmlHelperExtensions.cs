@@ -14,7 +14,7 @@ public static class HtmlHelperExtensions {
         var version = assembly.GetName().Version;
 
         if (version != null && assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), true).FirstOrDefault() is AssemblyProductAttribute product) {
-            return $"{product.Product} v{version.FriendlyVersionNumber()}";
+            return $"{product.Product} v{version}";
         } else {
             return "";
         }
@@ -25,14 +25,7 @@ public static class HtmlHelperExtensions {
     /// </summary>
     /// <returns>App name and current version.</returns>
     public static string? ApplicationVersionNumber(this IHtmlHelper _)
-        => Assembly.GetExecutingAssembly().GetName().Version?.FriendlyVersionNumber();
-
-    /// <summary>
-    /// Format the app version.
-    /// </summary>
-    /// <returns>App version.</returns>
-    public static string FriendlyVersionNumber(this Version? version)
-        => version != null ? $"{version.Major}.{version.Minor}.{version.Build}.{version.Revision}" : "";
+        => Assembly.GetExecutingAssembly().GetName().Version?.ToString();
 
     /// <summary>
     /// Get the width as the correct type.

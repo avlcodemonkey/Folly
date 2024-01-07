@@ -29,7 +29,7 @@ public class ClaimsTests {
     public async Task TransformAsync_WithNoIdentity_ReturnsEarly() {
         // arrange
         var mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
-        mockClaimsPrincipal.Setup(x => x.Identity).Returns<ClaimsIdentity>(null);
+        mockClaimsPrincipal.Setup(x => x.Identity).Returns<ClaimsIdentity>(null!);
 
         // act
         var result = await _ClaimsTransformer.TransformAsync(mockClaimsPrincipal.Object);

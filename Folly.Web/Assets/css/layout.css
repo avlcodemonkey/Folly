@@ -63,6 +63,7 @@ dialog {
     box-shadow: #00000029 2px 2px 5px 0px;
     border-radius: 10px;
     padding: 20px;
+    width: 50%;
 
     &::backdrop {
         background: rgba(0,0,0,.5);

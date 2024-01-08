@@ -264,7 +264,7 @@
   <data name="Close" xml:space="preserve">
     <value>Cerca</value>
   </data>
-  <data name="ToggleHelp" xml:space="preserve">
+  <data name="Help" xml:space="preserve">
     <value>Alternar ayuda</value>
   </data>
   <data name="Id" xml:space="preserve">

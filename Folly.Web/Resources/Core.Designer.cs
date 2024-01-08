@@ -358,6 +358,15 @@ namespace Folly.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Help.
+        /// </summary>
+        public static string Help {
+            get {
+                return ResourceManager.GetString("Help", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Context help has been disabled..
         /// </summary>
         public static string HelpDisabled {
@@ -561,15 +570,6 @@ namespace Folly.Resources {
         public static string TableTo {
             get {
                 return ResourceManager.GetString("TableTo", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Help.
-        /// </summary>
-        public static string ToggleHelp {
-            get {
-                return ResourceManager.GetString("ToggleHelp", resourceCulture);
             }
         }
         

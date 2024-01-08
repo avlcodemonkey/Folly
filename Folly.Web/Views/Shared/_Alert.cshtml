@@ -8,8 +8,8 @@
             <span class="col-11">@Html.Raw(Model.Content)</span>
             <span class="col-1 text-right">
                 @if(Model.CanDismiss) {
-                    <button class="button" label="@Core.Close" data-dismiss>
-                        <icon name="Close" />
+                    <button class="button" data-dismiss>
+                        <icon name="Close" label="@Core.Close" />
                     </button>
                 }
             </span>

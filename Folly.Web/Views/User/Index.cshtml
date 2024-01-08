@@ -12,7 +12,7 @@
     <data-table key="users" src="@Url.Action("List", "User")">
         <data-head>
             <th width="@Html.Width(ColumnWidth.DoubleIcon)">
-                <a authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button primary" label="@Users.CreateUser">
+                <a authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button primary">
                     <icon name="Add" label="@Users.CreateUser" />
                 </a>
             </th>
@@ -24,15 +24,15 @@
         </data-head>
         <data-body colspan="6">
             <td>
-                <a authorize-roles="user.edit" href="@Url.ActionForMustache("Edit")" class="button primary" label="@Users.EditUser">
+                <a authorize-roles="user.edit" href="@Url.ActionForMustache("Edit")" class="button primary">
                     <icon name="EditAlt" label="@Users.EditUser" />
                 </a>
                 <nilla-confirm authorize-roles="user.delete" hx-delete="@Url.ActionForMustache("Delete")" data-ok="@Core.Okay"
                     data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
                 >
-                    <a href="#" class="button dark" label="@Core.Delete">
+                    <button class="button dark" role="button" type="button">
                         <icon name="DeleteAlt" label="@Core.Delete" />
-                    </a>
+                    </button>
                 </nilla-confirm>
             </td>
             <td>{{id}}</td>

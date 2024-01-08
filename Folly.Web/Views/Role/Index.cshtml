@@ -12,15 +12,15 @@
     <data-table key="roles" src="@Url.Action("List", "Role")">
         <data-head>
             <th width="@Html.Width(ColumnWidth.TripleIcon)">
-                <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary" label="@Roles.CreateRole">
+                <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary">
                     <icon name="Add" label="@Roles.CreateRole" />
                 </a>
                 <nilla-confirm authorize-roles="role.refreshpermissions" hx-get="@Url.Action("RefreshPermissions", "Role")"
                     data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@Roles.ConfirmRefreshPermissions"
                 >
-                    <a href="#" class="button primary" label="@Roles.RefreshPermissions">
+                    <button class="button primary" role="button" type="button">
                         <icon name="Refresh" label="@Roles.RefreshPermissions" />
-                    </a>
+                    </button>
                 </nilla-confirm>
             </th>
             <th width="@Html.Width(ColumnWidth.Id)" data-property="id">@Core.Id</th>
@@ -28,18 +28,18 @@
         </data-head>
         <data-body colspan="3">
             <td>
-                <a authorize-roles="role.edit" href="@Url.ActionForMustache("Edit")" class="button primary" label="@Roles.EditRole">
+                <a authorize-roles="role.edit" href="@Url.ActionForMustache("Edit")" class="button primary">
                     <icon name="EditAlt" label="@Roles.EditRole" />
                 </a>
-                <a authorize-roles="role.edit" href="@Url.ActionForMustache("Copy")" class="button primary" label="@Core.Copy">
+                <a authorize-roles="role.edit" href="@Url.ActionForMustache("Copy")" class="button primary">
                     <icon name="Copy" label="@Core.Copy" />
                 </a>
                 <nilla-confirm authorize-roles="role.delete" hx-delete="@Url.ActionForMustache("Delete")"
                     data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
                 >
-                    <a href="#" class="button dark" label="@Core.Delete">
+                    <button class="button dark" role="button" type="button">
                         <icon name="DeleteAlt" label="@Core.Delete" />
-                    </a>
+                    </button>
                 </nilla-confirm>
             </td>
             <td>{{id}}</td>

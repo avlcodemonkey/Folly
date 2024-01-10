@@ -6,7 +6,7 @@ using Moq;
 
 namespace Folly.Web.Tests.Utils;
 
-public class ClaimsTests {
+public class ClaimsTransformerTests {
     private readonly Mock<IUserService> _MockUserService;
     private readonly ClaimsTransformer _ClaimsTransformer;
 
@@ -17,7 +17,7 @@ public class ClaimsTests {
         new() { Id = 2, ControllerName = "controller2", ActionName = "action2" },
     ];
 
-    public ClaimsTests() {
+    public ClaimsTransformerTests() {
         _MockUserService = new Mock<IUserService>();
         _MockUserService.Setup(x => x.GetUserByUserNameAsync(_User.UserName)).ReturnsAsync(_User);
         _MockUserService.Setup(x => x.GetClaimsByUserIdAsync(_User.Id)).ReturnsAsync(_UserClaims);
@@ -59,9 +59,10 @@ public class ClaimsTests {
     [Fact]
     public async Task TransformAsync_WithRoleClaim_ReturnsEarly() {
         // arrange
-        var claimsIdentity = new ClaimsIdentity();
-        claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, _User.UserName));
-        claimsIdentity.AddClaim(new Claim(ClaimTypes.Role, "testRole"));
+        var claimsIdentity = new ClaimsIdentity([
+            new Claim(ClaimTypes.Name, _User.UserName),
+            new Claim(ClaimTypes.Role, "testRole")
+        ]);
 
         var mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
         mockClaimsPrincipal.Setup(x => x.Identity).Returns(claimsIdentity);
@@ -78,8 +79,7 @@ public class ClaimsTests {
     [Fact]
     public async Task TransformAsync_WithNoMatchingUserName_ReturnsEarly() {
         // arrange
-        var claimsIdentity = new ClaimsIdentity();
-        claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, "nameThatDoesExist"));
+        var claimsIdentity = new ClaimsIdentity([new Claim(ClaimTypes.Name, "nameThatDoesExist")]);
 
         var mockClaimsPrincipal = new Mock<ClaimsPrincipal>();
         mockClaimsPrincipal.Setup(x => x.Identity).Returns(claimsIdentity);
@@ -97,8 +97,7 @@ public class ClaimsTests {
     [Fact]
     public async Task TransformAsync_WithNoRoleClaims_AddsRoleClaims() {
         // arrange
-        var claimsIdentity = new ClaimsIdentity();
-        claimsIdentity.AddClaim(new Claim(ClaimTypes.Name, _User.UserName));
+        var claimsIdentity = new ClaimsIdentity([new Claim(ClaimTypes.Name, _User.UserName)]);
         var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
         // act

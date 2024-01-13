@@ -172,8 +172,8 @@ class Table extends HTMLElement {
      * Initialize table by loading settings from sessionStorage, processing HTML to add event handlers, and fetching data from the server.
      */
     initializeTable() {
-        this.key = this.getAttribute('data-key');
-        this.src = this.getAttribute('data-src');
+        this.key = this.dataset.key;
+        this.src = this.dataset.src;
 
         // check sessionStorage for saved settings
         this.perPage = parseInt(this.fetchSetting(TableSetting.PerPage) ?? '10', 10);
@@ -413,8 +413,8 @@ class Table extends HTMLElement {
         const sortAscTemplate = this.getElement(Elements.SortAscTemplate);
         const sortDescTemplate = this.getElement(Elements.SortDescTemplate);
 
-        this.querySelectorAll('th[data-property]').forEach((th) => {
-            const property = th.getAttribute('data-property');
+        this.querySelectorAll('th[data-property]').forEach((/** @type {HTMLElement} */ th) => {
+            const { property } = th.dataset;
             const sortOrder = this.sortOrder(property);
             const sortAsc = th.querySelector(`[data-table-${Elements.SortAsc}]`);
             const sortDesc = th.querySelector(`[data-table-${Elements.SortDesc}]`);
@@ -671,14 +671,14 @@ class Table extends HTMLElement {
 
     /**
      * Handle click in table header to sort by a column.
-     * @param {Element} elem TH that was clicked on.
+     * @param {HTMLElement} elem TH that was clicked on.
      */
     onSortClick(elem) {
         if (this.loading || this.error) {
             return;
         }
 
-        const property = elem.getAttribute('data-property');
+        const { property } = elem.dataset;
         if (!property) {
             return;
         }

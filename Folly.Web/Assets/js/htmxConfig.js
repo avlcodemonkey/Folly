@@ -7,7 +7,7 @@ htmx.config.allowEval = false;
 htmx.config.historyCacheSize = 0;
 
 // enable logging for htmx
-if (document.body.getAttribute('data-environment') === 'development') {
+if (document.body.dataset.environment === 'development') {
     // uncomment this line to enable detailed htmx logging
     // htmx.logAll();
 }

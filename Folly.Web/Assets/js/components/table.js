@@ -154,24 +154,12 @@ class Table extends HTMLElement {
      */
     elementCache = [];
 
-    constructor() {
-        super();
-
-        this.initializeTable();
-    }
-
-    /**
-     * Removes references to elements when the component is removed from the document.
-     * Doing this to help with garbage collection, but may not be strictly necessary.
-     */
-    disconnectedCallback() {
-        this.elementCache = [];
-    }
-
     /**
      * Initialize table by loading settings from sessionStorage, processing HTML to add event handlers, and fetching data from the server.
      */
-    initializeTable() {
+    constructor() {
+        super();
+
         this.key = this.dataset.key;
         this.src = this.dataset.src;
 
@@ -187,6 +175,14 @@ class Table extends HTMLElement {
         this.setupSorting();
 
         this.fetchData();
+    }
+
+    /**
+     * Removes references to elements when the component is removed from the document.
+     * Doing this to help with garbage collection, but may not be strictly necessary.
+     */
+    disconnectedCallback() {
+        this.elementCache = [];
     }
 
     /**
@@ -262,7 +258,7 @@ class Table extends HTMLElement {
      * Add event handlers for table sorting functionality.
      */
     setupSorting() {
-        this.querySelectorAll('th[data-property]').forEach((x) => {
+        this.querySelectorAll('th[data-property]').forEach((/** @type {HTMLElement} */ x) => {
             x.addEventListener('click', () => this.onSortClick(x));
         });
     }

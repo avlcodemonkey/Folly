@@ -27,10 +27,10 @@
                 <a authorize-roles="user.edit" href="@Url.ActionForMustache("Edit")" class="button primary">
                     <icon name="EditAlt" label="@Users.EditUser" />
                 </a>
-                <nilla-confirm authorize-roles="user.delete" hx-delete="@Url.ActionForMustache("Delete")" data-ok="@Core.Okay"
-                    data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
-                >
-                    <button class="button dark" role="button" type="button">
+                <nilla-confirm authorize-roles="user.delete">
+                    <button class="button dark" role="button" type="button" hx-delete="@Url.ActionForMustache("Delete")" data-dialog-ok="@Core.Okay"
+                        data-dialog-cancel="@Core.Cancel" data-dialog-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
+                    >
                         <icon name="DeleteAlt" label="@Core.Delete" />
                     </button>
                 </nilla-confirm>

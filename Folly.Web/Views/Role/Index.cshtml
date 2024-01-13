@@ -15,10 +15,10 @@
                 <a authorize-roles="role.edit" href="@Url.Action("Create", "Role")" class="button primary">
                     <icon name="Add" label="@Roles.CreateRole" />
                 </a>
-                <nilla-confirm authorize-roles="role.refreshpermissions" hx-get="@Url.Action("RefreshPermissions", "Role")"
-                    data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@Roles.ConfirmRefreshPermissions"
-                >
-                    <button class="button primary" role="button" type="button">
+                <nilla-confirm authorize-roles="role.refreshpermissions">
+                    <button class="button primary" role="button" type="button" hx-get="@Url.Action("RefreshPermissions", "Role")"
+                        data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Roles.ConfirmRefreshPermissions"
+                    >
                         <icon name="Refresh" label="@Roles.RefreshPermissions" />
                     </button>
                 </nilla-confirm>
@@ -34,10 +34,10 @@
                 <a authorize-roles="role.edit" href="@Url.ActionForMustache("Copy")" class="button primary">
                     <icon name="Copy" label="@Core.Copy" />
                 </a>
-                <nilla-confirm authorize-roles="role.delete" hx-delete="@Url.ActionForMustache("Delete")"
-                    data-ok="@Core.Okay" data-cancel="@Core.Cancel" data-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
-                >
-                    <button class="button dark" role="button" type="button">
+                <nilla-confirm authorize-roles="role.delete">
+                    <button class="button dark" role="button" type="button" hx-delete="@Url.ActionForMustache("Delete")" data-dialog-ok="@Core.Okay"
+                            data-dialog-cancel="@Core.Cancel" data-dialog-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
+                    >
                         <icon name="DeleteAlt" label="@Core.Delete" />
                     </button>
                 </nilla-confirm>

@@ -71,16 +71,16 @@ public class GroupBaseTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelp
         button.AddCssClass("button success button-icon");
         button.MergeAttribute("type", "button");
         button.MergeAttribute("role", "button");
+        button.MergeAttribute("data-dialog-content", HelpText!.Replace("\"", "&quot;"));
+        button.MergeAttribute("data-dialog-ok", Core.Okay);
         button.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("Icons/_Flag"));
 
-        var label = new TagBuilder("span");
-        label.InnerHtml.Append(Core.Help);
-        label.AddCssClass("visually-hidden");
-        button.InnerHtml.AppendHtml(label);
+        var labelSpan = new TagBuilder("span");
+        labelSpan.InnerHtml.Append(Core.Help);
+        labelSpan.AddCssClass("visually-hidden");
+        button.InnerHtml.AppendHtml(labelSpan);
 
         var dialog = new TagBuilder("nilla-info");
-        dialog.MergeAttribute("data-content", HelpText!.Replace("\"", "&quot;"));
-        dialog.MergeAttribute("data-ok", Core.Okay);
         dialog.InnerHtml.AppendHtml(button);
 
         var span = new TagBuilder("span");

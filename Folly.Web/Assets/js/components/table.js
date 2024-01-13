@@ -427,6 +427,7 @@ class Table extends HTMLElement {
                 if (!sortAsc) {
                     th.insertAdjacentHTML('beforeend', sortAscTemplate.innerHTML);
                 }
+                th.setAttribute('aria-sort', 'ascending');
             } else if (sortOrder === SortOrder.Desc) {
                 if (sortAsc) {
                     sortAsc.remove();
@@ -434,6 +435,7 @@ class Table extends HTMLElement {
                 if (!sortDesc) {
                     th.insertAdjacentHTML('beforeend', sortDescTemplate.innerHTML);
                 }
+                th.setAttribute('aria-sort', 'descending');
             } else {
                 if (sortAsc) {
                     sortAsc.remove();
@@ -441,6 +443,7 @@ class Table extends HTMLElement {
                 if (sortDesc) {
                     sortDesc.remove();
                 }
+                th.removeAttribute('aria-sort');
             }
         });
     }

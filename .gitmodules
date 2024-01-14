@@ -1,3 +1,6 @@
 [submodule "Folly.Web/Assets/external/chota"]
 	path = Folly.Web/Assets/external/chota
 	url = https://github.com/avlcodemonkey/chota
+[submodule "Folly.Web/Assets/external/luxbar"]
+	path = Folly.Web/Assets/external/luxbar
+	url = https://github.com/avlcodemonkey/luxbar

@@ -4,7 +4,7 @@
     height: 80px;
 }
 
-.spinner:after {
+.spinner::after {
     content: " ";
     display: block;
     width: 64px;
@@ -38,7 +38,7 @@ nilla-table {
         .sort-icon {
             & svg {
                 & path {
-                    fill: currentColor;
+                    fill: currentcolor;
                 }
             }
         }

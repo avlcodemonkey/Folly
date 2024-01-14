@@ -10,6 +10,11 @@ public class HtmxHeaders {
     public const string Request = "hx-request";
 
     /// <summary>
+    /// Request header that is true when HTMX tried to go back and restore a page.
+    /// </summary>
+    public const string RestoreRequest = "hx-history-restore-request";
+
+    /// <summary>
     /// Request header that specifies the expected version of the app.
     /// </summary>
     public const string Version = "hx-version";

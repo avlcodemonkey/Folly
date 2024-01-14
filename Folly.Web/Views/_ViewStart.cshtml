@@ -2,5 +2,5 @@
 @using Folly.Utils;
 
 @{
-    Layout = Context.Request.Headers.Any(x => x.Key == HtmxHeaders.Request) ? null : "_Layout";
+    Layout = Context.Request.Headers.Any(x => x.Key == HtmxHeaders.Request || x.Key == HtmxHeaders.RestoreRequest) ? null : "_Layout";
 }

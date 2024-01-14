@@ -6,7 +6,7 @@ The plan for assets is to focus on using native browser functionality and minimi
 
 All styling for the project uses native browser functionality with no LESS/SASS.  Modern browsers support nested CSS, so it's pretty easy to avoid LESS/SASS now.
 
-Custom versions of `chota` and `luxbar` are added as git submodules.  These versions have a feature set trimmed down to just what is needed here, and use browser native functionality instead of SASS.  They should change infrequently so submodules seem like a good choice.
+Custom versions of `chota` and `luxbar` are added as git submodules.  These versions have a feature set trimmed down to just what is needed here, and use browser native functionality instead of SASS.  They should change infrequently so submodules seem like a good choice.  Initialize submodules using `git submodule update --init --recursive`.  Update submodules using `git submodule update --remote`.
 
 It is possible to use the CSS without a build step if needed.  But the build will create sourcemaps that make debugging with the bundled/minified version easy still.
 

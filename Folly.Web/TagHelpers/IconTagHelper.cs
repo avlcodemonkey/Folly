@@ -24,7 +24,7 @@ public sealed class IconTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHe
             var label = new TagBuilder("span");
             label.InnerHtml.Append(Label);
             if (!ShowLabel) {
-                label.AddCssClass("visually-hidden");
+                label.AddCssClass("is-visually-hidden");
             }
             output.Content.AppendHtml(label);
         }

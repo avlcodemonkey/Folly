@@ -77,7 +77,7 @@ public class GroupBaseTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelp
 
         var labelSpan = new TagBuilder("span");
         labelSpan.InnerHtml.Append(Core.Help);
-        labelSpan.AddCssClass("visually-hidden");
+        labelSpan.AddCssClass("is-visually-hidden");
         button.InnerHtml.AppendHtml(labelSpan);
 
         var dialog = new TagBuilder("nilla-info");

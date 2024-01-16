@@ -12,11 +12,11 @@ public class PermissionManagerTests {
         { "controller2.action1", "Controller2.Action1" },
     };
 
-    private readonly List<Permission> _PermissionList = new() {
+    private readonly List<Permission> _PermissionList = [
         new Permission { ControllerName = "controller1", ActionName = "action1" },
         new Permission { ControllerName = "controller1", ActionName = "action2" },
         new Permission { ControllerName = "controller2", ActionName = "action1" },
-    };
+    ];
 
     private readonly Role _Role = new() { Name = "test role" };
 
@@ -78,7 +78,7 @@ public class PermissionManagerTests {
     public async Task Register_WithDeletedActions_DeletesPermissions() {
         // arrange
         var mockAssemblyService = new Mock<IAssemblyService>();
-        mockAssemblyService.Setup(x => x.GetActionList()).Returns(new Dictionary<string, string>());
+        mockAssemblyService.Setup(x => x.GetActionList()).Returns([]);
 
         var mockPermissionService = new Mock<IPermissionService>();
         mockPermissionService.Setup(x => x.GetAllPermissionsAsync()).ReturnsAsync(_PermissionList);

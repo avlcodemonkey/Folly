@@ -1,5 +1,5 @@
 using System.Runtime.Serialization;
-using Folly.Utils;
+using Folly.Constants;
 
 namespace Folly.Models;
 

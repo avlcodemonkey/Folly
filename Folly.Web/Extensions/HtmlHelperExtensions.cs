@@ -1,5 +1,5 @@
 using System.Reflection;
-using Folly.Utils;
+using Folly.Constants;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Folly.Extensions;

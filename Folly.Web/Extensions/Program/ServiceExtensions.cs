@@ -3,7 +3,7 @@ using Folly.Services;
 
 namespace Folly.Extensions.Program;
 
-public static class DbExtensions {
+public static class ServiceExtensions {
 
     public static IServiceCollection ConfigureDb(this IServiceCollection services) {
         services.AddDbContext<FollyDbContext>();

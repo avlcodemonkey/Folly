@@ -1,5 +1,5 @@
 using System.Text.Encodings.Web;
-using Folly.Utils;
+using Folly.Constants;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;

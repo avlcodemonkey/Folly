@@ -1,4 +1,4 @@
-namespace Folly.Utils;
+namespace Folly.Constants;
 
 public enum AlertType {
     Success,

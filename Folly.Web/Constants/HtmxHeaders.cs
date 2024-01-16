@@ -1,4 +1,4 @@
-namespace Folly.Utils;
+namespace Folly.Constants;
 
 /// <summary>
 /// Custom headers to use with HTMX.

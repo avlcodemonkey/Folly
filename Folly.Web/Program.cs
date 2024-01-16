@@ -17,6 +17,7 @@ builder.Services
     .AddSession()
     .ConfigureAuthentication(builder.Configuration)
     .AddAntiforgery()
+    .AddSingleton<IAssemblyService, AssemblyService>()
     .AddSingleton(new MemoryCache(new MemoryCacheOptions()))
     .AddSingleton<IHttpContextAccessor, HttpContextAccessor>()
     .AddSingleton<IActionContextAccessor, ActionContextAccessor>()

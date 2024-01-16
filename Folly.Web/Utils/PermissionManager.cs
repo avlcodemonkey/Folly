@@ -1,34 +1,20 @@
 using System.Globalization;
-using System.Reflection;
-using Folly.Attributes;
-using Folly.Extensions;
 using Folly.Models;
 using Folly.Services;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Folly.Utils;
 
-public sealed class PermissionManager(IPermissionService permissionService, IRoleService roleService) {
+public sealed class PermissionManager(IAssemblyService assemblyService, IPermissionService permissionService, IRoleService roleService) {
+    private readonly IAssemblyService _AssemblyService = assemblyService;
     private readonly IPermissionService _PermissionService = permissionService;
     private readonly IRoleService _RoleService = roleService;
 
     /// <summary>
     /// Scans the assembly for all controllers and updates the permissions table to match the list of available actions.
     /// </summary>
-    public async Task<bool> Register() {
-        // @todo need to re-test this method
-
+    public async Task<bool> RegisterAsync() {
         // build a list of all available actions
-        var actionList = Assembly.GetExecutingAssembly().GetTypes()
-            .Where(x => typeof(Controller).IsAssignableFrom(x)) //filter controllers
-            .SelectMany(x => x.GetMethods())
-            .Where(x => x.IsPublic && !x.IsDefined(typeof(NonActionAttribute))
-                && (x.IsDefined(typeof(AuthorizeAttribute)) || x.DeclaringType!.IsDefined(typeof(AuthorizeAttribute)))
-                && !x.IsDefined(typeof(AllowAnonymousAttribute)) & !x.IsDefined(typeof(ParentActionAttribute)))
-            .Select(x => $"{x.DeclaringType?.FullName?.Split('.').Last().StripController()}.{x.Name}")
-            .Distinct()
-            .ToDictionary(x => x.ToLower(CultureInfo.InvariantCulture), x => x);
+        var actionList = _AssemblyService.GetActionList();
 
         // query all permissions from db
         var permissions = (await _PermissionService.GetAllPermissionsAsync())

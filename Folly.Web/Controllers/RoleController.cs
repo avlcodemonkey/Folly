@@ -10,9 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace Folly.Controllers;
 
 [Authorize(Policy = PermissionRequirementHandler.PolicyName)]
-public class RoleController(IRoleService roleService, IPermissionService permissionService, ILogger<RoleController> logger) : BaseController(logger) {
+public class RoleController(IRoleService roleService, IPermissionService permissionService, IAssemblyService assemblyService, ILogger<RoleController> logger) : BaseController(logger) {
     private readonly IPermissionService _PermissionService = permissionService;
     private readonly IRoleService _RoleService = roleService;
+    private readonly IAssemblyService _AssemblyService = assemblyService;
 
     private ViewResult CreateEditView(Role model) => View("CreateEdit", model);
 
@@ -89,7 +90,7 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
 
     [HttpGet]
     public async Task<IActionResult> RefreshPermissions() {
-        await new PermissionManager(_PermissionService, _RoleService).Register();
+        await new PermissionManager(_AssemblyService, _PermissionService, _RoleService).RegisterAsync();
         ViewData.AddMessage(Roles.SuccessRefreshingPermissions);
         return Index();
     }

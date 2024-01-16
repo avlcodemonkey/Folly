@@ -5,10 +5,6 @@ using DTO = Folly.Models;
 
 namespace Folly.Services;
 
-/// <summary>
-/// Fetches languages from the DB.
-/// Use AsNoTracking since languages can't be modified.
-/// </summary>
 public sealed class LanguageService(FollyDbContext dbContext) : ILanguageService {
     private readonly FollyDbContext _DbContext = dbContext;
 

@@ -1,0 +1,59 @@
+@using Folly.Models
+@using Folly.Resources;
+@using Folly.Services
+@model AuditLog
+@inject IViewService ViewService
+
+<content>
+    <breadcrumb>
+        <breadcrumb-item label="@AuditLogs.ViewAll" controller="AuditLog" action="Index" />
+        <breadcrumb-item label="@AuditLogs.ViewAuditLog" controller="AuditLog" action="View"
+            route-values="@new { Id = Model.Id }" active="true"
+        />
+    </breadcrumb>
+
+    <partial name="_Alerts" />
+
+    <div class="container">
+        <dl>
+            <dt>@AuditLogs.Date</dt>
+            @* @todo replace this date-format when a user setting is added*@
+            <dd><nilla-date data-date-format="MM/DD/YYYY hh:mm:ss A">@Model.UniversalDate</nilla-date></dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.User</dt>
+            <dd>@Model.UserFullName</dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.State</dt>
+            <dd>@Model.State</dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.Entity</dt>
+            <dd>@Model.Entity</dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.Batch</dt>
+            <dd>@Model.BatchId</dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.PrimaryKey</dt>
+            <dd>@Model.PrimaryKey</dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.OldValues</dt>
+            <dd><nilla-json>@Model.OldValues</nilla-json></dd>
+        </dl>
+
+        <dl>
+            <dt>@AuditLogs.NewValues</dt>
+            <dd><nilla-json>@Model.NewValues</nilla-json></dd>
+        </dl>
+    </div>
+</content>

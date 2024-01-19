@@ -27,9 +27,12 @@ public class AuditLog {
     [Required]
     public DateTime Date { get; set; }
 
-    public long? UserId { get; set; }
+    public int? UserId { get; set; }
 
     public string? OldValues { get; set; }
 
     public string? NewValues { get; set; }
+
+    [ForeignKey(nameof(UserId))]
+    public User? User { get; set; }
 }

@@ -35,6 +35,9 @@
                         <li authorize-roles="user.index">
                             <a asp-controller="User" asp-action="Index"><icon name="Users" label="@Users.MenuItem" show-label /></a>
                         </li>
+                        <li authorize-roles="auditlog.index">
+                            <a asp-controller="AuditLog" asp-action="Index"><icon name="DocumentEmpty" label="@AuditLogs.MenuItem" show-label /></a>
+                        </li>
                         <li class="luxbar-dropdown">
                             <a href="#"><icon name="Settings" label="@Account.Settings" show-label /></a>
                             <ul>

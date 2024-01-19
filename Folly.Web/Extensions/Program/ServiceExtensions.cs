@@ -8,6 +8,7 @@ public static class ServiceExtensions {
     public static IServiceCollection ConfigureDb(this IServiceCollection services) {
         services.AddDbContext<FollyDbContext>();
 
+        services.AddScoped<IAuditLogService, AuditLogService>();
         services.AddScoped<ILanguageService, LanguageService>();
         services.AddScoped<IPermissionService, PermissionService>();
         services.AddScoped<IRoleService, RoleService>();

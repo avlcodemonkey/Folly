@@ -51,6 +51,11 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Core.resx</DependentUpon>
     </Compile>
+    <Compile Update="Resources\AuditLogs.Designer.cs">
+      <DependentUpon>AuditLogs.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </Compile>
     <Compile Update="Resources\Roles.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
@@ -86,6 +91,10 @@
     <EmbeddedResource Update="Resources\Core.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Core.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\AuditLogs.resx">
+      <LastGenOutput>AuditLogs.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Roles.es.resx">
       <Generator>

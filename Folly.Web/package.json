@@ -24,6 +24,7 @@
         "fecha": "^4.2.3",
         "htmx.org": "^1.9.8",
         "ky": "^1.1.3",
-        "mustache": "^4.2.0"
+        "mustache": "^4.2.0",
+        "pretty-print-json": "^2.1.1"
     }
 }

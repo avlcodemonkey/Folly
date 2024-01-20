@@ -46,14 +46,16 @@
             <dd>@Model.PrimaryKey</dd>
         </dl>
 
-        <dl>
-            <dt>@AuditLogs.OldValues</dt>
-            <dd><nilla-json>@Model.OldValues</nilla-json></dd>
-        </dl>
+        <div class="row">
+            <dl class="col">
+                <dt>@AuditLogs.OldValues</dt>
+                <dd><nilla-json>@Model.OldValues</nilla-json></dd>
+            </dl>
 
-        <dl>
-            <dt>@AuditLogs.NewValues</dt>
-            <dd><nilla-json>@Model.NewValues</nilla-json></dd>
-        </dl>
+            <dl class="col">
+                <dt>@AuditLogs.NewValues</dt>
+                <dd><nilla-json>@Model.NewValues</nilla-json></dd>
+            </dl>
+        </div>
     </div>
 </content>

@@ -1,3 +1,4 @@
+using Folly.Models;
 using Folly.Resources;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -8,6 +9,8 @@ public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(h
     public string? Key { get; set; }
 
     public string? Src { get; set; }
+
+    public bool? HideSearch { get; set; }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
@@ -49,7 +52,7 @@ public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(h
 
         var containerDiv = new TagBuilder("div");
         containerDiv.AddCssClass("container");
-        containerDiv.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("_DataTableHeader"));
+        containerDiv.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("_DataTableHeader", new DataTable { HideSearch = HideSearch == true }));
         containerDiv.InnerHtml.AppendHtml(rowDiv);
         containerDiv.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("_DataTableFooter"));
 

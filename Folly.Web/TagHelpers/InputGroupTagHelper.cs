@@ -65,7 +65,6 @@ public sealed class InputGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHe
         output.TagName = "div";
         output.TagMode = TagMode.StartTagAndEndTag;
         output.Attributes.Clear();
-        output.AddClass("mb-1", HtmlEncoder.Default);
         output.Content.AppendHtml(BuildLabel());
         output.Content.AppendHtml(inputGroup);
 

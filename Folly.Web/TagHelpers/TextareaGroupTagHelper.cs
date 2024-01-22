@@ -1,9 +1,7 @@
 using System.Globalization;
-using System.Text.Encodings.Web;
 using Folly.Extensions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
@@ -49,7 +47,6 @@ public sealed class TextareaGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTa
         output.TagName = "div";
         output.TagMode = TagMode.StartTagAndEndTag;
         output.Attributes.Clear();
-        output.AddClass("mb-1", HtmlEncoder.Default);
         output.Content.AppendHtml(BuildLabel());
         output.Content.AppendHtml(inputGroup);
 

@@ -1,5 +1,6 @@
 using Folly.Attributes;
 using Folly.Extensions;
+using Folly.Models;
 using Folly.Resources;
 using Folly.Services;
 using Folly.Utils;
@@ -22,14 +23,17 @@ public class AuditLogController(IAuditLogService auditLogService, IPermissionSer
             ViewData.AddError(Core.ErrorInvalidId);
         }
 
-        return model == null ? Index() : View("View", model);
-
+        return model == null ? Index(new AuditLogSearch()) : View("View", model);
     }
 
     [HttpGet]
-    public IActionResult Index() => View("Index");
+    public IActionResult Index(AuditLogSearch model) => View("Index", model);
 
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
     public async Task<IActionResult> List()
         => Ok((await _AuditLogService.GetAllLogsAsync()).Select(x => new { x.Id, x.BatchId, x.UniversalDate, x.UserFullName, x.StateDesc, x.Entity }));
+
+    [HttpPost, ParentAction(nameof(Index)), AjaxRequestOnly]
+    public async Task<IActionResult> Search(AuditLogSearch search)
+        => Ok((await _AuditLogService.SearchLogsAsync(search)).Select(x => new { x.Id, x.BatchId, x.UniversalDate, x.UserFullName, x.StateDesc, x.Entity }));
 }

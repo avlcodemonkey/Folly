@@ -1,9 +1,7 @@
 using System.Globalization;
-using System.Text.Encodings.Web;
 using Folly.Extensions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
 namespace Folly.TagHelpers;
@@ -39,9 +37,17 @@ public sealed class InputGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHe
         } else if (For != null && _NumberTypes.Contains(For.ModelExplorer.ModelType)) {
             type = "number";
         }
-
         input.MergeAttribute("type", type, true);
-        input.SetAttributeIf("value", type == "password" ? "" : For?.ModelExplorer.Model?.ToString(), true);
+
+        var value = For?.ModelExplorer.Model;
+        if (value != null) {
+            // if a date input, try to format value correctly for html to handle
+            if (type == "date" && DateTime.TryParse(value.ToString(), out var dateValue)) {
+                value = dateValue.ToString("yyyy-MM-dd");
+            }
+        }
+        input.SetAttributeIf("value", type == "password" ? "" : value?.ToString(), true);
+
         input.SetAttributeIf("required", "true", Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true));
 
         if (For != null) {

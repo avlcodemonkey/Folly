@@ -2,6 +2,7 @@
 @using Folly.Extensions
 @using Folly.Resources
 @using Folly.Utils
+@model AuditLogSearch
 
 <content>
     <breadcrumb>
@@ -10,7 +11,47 @@
 
     <partial name="_Alerts" />
 
-    <data-table key="auditLogs" src="@Url.Action("List", "AuditLog")">
+    <div class="mb-2">
+        <details open>
+            <summary><b>@AuditLogs.Filters</b></summary>
+            <form id="auditLogSearch" hx-boost="false" class="form-compact">
+                <div class="row">
+                    <div class="col">
+                        <input-group for="StartDate" autofocus />
+                    </div>
+                    <div class="col">
+                        <input-group for="EndDate" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <input-group for="Entity" />
+                    </div>
+                    <div class="col">
+                        <input-group for="State" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <input-group for="UserId" />
+                    </div>
+                    <div class="col">
+                        <input-group for="BatchId" />
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <input-group for="PrimaryKey" />
+                    </div>
+                    <div class="col is-bottom-right">
+                        <input class="button primary" type="submit" value="@Core.Search">
+                    </div>
+                </div>
+            </form>
+        </details>
+    </div>
+
+    <data-table key="auditLogs" src="@Url.Action("Search", "AuditLog")" hide-search="true" data-method="post" data-form="auditLogSearch">
         <data-head>
             <th width="@Html.Width(ColumnWidth.SingleIcon)"></th>
             <th data-property="universalDate">@AuditLogs.Date</th>

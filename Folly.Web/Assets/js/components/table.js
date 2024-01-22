@@ -83,6 +83,18 @@ class Table extends HTMLElement {
     src = '';
 
     /**
+     * Method to use to request data from the server.
+     * @type {string}
+     */
+    method = '';
+
+    /**
+     * ID for form to include with request.
+     * @type {string}
+     */
+    form = '';
+
+    /**
      * Data fetched from the server.
      * @type {Array<IndexedRow>}
      */
@@ -162,6 +174,8 @@ class Table extends HTMLElement {
 
         this.key = this.dataset.key;
         this.src = this.dataset.src;
+        this.method = this.dataset.method;
+        this.form = this.dataset.form;
 
         // check sessionStorage for saved settings
         this.perPage = parseInt(this.fetchSetting(TableSetting.PerPage) ?? '10', 10);
@@ -173,6 +187,7 @@ class Table extends HTMLElement {
         this.setupFooter();
         this.setupStatus();
         this.setupSorting();
+        this.setupForm();
 
         this.fetchData();
     }
@@ -264,6 +279,25 @@ class Table extends HTMLElement {
     }
 
     /**
+     * Add event handlers for table sorting functionality.
+     */
+    setupForm() {
+        if (this.form) {
+            /** @type {HTMLFormElement} */
+            // @ts-ignore HTMLFormElement is correct type but js can't cast
+            const formElement = document.getElementById(this.form);
+            if (formElement) {
+                formElement.addEventListener('submit', (/** @type {SubmitEvent} */ e) => {
+                    // @todo may want to debounce later
+                    this.fetchData();
+                    e.preventDefault();
+                    e.stopImmediatePropagation();
+                });
+            }
+        }
+    }
+
+    /**
      * Fetch data from the server at the URL specified in the `src` property.
      */
     async fetchData() {
@@ -276,7 +310,24 @@ class Table extends HTMLElement {
         this.update();
 
         try {
-            const json = await ky.get(this.src, { headers: { 'X-Requested-With': 'XMLHttpRequest' } }).json();
+            const options = {
+                headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            };
+
+            if (this.method?.trim().length) {
+                options.method = this.method;
+            }
+
+            if (this.form) {
+                /** @type {HTMLFormElement} */
+                // @ts-ignore HTMLFormElement is correct type but js can't cast
+                const formElement = document.getElementById(this.form);
+                if (formElement) {
+                    options.body = new FormData(formElement);
+                }
+            }
+
+            const json = await ky(this.src, options).json();
             if (!(json && Array.isArray(json))) {
                 throw new FetchError(`Request to '${this.src}' returned invalid response.`);
             }

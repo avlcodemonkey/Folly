@@ -8,14 +8,14 @@ namespace Folly.TagHelpers;
 public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelper) {
     public string? Key { get; set; }
 
-    public string? Src { get; set; }
+    public string? SrcUrl { get; set; }
 
-    public bool? HideSearch { get; set; }
+    public string? SrcForm { get; set; }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 
-        if (string.IsNullOrWhiteSpace(Key) || string.IsNullOrWhiteSpace(Src)) {
+        if (string.IsNullOrWhiteSpace(Key) || (string.IsNullOrWhiteSpace(SrcUrl) && string.IsNullOrWhiteSpace(SrcForm))) {
             output.SuppressOutput();
             await base.ProcessAsync(context, output);
             return;
@@ -52,13 +52,14 @@ public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(h
 
         var containerDiv = new TagBuilder("div");
         containerDiv.AddCssClass("container");
-        containerDiv.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("_DataTableHeader", new DataTable { HideSearch = HideSearch == true }));
+        containerDiv.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("_DataTableHeader", new DataTable { HideSearch = !string.IsNullOrEmpty(SrcForm) }));
         containerDiv.InnerHtml.AppendHtml(rowDiv);
         containerDiv.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("_DataTableFooter"));
 
         output.TagName = "nilla-table";
         output.Attributes.SetAttribute("data-key", Key);
-        output.Attributes.SetAttribute("data-src", Src);
+        output.Attributes.SetAttribute("data-src-url", SrcUrl);
+        output.Attributes.SetAttribute("data-src-form", SrcForm);
         output.Content.AppendHtml(containerDiv);
 
         await base.ProcessAsync(context, output);

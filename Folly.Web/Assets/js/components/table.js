@@ -14,6 +14,7 @@ const TableSetting = Object.freeze({
     PerPage: 'perPage',
     Search: 'search',
     Sort: 'sort',
+    FormData: 'formData',
 });
 
 /**
@@ -39,7 +40,6 @@ const Elements = Object.freeze({
     LastPage: 'last-page',
     PerPage: 'per-page',
     Retry: 'retry',
-    RowNumbers: 'row-numbers',
     StartRow: 'start-row',
     EndRow: 'end-row',
     FilteredRows: 'filtered-rows',
@@ -80,19 +80,13 @@ class Table extends HTMLElement {
      * Url to request data from the server.
      * @type {string}
      */
-    src = '';
-
-    /**
-     * Method to use to request data from the server.
-     * @type {string}
-     */
-    method = '';
+    srcUrl = '';
 
     /**
      * ID for form to include with request.
      * @type {string}
      */
-    form = '';
+    srcForm = '';
 
     /**
      * Data fetched from the server.
@@ -173,9 +167,8 @@ class Table extends HTMLElement {
         super();
 
         this.key = this.dataset.key;
-        this.src = this.dataset.src;
-        this.method = this.dataset.method;
-        this.form = this.dataset.form;
+        this.srcUrl = this.dataset.srcUrl;
+        this.srcForm = this.dataset.srcForm;
 
         // check sessionStorage for saved settings
         this.perPage = parseInt(this.fetchSetting(TableSetting.PerPage) ?? '10', 10);
@@ -282,16 +275,29 @@ class Table extends HTMLElement {
      * Add event handlers for table sorting functionality.
      */
     setupForm() {
-        if (this.form) {
+        if (this.srcForm) {
             /** @type {HTMLFormElement} */
             // @ts-ignore HTMLFormElement is correct type but js can't cast
-            const formElement = document.getElementById(this.form);
+            const formElement = document.getElementById(this.srcForm);
             if (formElement) {
+                this.fetchFormData();
+
                 formElement.addEventListener('submit', (/** @type {SubmitEvent} */ e) => {
-                    // @todo may want to debounce later
-                    this.fetchData();
+                    // make sure the form doesn't actually submit
                     e.preventDefault();
                     e.stopImmediatePropagation();
+
+                    if (this.loading) {
+                        return;
+                    }
+
+                    // @todo may want to debounce later
+
+                    // first clear out the existing data
+                    this.rows = [];
+                    this.filterData();
+                    // now request new data
+                    this.fetchData();
                 });
             }
         }
@@ -301,7 +307,7 @@ class Table extends HTMLElement {
      * Fetch data from the server at the URL specified in the `src` property.
      */
     async fetchData() {
-        if (!this.src.length) {
+        if (!this.srcUrl && !this.srcForm) {
             return;
         }
 
@@ -310,26 +316,27 @@ class Table extends HTMLElement {
         this.update();
 
         try {
+            let url = this.srcUrl;
             const options = {
                 headers: { 'X-Requested-With': 'XMLHttpRequest' },
             };
 
-            if (this.method?.trim().length) {
-                options.method = this.method;
-            }
-
-            if (this.form) {
+            if (this.srcForm) {
                 /** @type {HTMLFormElement} */
                 // @ts-ignore HTMLFormElement is correct type but js can't cast
-                const formElement = document.getElementById(this.form);
+                const formElement = document.getElementById(this.srcForm);
                 if (formElement) {
+                    url = formElement.action;
                     options.body = new FormData(formElement);
+                    options.method = formElement.method;
+
+                    this.saveFormData();
                 }
             }
 
-            const json = await ky(this.src, options).json();
+            const json = await ky(url, options).json();
             if (!(json && Array.isArray(json))) {
-                throw new FetchError(`Request to '${this.src}' returned invalid response.`);
+                throw new FetchError(`Request to '${this.srcUrl}' returned invalid response.`);
             }
             this.rows = json.map((x, index) => ({ ...x, _index: index })) ?? [];
         } catch {
@@ -369,25 +376,19 @@ class Table extends HTMLElement {
      * Updates the start, end, and total numbers.
      */
     updateRowNumbers() {
-        const rowNumbersDiv = this.getElement(Elements.RowNumbers);
-        if (!rowNumbersDiv) {
-            return;
-        }
-        rowNumbersDiv.classList.toggle('is-hidden', this.loading || this.error);
-
         const startRowSpan = this.getElement(Elements.StartRow);
         if (startRowSpan) {
-            startRowSpan.textContent = `${this.startRowNumber}`;
+            startRowSpan.textContent = `${this.loading || this.error ? 0 : this.startRowNumber}`;
         }
 
         const endRowSpan = this.getElement(Elements.EndRow);
         if (endRowSpan) {
-            endRowSpan.textContent = `${this.endRowNumber}`;
+            endRowSpan.textContent = `${this.loading || this.error ? 0 : this.endRowNumber}`;
         }
 
         const filteredRowsSpan = this.getElement(Elements.FilteredRows);
         if (filteredRowsSpan) {
-            filteredRowsSpan.textContent = `${this.filteredRowTotal}`;
+            filteredRowsSpan.textContent = `${this.loading || this.error ? 0 : this.filteredRowTotal}`;
         }
     }
 
@@ -547,6 +548,62 @@ class Table extends HTMLElement {
      */
     saveSetting(name, value) {
         sessionStorage.setItem(`${this.key}_${name}`, value.toString());
+    }
+
+    /**
+     * Fetches form data from storage and populates the form.
+     */
+    fetchFormData() {
+        /** @type {HTMLFormElement} */
+        // @ts-ignore HTMLFormElement is correct type but js can't cast
+        const formElement = document.getElementById(this.srcForm);
+        if (!formElement) {
+            return;
+        }
+
+        const data = JSON.parse(this.fetchSetting(TableSetting.FormData));
+        Object.entries(data).forEach(([key, value]) => {
+            const input = formElement.elements.namedItem(key);
+            if (input) {
+                if (Array.isArray(value)) {
+                    // @todo are there other types that need special logic?
+
+                    // @ts-ignore input will be a multi-select
+                    input.options.forEach((opt) => {
+                        // eslint-disable-next-line no-param-reassign
+                        opt.selected = value.includes(opt.value);
+                    });
+                } else {
+                    // @ts-ignore will be an input with a value property
+                    input.value = value;
+                }
+            }
+        });
+    }
+
+    /**
+     * Saves form data to session storage.
+     */
+    saveFormData() {
+        /** @type {HTMLFormElement} */
+        // @ts-ignore HTMLFormElement is correct type but js can't cast
+        const formElement = document.getElementById(this.srcForm);
+        if (!formElement) {
+            return;
+        }
+
+        const data = {};
+        new FormData(formElement).forEach((value, key) => {
+            if (!Object.prototype.hasOwnProperty.call(data, key)) {
+                data[key] = value;
+                return;
+            }
+            if (!Array.isArray(data[key])) {
+                data[key] = [data[key]];
+            }
+            data[key].push(value);
+        });
+        this.saveSetting(TableSetting.FormData, JSON.stringify(data));
     }
 
     /**

@@ -12,9 +12,9 @@
     <partial name="_Alerts" />
 
     <div class="mb-2">
-        <details open>
+        <details>
             <summary><b>@AuditLogs.Filters</b></summary>
-            <form id="auditLogSearch" hx-boost="false" class="form-compact">
+            <form method="post" action="@Url.Action("Search", "AuditLog")" id="auditLogSearch" hx-boost="false" class="form-compact">
                 <div class="row">
                     <div class="col">
                         <input-group for="StartDate" autofocus />
@@ -51,7 +51,7 @@
         </details>
     </div>
 
-    <data-table key="auditLogs" src="@Url.Action("Search", "AuditLog")" hide-search="true" data-method="post" data-form="auditLogSearch">
+    <data-table key="auditLogs" src-form="auditLogSearch">
         <data-head>
             <th width="@Html.Width(ColumnWidth.SingleIcon)"></th>
             <th data-property="universalDate">@AuditLogs.Date</th>

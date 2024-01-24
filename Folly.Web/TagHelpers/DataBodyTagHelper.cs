@@ -18,6 +18,7 @@ public sealed class DataBodyTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(ht
 
         var template = new TagBuilder("template");
         template.InnerHtml.AppendHtml(tr);
+        template.Attributes.Add("hx-disable", "true");
 
         output.TagName = "tbody";
         output.Content.AppendHtml(await HtmlHelper!.PartialAsync("_DataTableStatus", ColSpan));

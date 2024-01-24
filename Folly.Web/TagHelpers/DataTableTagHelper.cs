@@ -12,6 +12,8 @@ public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(h
 
     public string? SrcForm { get; set; }
 
+    public int MaxResults { get; set; }
+
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 
@@ -60,6 +62,7 @@ public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(h
         output.Attributes.SetAttribute("data-key", Key);
         output.Attributes.SetAttribute("data-src-url", SrcUrl);
         output.Attributes.SetAttribute("data-src-form", SrcForm);
+        output.Attributes.SetAttribute("data-max-results", MaxResults);
         output.Content.AppendHtml(containerDiv);
 
         await base.ProcessAsync(context, output);

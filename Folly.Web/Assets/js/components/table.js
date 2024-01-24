@@ -51,6 +51,7 @@ const Elements = Object.freeze({
     SortAsc: 'sort-asc',
     SortDesc: 'sort-desc',
     Status: 'status',
+    MaxResults: 'max-results',
 });
 
 /**
@@ -87,6 +88,12 @@ class Table extends HTMLElement {
      * @type {string}
      */
     srcForm = '';
+
+    /**
+     * Max number of results to display.
+     * @type {Number|undefined}
+     */
+    maxResults = undefined;
 
     /**
      * Data fetched from the server.
@@ -170,9 +177,14 @@ class Table extends HTMLElement {
         this.srcUrl = this.dataset.srcUrl;
         this.srcForm = this.dataset.srcForm;
 
+        this.maxResults = Number(this.dataset.maxResults);
+        if (Number.isNaN(this.maxResults)) {
+            this.maxResults = undefined;
+        }
+
         // check sessionStorage for saved settings
-        this.perPage = parseInt(this.fetchSetting(TableSetting.PerPage) ?? '10', 10);
-        this.currentPage = parseInt(this.fetchSetting(TableSetting.CurrentPage) ?? '0', 10);
+        this.perPage = Number(this.fetchSetting(TableSetting.PerPage) ?? '10');
+        this.currentPage = Number(this.fetchSetting(TableSetting.CurrentPage) ?? '0');
         this.search = this.fetchSetting(TableSetting.Search) ?? '';
         this.sortColumns = JSON.parse(this.fetchSetting(TableSetting.Sort) ?? '[]');
 
@@ -292,11 +304,6 @@ class Table extends HTMLElement {
                     }
 
                     // @todo may want to debounce later
-
-                    // first clear out the existing data
-                    this.rows = [];
-                    this.filterData();
-                    // now request new data
                     this.fetchData();
                 });
             }
@@ -313,8 +320,13 @@ class Table extends HTMLElement {
 
         this.loading = true;
         this.error = false;
+
+        // first clear out the existing data
+        this.rows = [];
+
         this.update();
 
+        // now request new data
         try {
             let url = this.srcUrl;
             const options = {
@@ -338,6 +350,7 @@ class Table extends HTMLElement {
             if (!(json && Array.isArray(json))) {
                 throw new FetchError(`Request to '${this.srcUrl}' returned invalid response.`);
             }
+
             this.rows = json.map((x, index) => ({ ...x, _index: index })) ?? [];
         } catch {
             this.rows = [];
@@ -389,6 +402,11 @@ class Table extends HTMLElement {
         const filteredRowsSpan = this.getElement(Elements.FilteredRows);
         if (filteredRowsSpan) {
             filteredRowsSpan.textContent = `${this.loading || this.error ? 0 : this.filteredRowTotal}`;
+        }
+
+        const maxResultsSpan = this.getElement(Elements.MaxResults);
+        if (maxResultsSpan) {
+            maxResultsSpan.classList.toggle('is-hidden', !this.maxResults || this.rows.length <= this.maxResults);
         }
     }
 
@@ -561,24 +579,34 @@ class Table extends HTMLElement {
             return;
         }
 
-        const data = JSON.parse(this.fetchSetting(TableSetting.FormData));
-        Object.entries(data).forEach(([key, value]) => {
-            const input = formElement.elements.namedItem(key);
-            if (input) {
-                if (Array.isArray(value)) {
-                    // @todo are there other types that need special logic?
+        const json = this.fetchSetting(TableSetting.FormData);
+        if (!json) {
+            return;
+        }
 
-                    // @ts-ignore input will be a multi-select
-                    input.options.forEach((opt) => {
-                        // eslint-disable-next-line no-param-reassign
-                        opt.selected = value.includes(opt.value);
-                    });
-                } else {
-                    // @ts-ignore will be an input with a value property
-                    input.value = value;
-                }
+        try {
+            const data = JSON.parse(json);
+            if (!data) {
+                return;
             }
-        });
+            Object.entries(data).forEach(([key, value]) => {
+                const input = formElement.elements.namedItem(key);
+                if (input) {
+                    if (Array.isArray(value)) {
+                        // @todo are there other types that need special logic?
+
+                        // @ts-ignore input will be a multi-select
+                        input.options.forEach((opt) => {
+                            // eslint-disable-next-line no-param-reassign
+                            opt.selected = value.includes(opt.value);
+                        });
+                    } else {
+                        // @ts-ignore will be an input with a value property
+                        input.value = value;
+                    }
+                }
+            });
+        } catch { /* empty */ }
     }
 
     /**
@@ -669,8 +697,12 @@ class Table extends HTMLElement {
      * Create a new array of results, filter by the search query, and sort.
      */
     filterData() {
-        const filteredData = this.search ? (this.rows?.filter(this.filterArray.bind(this.search.toLowerCase())) ?? [])
+        let filteredData = this.search ? (this.rows?.filter(this.filterArray.bind(this.search.toLowerCase())) ?? [])
             : [...(this.rows ?? [])];
+
+        if (this.maxResults) {
+            filteredData = filteredData.slice(0, this.maxResults);
+        }
 
         // sort the new array
         filteredData.sort(this.sortColumns?.length ? this.compare.bind(this.sortColumns) : Table.defaultCompare);
@@ -678,6 +710,10 @@ class Table extends HTMLElement {
         // cache the total number of filtered records and max number of pages for paging
         this.filteredRowTotal = filteredData.length;
         this.maxPage = Math.max(Math.ceil(this.filteredRowTotal / this.perPage) - 1, 0);
+        if (this.currentPage > this.maxPage) {
+            this.currentPage = 0;
+            this.saveSetting(TableSetting.CurrentPage, 0);
+        }
 
         // determine the correct slice of data for the current page, and reassign our array to trigger the update
         this.filteredRows = filteredData.slice(this.perPage * this.currentPage, (this.perPage * this.currentPage) + this.perPage);
@@ -722,7 +758,7 @@ class Table extends HTMLElement {
         }
 
         // @ts-ignore target will be a HTMLSelectElement with a value
-        const newVal = parseInt((event?.target)?.value ?? '10', 10) ?? 10;
+        const newVal = Number((event?.target)?.value ?? '10');
         if (this.perPage !== newVal) {
             this.currentPage = 0;
             this.saveSetting(TableSetting.CurrentPage, 0);

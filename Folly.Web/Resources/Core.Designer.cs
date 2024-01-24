@@ -574,6 +574,15 @@ namespace Folly.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Too much data to display.  Narrow the search filters..
+        /// </summary>
+        public static string TableTooManyResults {
+            get {
+                return ResourceManager.GetString("TableTooManyResults", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Try Again.
         /// </summary>
         public static string TryAgain {

@@ -303,4 +303,7 @@
   <data name="Descending" xml:space="preserve">
     <value>Descendente</value>
   </data>
+  <data name="TableTooManyResults" xml:space="preserve">
+    <value>Demasiados datos para mostrar.</value>
+  </data>
 </root>

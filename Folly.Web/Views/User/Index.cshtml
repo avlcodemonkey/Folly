@@ -10,7 +10,7 @@
 
     <partial name="_Alerts" />
 
-    <data-table key="users" src="@Url.Action("List", "User")">
+    <data-table key="users" src-url="@Url.Action("List", "User")">
         <data-head>
             <th width="@Html.Width(ColumnWidth.DoubleIcon)">
                 <a authorize-roles="user.create" href="@Url.Action("Create", "User")" class="button primary">

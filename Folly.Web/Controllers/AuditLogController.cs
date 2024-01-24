@@ -29,10 +29,6 @@ public class AuditLogController(IAuditLogService auditLogService, IPermissionSer
     [HttpGet]
     public IActionResult Index(AuditLogSearch model) => View("Index", model);
 
-    [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
-    public async Task<IActionResult> List()
-        => Ok((await _AuditLogService.GetAllLogsAsync()).Select(x => new { x.Id, x.BatchId, x.UniversalDate, x.UserFullName, x.StateDesc, x.Entity }));
-
     [HttpPost, ParentAction(nameof(Index)), AjaxRequestOnly]
     public async Task<IActionResult> Search(AuditLogSearch search)
         => Ok((await _AuditLogService.SearchLogsAsync(search)).Select(x => new { x.Id, x.BatchId, x.UniversalDate, x.UserFullName, x.StateDesc, x.Entity }));

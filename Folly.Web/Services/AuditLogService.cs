@@ -8,8 +8,7 @@ namespace Folly.Services;
 public sealed class AuditLogService(FollyDbContext dbContext) : IAuditLogService {
     private readonly FollyDbContext _DbContext = dbContext;
 
-    public async Task<IEnumerable<DTO.AuditLog>> GetAllLogsAsync()
-        => await _DbContext.AuditLog.AsNoTracking().SelectAsDTO().ToListAsync();
+    public static int MaxResults { get; } = 1000;
 
     public async Task<IEnumerable<DTO.AuditLog>> SearchLogsAsync(DTO.AuditLogSearch search) {
         var query = _DbContext.AuditLog.AsNoTracking();
@@ -41,6 +40,8 @@ public sealed class AuditLogService(FollyDbContext dbContext) : IAuditLogService
         if (search.UserId.HasValue) {
             query = query.Where(x => x.UserId == search.UserId);
         }
+
+        query = query.Take(MaxResults + 1);
 
         return await query.SelectAsDTO().ToListAsync();
     }

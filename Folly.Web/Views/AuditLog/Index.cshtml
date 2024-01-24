@@ -1,8 +1,10 @@
 @using Folly.Constants
 @using Folly.Extensions
 @using Folly.Resources
+@using Folly.Services
 @using Folly.Utils
 @model AuditLogSearch
+@inject IViewService ViewService
 
 <content>
     <breadcrumb>
@@ -28,21 +30,19 @@
                         <input-group for="Entity" />
                     </div>
                     <div class="col">
-                        <input-group for="State" />
+                        <select-group for="State" options="@ViewService.GetEntityStatesSelectList()" />
                     </div>
                 </div>
                 <div class="row">
                     <div class="col">
-                        <input-group for="UserId" />
+                        <select-group for="UserId" options="@(await ViewService.GetUserSelectListAsync())" />
                     </div>
                     <div class="col">
                         <input-group for="BatchId" />
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col">
-                        <input-group for="PrimaryKey" />
-                    </div>
+                    <div class="col"></div>
                     <div class="col is-bottom-right">
                         <input class="button primary" type="submit" value="@Core.Search">
                     </div>
@@ -51,7 +51,7 @@
         </details>
     </div>
 
-    <data-table key="auditLogs" src-form="auditLogSearch">
+    <data-table key="auditLogs" src-form="auditLogSearch" max-results="AuditLogService.MaxResults">
         <data-head>
             <th width="@Html.Width(ColumnWidth.SingleIcon)"></th>
             <th data-property="universalDate">@AuditLogs.Date</th>

@@ -9,4 +9,8 @@ public interface IViewService {
     Task<Dictionary<string, List<Permission>>> GetControllerPermissionsAsync();
 
     Task<IEnumerable<SelectListItem>> GetLanguageSelectListAsync();
+
+    Task<IEnumerable<SelectListItem>> GetUserSelectListAsync();
+
+    IEnumerable<SelectListItem> GetEntityStatesSelectList();
 }

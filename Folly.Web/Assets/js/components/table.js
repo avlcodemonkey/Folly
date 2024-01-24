@@ -183,10 +183,10 @@ class Table extends HTMLElement {
         }
 
         // check sessionStorage for saved settings
-        this.perPage = Number(this.fetchSetting(TableSetting.PerPage) ?? '10');
-        this.currentPage = Number(this.fetchSetting(TableSetting.CurrentPage) ?? '0');
-        this.search = this.fetchSetting(TableSetting.Search) ?? '';
-        this.sortColumns = JSON.parse(this.fetchSetting(TableSetting.Sort) ?? '[]');
+        this.perPage = Number(this.loadSetting(TableSetting.PerPage) ?? '10');
+        this.currentPage = Number(this.loadSetting(TableSetting.CurrentPage) ?? '0');
+        this.search = this.loadSetting(TableSetting.Search) ?? '';
+        this.sortColumns = JSON.parse(this.loadSetting(TableSetting.Sort) ?? '[]');
 
         this.setupHeader();
         this.setupFooter();
@@ -292,7 +292,7 @@ class Table extends HTMLElement {
             // @ts-ignore HTMLFormElement is correct type but js can't cast
             const formElement = document.getElementById(this.srcForm);
             if (formElement) {
-                this.fetchFormData();
+                this.loadFormData();
 
                 formElement.addEventListener('submit', (/** @type {SubmitEvent} */ e) => {
                     // make sure the form doesn't actually submit
@@ -555,13 +555,13 @@ class Table extends HTMLElement {
      * @param {string} name Key to store the value as.
      * @returns {string} Value from session storage if found, else null.
      */
-    fetchSetting(name) {
+    loadSetting(name) {
         return sessionStorage.getItem(`${this.key}_${name}`);
     }
 
     /**
      * Saves a value to session storage.
-     * @param {string} name Key to fetch the value from.
+     * @param {string} name Key to save the value to.
      * @param {string|number} value Value to save to storage.
      */
     saveSetting(name, value) {
@@ -569,9 +569,9 @@ class Table extends HTMLElement {
     }
 
     /**
-     * Fetches form data from storage and populates the form.
+     * Loads form data from storage and populates the form.
      */
-    fetchFormData() {
+    loadFormData() {
         /** @type {HTMLFormElement} */
         // @ts-ignore HTMLFormElement is correct type but js can't cast
         const formElement = document.getElementById(this.srcForm);
@@ -579,7 +579,7 @@ class Table extends HTMLElement {
             return;
         }
 
-        const json = this.fetchSetting(TableSetting.FormData);
+        const json = this.loadSetting(TableSetting.FormData);
         if (!json) {
             return;
         }

@@ -35,7 +35,7 @@
                 </div>
                 <div class="row">
                     <div class="col">
-                        <select-group for="UserId" options="@(await ViewService.GetUserSelectListAsync())" />
+                        <autocomplete-group for="UserId" src-url="@Url.Action("UserList", "AuditLog")" />
                     </div>
                     <div class="col">
                         <input-group for="BatchId" />

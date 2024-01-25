@@ -21,6 +21,7 @@
         "css:fix": "stylelint Assets/css/*.css --fix"
     },
     "dependencies": {
+        "autocompleter": "^9.1.2",
         "fecha": "^4.2.3",
         "htmx.org": "^1.9.8",
         "ky": "^1.1.3",

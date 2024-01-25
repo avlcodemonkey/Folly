@@ -4,9 +4,6 @@ import { prettyPrintJson } from 'pretty-print-json';
  * Web component for displaying json in a pretty way.
  */
 class JsonFormatter extends HTMLElement {
-    /** @type {string} */
-    format;
-
     constructor() {
         super();
 

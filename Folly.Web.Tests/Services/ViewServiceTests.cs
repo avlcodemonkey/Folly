@@ -22,7 +22,7 @@ public class ViewServiceTests {
         var permissionService = new Mock<IPermissionService>();
         permissionService.Setup(x => x.GetAllPermissionsAsync().Result).Returns(() => new List<Permission> { _Permission1, _Permission2, _Permission3 });
 
-        _ViewService = new ViewService(languageService.Object, permissionService.Object, new Mock<IRoleService>().Object, new Mock<IUserService>().Object);
+        _ViewService = new ViewService(languageService.Object, permissionService.Object, new Mock<IRoleService>().Object);
     }
 
     [Fact]

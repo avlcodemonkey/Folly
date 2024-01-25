@@ -106,6 +106,15 @@ namespace Folly.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No matching results..
+        /// </summary>
+        public static string AutocompleteNoMatches {
+            get {
+                return ResourceManager.GetString("AutocompleteNoMatches", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Folly.
         /// </summary>
         public static string Brand {
@@ -574,7 +583,7 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Too much data to display.  Narrow the search filters..
+        ///   Looks up a localized string similar to Too much data to display.  Narrow the search..
         /// </summary>
         public static string TableTooManyResults {
             get {

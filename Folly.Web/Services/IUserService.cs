@@ -16,4 +16,6 @@ public interface IUserService {
     Task<bool> SaveUserAsync(User userDTO);
 
     Task<string> UpdateAccountAsync(UpdateAccount account);
+
+    Task<IEnumerable<User>> FindUsersByNameAsync(string name);
 }

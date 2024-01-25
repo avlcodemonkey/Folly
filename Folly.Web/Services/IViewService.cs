@@ -10,7 +10,5 @@ public interface IViewService {
 
     Task<IEnumerable<SelectListItem>> GetLanguageSelectListAsync();
 
-    Task<IEnumerable<SelectListItem>> GetUserSelectListAsync();
-
     IEnumerable<SelectListItem> GetEntityStatesSelectList();
 }

@@ -19,7 +19,8 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
         return await _DbContext.SaveChangesAsync() > 0;
     }
 
-    public async Task<IEnumerable<DTO.User>> GetAllUsersAsync() => await _DbContext.Users.Where(x => x.Status == true).SelectAsDTO().ToListAsync();
+    public async Task<IEnumerable<DTO.User>> GetAllUsersAsync()
+        => await _DbContext.Users.Where(x => x.Status == true).SelectAsDTO().ToListAsync();
 
     public async Task<IEnumerable<DTO.UserClaim>> GetClaimsByUserIdAsync(int id)
         => await _DbContext.UserRoles
@@ -51,22 +52,6 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
         return await _DbContext.SaveChangesAsync() > 0;
     }
 
-    public async Task<string> UpdateAccountAsync(DTO.UpdateAccount account) {
-        var userName = _HttpContextAccessor.HttpContext?.User?.Identity?.Name;
-        if (userName.IsNullOrEmpty()) {
-            return Core.ErrorGeneric;
-        }
-
-        var user = await _DbContext.Users.FirstAsync(x => x.UserName == userName && x.Status == true);
-        user.FirstName = account.FirstName;
-        user.LastName = account.LastName;
-        user.LanguageId = account.LanguageId;
-        user.Email = account.Email;
-        _DbContext.Users.Update(user);
-
-        return (await _DbContext.SaveChangesAsync() > 0) ? "" : Core.ErrorGeneric;
-    }
-
     private async Task MapToEntity(DTO.User userDTO, User user) {
         user.Email = userDTO.Email;
         user.FirstName = userDTO.FirstName;
@@ -86,5 +71,28 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
             }
             return new UserRole { RoleId = x, UserId = userDTO.Id };
         }).ToList() ?? [];
+    }
+
+    public async Task<string> UpdateAccountAsync(DTO.UpdateAccount account) {
+        var userName = _HttpContextAccessor.HttpContext?.User?.Identity?.Name;
+        if (userName.IsNullOrEmpty()) {
+            return Core.ErrorGeneric;
+        }
+
+        var user = await _DbContext.Users.FirstAsync(x => x.UserName == userName && x.Status == true);
+        user.FirstName = account.FirstName;
+        user.LastName = account.LastName;
+        user.LanguageId = account.LanguageId;
+        user.Email = account.Email;
+        _DbContext.Users.Update(user);
+
+        return (await _DbContext.SaveChangesAsync() > 0) ? "" : Core.ErrorGeneric;
+    }
+
+    public async Task<IEnumerable<DTO.User>> FindUsersByNameAsync(string name) {
+        var lowerName = (name ?? "").ToLower();
+        return await _DbContext.Users
+            .Where(x => x.Status == true && (x.FirstName.ToLower().Contains(lowerName) || (x.LastName ?? "").ToLower().Contains(lowerName)))
+            .SelectAsNameDTO().ToListAsync();
     }
 }

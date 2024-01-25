@@ -6,11 +6,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Folly.Services;
 
-public sealed class ViewService(ILanguageService languageService, IPermissionService permissionService, IRoleService roleService, IUserService userService) : IViewService {
+public sealed class ViewService(ILanguageService languageService, IPermissionService permissionService, IRoleService roleService) : IViewService {
     private readonly ILanguageService _LanguageService = languageService;
     private readonly IPermissionService _PermissionService = permissionService;
     private readonly IRoleService _RoleService = roleService;
-    private readonly IUserService _UserService = userService;
 
     public async Task<IEnumerable<Role>> GetAllRolesAsync() => await _RoleService.GetAllRolesAsync();
 
@@ -30,12 +29,6 @@ public sealed class ViewService(ILanguageService languageService, IPermissionSer
 
     public async Task<IEnumerable<SelectListItem>> GetLanguageSelectListAsync()
         => (await _LanguageService.GetAllLanguagesAsync()).ToSelectList(x => x.Name, x => x.Id.ToString(CultureInfo.InvariantCulture));
-
-    public async Task<IEnumerable<SelectListItem>> GetUserSelectListAsync()
-        => (await _UserService.GetAllUsersAsync()).OrderBy(x => x.LastName).ThenBy(x => x.FirstName).ToSelectList(
-            x => string.Join(", ", new string[] { x.LastName ?? "", x.FirstName ?? "" }.Where(x => !string.IsNullOrWhiteSpace(x))),
-            x => x.Id.ToString(CultureInfo.InvariantCulture)
-        );
 
     public IEnumerable<SelectListItem> GetEntityStatesSelectList()
         => new List<EntityState> { EntityState.Deleted, EntityState.Added, EntityState.Modified }

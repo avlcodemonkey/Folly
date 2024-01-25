@@ -5,7 +5,7 @@ import { format } from 'fecha';
  */
 class DateFormatter extends HTMLElement {
     /** @type {string} */
-    format;
+    dateFormat;
 
     constructor() {
         super();

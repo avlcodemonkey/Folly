@@ -10,10 +10,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace Folly.Controllers;
 
 [Authorize(Policy = PermissionRequirementHandler.PolicyName)]
-public class AuditLogController(IAuditLogService auditLogService, IPermissionService permissionService, ILogger<AuditLogController> logger)
+public class AuditLogController(IAuditLogService auditLogService, IPermissionService permissionService, IUserService userService, ILogger<AuditLogController> logger)
     : BaseController(logger) {
 
     private readonly IPermissionService _PermissionService = permissionService;
+    private readonly IUserService _UserService = userService;
     private readonly IAuditLogService _AuditLogService = auditLogService;
 
     [HttpGet]
@@ -32,4 +33,11 @@ public class AuditLogController(IAuditLogService auditLogService, IPermissionSer
     [HttpPost, ParentAction(nameof(Index)), AjaxRequestOnly]
     public async Task<IActionResult> Search(AuditLogSearch search)
         => Ok((await _AuditLogService.SearchLogsAsync(search)).Select(x => new { x.Id, x.BatchId, x.UniversalDate, x.UserFullName, x.StateDesc, x.Entity }));
+
+    [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
+    public async Task<IActionResult> UserList(string query)
+        => Ok((await _UserService.FindUsersByNameAsync(query)).OrderBy(x => x.LastName).ThenBy(x => x.FirstName).Select(x => new {
+            Label = string.Join(", ", new string[] { x.LastName ?? "", x.FirstName ?? "" }.Where(x => !string.IsNullOrWhiteSpace(x))),
+            Value = x.Id
+        }));
 }

@@ -304,6 +304,9 @@
     <value>Descending</value>
   </data>
   <data name="TableTooManyResults" xml:space="preserve">
-    <value>Too much data to display.  Narrow the search filters.</value>
+    <value>Too much data to display.  Narrow the search.</value>
+  </data>
+  <data name="AutocompleteNoMatches" xml:space="preserve">
+    <value>No matching results.</value>
   </data>
 </root>

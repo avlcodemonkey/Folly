@@ -28,6 +28,7 @@ public sealed class AutocompleteGroupTagHelper(IHtmlHelper htmlHelper) : GroupBa
         input.MergeAttribute("name", AutoCompleteName, true);
         input.MergeAttribute("type", "text", true);
         input.MergeAttribute("placeholder", Core.StartTyping, true);
+        input.Attributes.Add("autocomplete", "off");
         input.Attributes.Add("data-autocomplete-display", "");
 
         return input;

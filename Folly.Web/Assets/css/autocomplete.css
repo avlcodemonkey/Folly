@@ -20,6 +20,6 @@
 
 .autocomplete > div:hover:not(.group),
 .autocomplete > div.selected {
-    background: #81ca91;
+    background: var(--color-light-grey);
     cursor: pointer;
 }

@@ -1,6 +1,14 @@
-import autocomplete, { PreventSubmit } from 'autocompleter';
+import autocomplete from 'autocompleter';
+// @ts-ignore VS doesn't like this import but it builds fine
 import ky from 'ky';
 import FetchError from './fetchError';
+
+/**
+ * @typedef AutocompleteItem
+ * @type {object}
+ * @property {string} label Label to display for the item.
+ * @property {string} value Value to use when selecting the item.
+ */
 
 /**
  * Web component for an input autocomplete.
@@ -9,18 +17,29 @@ class Autocomplete extends HTMLElement {
     constructor() {
         super();
 
-        const { srcUrl, emptyMessage } = this.dataset;
+        /**
+         * Input shown to the user to interact with.
+         * @type {HTMLInputElement}
+         */
         const displayInput = this.querySelector('[data-autocomplete-display]');
+
+        /**
+         * Hidden input that stores the selected value from the automcomplete
+         * @type {HTMLInputElement}
+         */
         const valueInput = this.querySelector('[data-autocomplete-value]');
+
+        const { srcUrl, emptyMessage } = this.dataset;
         if (!(srcUrl && displayInput && valueInput)) {
             return;
         }
 
         autocomplete({
             minLength: 1,
-            preventSubmit: 1, // PreventSubmit.Always
+            preventSubmit: 2, // PreventSubmit.OnSelect
             emptyMsg: emptyMessage,
             input: displayInput,
+            debounceWaitMs: 250,
             async fetch(query, update) {
                 let suggestions = [];
                 try {
@@ -40,17 +59,19 @@ class Autocomplete extends HTMLElement {
                 }
                 update(suggestions);
             },
-            onSelect(item) {
+            onSelect(/** @type {AutocompleteItem} */ item) {
                 valueInput.value = item.value;
                 displayInput.value = item.label;
+                displayInput.dataset.label = item.label;
             },
         });
 
         // clear out the value in the hidden input when changing the search value. it'll get re-set in onSelect
-        // @todo not working as expected - it clears out the value when you tab to the next field
-        displayInput.addEventListener('keyup', (e) => {
-            console.log(e);
-            valueInput.value = '';
+        displayInput.addEventListener('change', () => {
+            if (displayInput.value !== displayInput.dataset.label) {
+                displayInput.value = '';
+                valueInput.value = '';
+            }
         });
     }
 }

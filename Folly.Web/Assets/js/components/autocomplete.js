@@ -11,9 +11,20 @@ import FetchError from './fetchError';
  */
 
 /**
+ * @typedef {import("autocompleter").AutocompleteResult} AutocompleteResult
+ */
+
+/**
+ * @typedef {import("autocompleter").PreventSubmit} PreventSubmit
+ */
+
+/**
  * Web component for an input autocomplete.
  */
 class Autocomplete extends HTMLElement {
+    /** @type {AutocompleteResult} */
+    autocompleter;
+
     constructor() {
         super();
 
@@ -34,7 +45,7 @@ class Autocomplete extends HTMLElement {
             return;
         }
 
-        autocomplete({
+        this.autocompleter = autocomplete({
             minLength: 1,
             preventSubmit: 2, // PreventSubmit.OnSelect
             emptyMsg: emptyMessage,
@@ -73,6 +84,11 @@ class Autocomplete extends HTMLElement {
                 valueInput.value = '';
             }
         });
+    }
+
+    disconnectedCallback() {
+        // this could cause trouble if we later start detaching/reattaching autocompletes from the DOM
+        this.autocompleter.destroy();
     }
 }
 

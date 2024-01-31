@@ -1,5 +1,4 @@
 using System.Globalization;
-using Folly.Extensions;
 using Folly.Resources;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,9 +7,9 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 namespace Folly.TagHelpers;
 
 /// <summary>
-/// @todo this is not actually working yet.  
+/// Creates an input group for an autocomplete with label.
 /// </summary>
-/// <param name="htmlHelper"></param>
+/// <param name="htmlHelper">HtmlHelper for rendering.</param>
 public sealed class AutocompleteGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHelper(htmlHelper) {
     private string AutoCompleteName => $"{FieldName}_AutoComplete";
 
@@ -23,31 +22,37 @@ public sealed class AutocompleteGroupTagHelper(IHtmlHelper htmlHelper) : GroupBa
         // add any attributes passed in first. we'll overwrite ones we need as we build
         attributes.ToList().ForEach(x => input.MergeAttribute(x.Name, x.Value.ToString()));
 
-        input.AddCssClass("form-input");
         input.MergeAttribute("id", AutoCompleteName, true);
         input.MergeAttribute("name", AutoCompleteName, true);
         input.MergeAttribute("type", "text", true);
         input.MergeAttribute("placeholder", Core.StartTyping, true);
-        input.Attributes.Add("autocomplete", "off");
-        input.Attributes.Add("data-autocomplete-display", "");
+        input.MergeAttribute("autocomplete", "off", true);
+        input.MergeAttribute("data-autocomplete-display", "", true);
 
         return input;
     }
 
     private TagBuilder BuildHidden() {
         var input = new TagBuilder("input");
-        input.MergeAttribute("id", FieldName, true);
-        input.MergeAttribute("name", FieldName, true);
-        input.MergeAttribute("type", "hidden", true);
-        input.MergeAttribute("value", For?.ModelExplorer.Model?.ToString(), true);
-        input.SetAttributeIf("required", "true", Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true));
-        input.Attributes.Add("data-autocomplete-value", "");
+        input.MergeAttribute("id", FieldName);
+        input.MergeAttribute("name", FieldName);
+        input.MergeAttribute("type", "hidden");
+        input.MergeAttribute("value", For?.ModelExplorer.Model?.ToString());
+        input.MergeAttribute("data-autocomplete-value", "");
+
+        if (Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true)) {
+            input.MergeAttribute("required", "true");
+        }
 
         if (For != null) {
             var maxLength = GetMaxLength(For.ModelExplorer.Metadata.ValidatorMetadata);
-            input.SetAttributeIf("maxlength", maxLength.ToString(CultureInfo.InvariantCulture), maxLength > 0);
+            if (maxLength > 0) {
+                input.MergeAttribute("maxlength", maxLength.ToString(CultureInfo.InvariantCulture));
+            }
             var minLength = GetMinLength(For.ModelExplorer.Metadata.ValidatorMetadata);
-            input.SetAttributeIf("minLength", minLength.ToString(CultureInfo.InvariantCulture), minLength > 0);
+            if (minLength > 0) {
+                input.MergeAttribute("minLength", minLength.ToString(CultureInfo.InvariantCulture));
+            }
         }
 
         return input;
@@ -65,8 +70,10 @@ public sealed class AutocompleteGroupTagHelper(IHtmlHelper htmlHelper) : GroupBa
         inputGroup.InnerHtml.AppendHtml(output.GetChildContentAsync().Result);
 
         var autocomplete = new TagBuilder("nilla-autocomplete");
-        autocomplete.SetAttributeIf("data-src-url", SrcUrl, !string.IsNullOrWhiteSpace(SrcUrl));
-        autocomplete.Attributes.Add("data-empty-message", Core.AutocompleteNoMatches);
+        if (!string.IsNullOrWhiteSpace(SrcUrl)) {
+            autocomplete.MergeAttribute("data-src-url", SrcUrl);
+        }
+        autocomplete.MergeAttribute("data-empty-message", Core.AutocompleteNoMatches);
         autocomplete.InnerHtml.AppendHtml(BuildLabel(AutoCompleteName));
         autocomplete.InnerHtml.AppendHtml(inputGroup);
 

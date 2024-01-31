@@ -1,5 +1,4 @@
 using System.Globalization;
-using Folly.Extensions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -20,16 +19,22 @@ public sealed class TextareaGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTa
         // add any attributes passed in first. we'll overwrite ones we need as we build
         attributes.ToList().ForEach(x => textarea.MergeAttribute(x.Name, x.Value.ToString()));
 
-        textarea.AddCssClass("form-input");
         textarea.MergeAttribute("id", FieldName, true);
         textarea.MergeAttribute("name", FieldName, true);
-        textarea.SetAttributeIf("required", "true", Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true));
+
+        if (Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true)) {
+            textarea.MergeAttribute("required", "true", true);
+        }
 
         if (For != null) {
             var maxLength = GetMaxLength(For.ModelExplorer.Metadata.ValidatorMetadata);
-            textarea.SetAttributeIf("maxlength", maxLength.ToString(CultureInfo.InvariantCulture), maxLength > 0);
+            if (maxLength > 0) {
+                textarea.MergeAttribute("maxlength", maxLength.ToString(CultureInfo.InvariantCulture), true);
+            }
             var minLength = GetMinLength(For.ModelExplorer.Metadata.ValidatorMetadata);
-            textarea.SetAttributeIf("minLength", minLength.ToString(CultureInfo.InvariantCulture), minLength > 0);
+            if (minLength > 0) {
+                textarea.MergeAttribute("minLength", minLength.ToString(CultureInfo.InvariantCulture), true);
+            }
         }
 
         textarea.InnerHtml.Append(For?.ModelExplorer.Model?.ToString() ?? "");

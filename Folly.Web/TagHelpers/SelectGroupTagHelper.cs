@@ -1,4 +1,3 @@
-using Folly.Extensions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -19,18 +18,21 @@ public sealed class SelectGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagH
         // add any attributes passed in first. we'll overwrite ones we need as we build
         attributes.ToList().ForEach(x => input.MergeAttribute(x.Name, x.Value.ToString()));
 
-        input.AddCssClass("form-input");
-        input.AddCssClass("form-select");
         input.MergeAttribute("id", FieldName, true);
         input.MergeAttribute("name", FieldName, true);
-        input.SetAttributeIf("required", "true", Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true));
+
+        if (Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true)) {
+            input.MergeAttribute("required", "true", true);
+        }
 
         var selectedValue = For?.ModelExplorer.Model?.ToString();
         input.InnerHtml.AppendHtml(new TagBuilder("option"));
         Options.ToList().ForEach(x => {
             var opt = new TagBuilder("option");
             opt.MergeAttribute("value", x.Value.Trim());
-            opt.SetAttributeIf("selected", "true", selectedValue == x.Value);
+            if (selectedValue == x.Value) {
+                opt.MergeAttribute("selected", "true");
+            }
             opt.InnerHtml.Append(x.Text.Trim());
             input.InnerHtml.AppendHtml(opt);
         });

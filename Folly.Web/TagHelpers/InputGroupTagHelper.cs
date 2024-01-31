@@ -1,5 +1,4 @@
 using System.Globalization;
-using Folly.Extensions;
 using Microsoft.AspNetCore.Html;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -22,7 +21,6 @@ public sealed class InputGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHe
         // add any attributes passed in first. we'll overwrite ones we need as we build
         attributes.ToList().ForEach(x => input.MergeAttribute(x.Name, x.Value.ToString()));
 
-        input.AddCssClass("form-input");
         input.MergeAttribute("id", FieldName, true);
         input.MergeAttribute("name", FieldName, true);
 
@@ -46,15 +44,21 @@ public sealed class InputGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTagHe
                 value = dateValue.ToString("yyyy-MM-dd");
             }
         }
-        input.SetAttributeIf("value", type == "password" ? "" : value?.ToString(), true);
+        input.MergeAttribute("value", type == "password" ? "" : value?.ToString(), true);
 
-        input.SetAttributeIf("required", "true", Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true));
+        if (Required == true || (!Required.HasValue && For?.Metadata.IsRequired == true)) {
+            input.MergeAttribute("required", "true", true);
+        }
 
         if (For != null) {
             var maxLength = GetMaxLength(For.ModelExplorer.Metadata.ValidatorMetadata);
-            input.SetAttributeIf("maxlength", maxLength.ToString(CultureInfo.InvariantCulture), maxLength > 0);
+            if (maxLength > 0) {
+                input.MergeAttribute("maxlength", maxLength.ToString(CultureInfo.InvariantCulture), true);
+            }
             var minLength = GetMinLength(For.ModelExplorer.Metadata.ValidatorMetadata);
-            input.SetAttributeIf("minLength", minLength.ToString(CultureInfo.InvariantCulture), minLength > 0);
+            if (minLength > 0) {
+                input.MergeAttribute("minLength", minLength.ToString(CultureInfo.InvariantCulture), true);
+            }
         }
 
         return input;

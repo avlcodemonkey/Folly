@@ -1,4 +1,3 @@
-using Folly.Extensions;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 
@@ -23,13 +22,17 @@ public sealed class FormCheckboxTagHelper(IHtmlHelper htmlHelper) : BaseTagHelpe
         var id = string.IsNullOrWhiteSpace(Id) ? $"{Name}_{Value}" : Id;
         var label = new TagBuilder("label");
         label.MergeAttribute("for", id);
+        label.AddCssClass("cursor-pointer");
 
         var input = new TagBuilder("input");
-        input.MergeAttribute("id", id, true);
+        input.MergeAttribute("id", id);
         input.MergeAttribute("name", Name);
         input.MergeAttribute("type", "checkbox");
         input.MergeAttribute("value", Value);
-        input.SetAttributeIf("checked", "true", Checked);
+        if (Checked) {
+            input.MergeAttribute("checked", "true");
+        }
+        input.AddCssClass("cursor-pointer");
 
         label.InnerHtml.AppendHtml(input);
         label.InnerHtml.Append(Label);

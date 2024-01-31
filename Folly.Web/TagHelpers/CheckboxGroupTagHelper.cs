@@ -16,19 +16,20 @@ public sealed class CheckboxGroupTagHelper(IHtmlHelper htmlHelper) : GroupBaseTa
         }
 
         var label = new TagBuilder("label");
-        label.AddCssClass("form-checkbox");
         label.MergeAttribute("for", FieldName);
 
         var input = new TagBuilder("input");
+
         // add any attributes passed in first. we'll overwrite ones we need as we build
         attributes.ToList().ForEach(x => input.MergeAttribute(x.Name, x.Value.ToString()));
 
-        input.AddCssClass("form-input");
         input.MergeAttribute("id", FieldName, true);
         input.MergeAttribute("name", FieldName, true);
         input.MergeAttribute("type", "checkbox", true);
         input.MergeAttribute("value", "true", true);
-        input.SetAttributeIf("checked", "true", For?.ModelExplorer.Model?.ToString().ToBool() == true);
+        if (For?.ModelExplorer.Model?.ToString().ToBool() == true) {
+            input.MergeAttribute("checked", "true", true);
+        }
 
         label.InnerHtml.AppendHtml(input);
         if (!string.IsNullOrWhiteSpace(FieldTitle)) {

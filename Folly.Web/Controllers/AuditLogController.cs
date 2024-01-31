@@ -37,7 +37,6 @@ public class AuditLogController(IAuditLogService auditLogService, IPermissionSer
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
     public async Task<IActionResult> UserList(string query)
         => Ok((await _UserService.FindUsersByNameAsync(query)).OrderBy(x => x.LastName).ThenBy(x => x.FirstName).Select(x => new {
-            Label = string.Join(", ", new string[] { x.LastName ?? "", x.FirstName ?? "" }.Where(x => !string.IsNullOrWhiteSpace(x))),
-            Value = x.Id
+            Label = NameHelper.DisplayName(x.FirstName, x.LastName), Value = x.Id
         }));
 }

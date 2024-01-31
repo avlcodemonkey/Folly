@@ -1,3 +1,4 @@
+using Folly.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace Folly.Models;
@@ -38,8 +39,7 @@ public sealed record AuditLog : BaseModel {
     /// <summary>
     /// User name formatted as "last, first".
     /// </summary>
-    public string? UserFullName
-        => string.Join(", ", new string[] { UserLastName ?? "", UserFirstName ?? "" }.Where(x => !string.IsNullOrWhiteSpace(x)));
+    public string? UserFullName => NameHelper.DisplayName(UserFirstName, UserLastName);
 
     public string? OldValues { get; set; }
 

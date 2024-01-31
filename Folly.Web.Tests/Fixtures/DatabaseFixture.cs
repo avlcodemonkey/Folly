@@ -46,6 +46,12 @@ public class DatabaseFixture : IDisposable {
                     dbContext.Permissions.Add(TestPermission);
                     dbContext.Roles.Add(TestRole);
                     dbContext.Users.Add(TestUser);
+
+                    TestAuditLog.User = User;
+                    TestAuditLog2.User = TestUser;
+                    dbContext.AuditLog.Add(TestAuditLog);
+                    dbContext.AuditLog.Add(TestAuditLog2);
+
                     dbContext.SaveChanges();
                 }
 
@@ -71,6 +77,16 @@ public class DatabaseFixture : IDisposable {
     public User TestUser { get; } = new() {
         Id = -2, UserName = "Test", FirstName = "First", LastName = "Last", Email = "email@domain.com", Status = true,
         LanguageId = 1, UserRoles = new List<UserRole> { new() { Id = -2, UserId = -2, RoleId = -1 } }
+    };
+
+    public AuditLog TestAuditLog { get; } = new() {
+        Id = 1, BatchId = Guid.NewGuid(), Date = DateTime.Now, Entity = "test1", State = EntityState.Modified,
+        PrimaryKey = 10, UserId = 100, OldValues = "old", NewValues = "new"
+    };
+
+    public AuditLog TestAuditLog2 { get; } = new() {
+        Id = 2, BatchId = Guid.NewGuid(), Date = DateTime.Now, Entity = "test2", State = EntityState.Deleted,
+        PrimaryKey = 20, UserId = 200, OldValues = "old", NewValues = "new"
     };
 
     public void Dispose() {

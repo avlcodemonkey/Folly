@@ -13,7 +13,6 @@ builder.Services
     .Configure<IISServerOptions>(options => options.AllowSynchronousIO = true)
     .ConfigureDb()
     .ConfigureHealthChecks()
-    .AddScoped<IViewService, ViewService>()
     .AddSession()
     .ConfigureAuthentication(builder.Configuration)
     .AddAntiforgery()

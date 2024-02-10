@@ -1,9 +1,11 @@
 @using Folly.Controllers
+@using Folly.Extensions
 @using Folly.Models
 @using Folly.Resources
 @using Folly.Services
+@using System.Globalization
 @model UpdateAccount
-@inject IViewService ViewService
+@inject ILanguageService _LanguageService
 
 <content>
     <breadcrumb>
@@ -16,7 +18,7 @@
         <input-group for="FirstName" autofocus="true" />
         <input-group for="LastName" />
         <input-group for="Email" />
-        <select-group for="LanguageId" options="@(await ViewService.GetLanguageSelectListAsync())" />
+        <select-group for="LanguageId" options="@(await _LanguageService.GetAllLanguagesAsync()).ToSelectList(x => x.Name, x => x.Id.ToString(CultureInfo.InvariantCulture))" />
 
         <input class="button primary" type="submit" value="@Core.Save">
     </form-content>

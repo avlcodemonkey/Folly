@@ -8,4 +8,6 @@ public interface IPermissionService {
     Task<IEnumerable<Permission>> GetAllPermissionsAsync();
 
     Task<bool> SavePermissionAsync(Permission permissionDTO);
+
+    Task<Dictionary<string, List<Permission>>> GetControllerPermissionsAsync();
 }

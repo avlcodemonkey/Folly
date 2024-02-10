@@ -10,6 +10,10 @@ public class PermissionServiceTests(DatabaseFixture fixture) {
     private readonly DatabaseFixture _Fixture = fixture;
     private readonly PermissionService _PermissionService = new(fixture.CreateContext());
 
+    private readonly Permission _Permission1 = new() { Id = 1, ControllerName = "controller1", ActionName = "action1" };
+    private readonly Permission _Permission2 = new() { Id = 2, ControllerName = "controller2", ActionName = "action2" };
+    private readonly Permission _Permission3 = new() { Id = 3, ControllerName = "controller2", ActionName = "action3" };
+
     [Fact]
     public async Task GetAllPermissionsAsync_ReturnsManyDTOs() {
         // arrange
@@ -118,5 +122,25 @@ public class PermissionServiceTests(DatabaseFixture fixture) {
 
         // assert
         await Assert.ThrowsAsync<InvalidOperationException>(async () => await _PermissionService.DeletePermissionAsync(permissionIdToDelete));
+    }
+
+    [Fact]
+    public async Task GetControllerPermissionsAsync_ReturnsDictionaryWithPermissions() {
+        // arrange
+        using var context = _Fixture.CreateContext();
+        var dashboardPermission = context.Permissions.Find(1)!;
+        var totalControllers = context.Permissions.Select(x => x.ControllerName).Distinct().Count();
+
+        // act
+        var permissions = await _PermissionService.GetControllerPermissionsAsync();
+
+        // assert
+        Assert.NotEmpty(permissions);
+        Assert.IsAssignableFrom<Dictionary<string, List<DTO.Permission>>>(permissions);
+        Assert.Equal(totalControllers, permissions.Count);
+        Assert.Contains(dashboardPermission.ControllerName, permissions.Keys);
+        var dashboardPermissionGroup = permissions[dashboardPermission.ControllerName];
+        var resultDashboardPermission = Assert.Single(dashboardPermissionGroup);
+        Assert.Equal(dashboardPermission.ActionName, resultDashboardPermission.ActionName);
     }
 }

@@ -36,4 +36,18 @@ public sealed class PermissionService(FollyDbContext dbContext) : IPermissionSer
         permission.ControllerName = permissionDTO.ControllerName;
         permission.ActionName = permissionDTO.ActionName;
     }
+
+    public async Task<Dictionary<string, List<DTO.Permission>>> GetControllerPermissionsAsync() {
+        var controllerPermissions = new Dictionary<string, List<DTO.Permission>>();
+        var permissions = await GetAllPermissionsAsync();
+
+        foreach (var permission in permissions) {
+            if (!controllerPermissions.TryGetValue(permission.ControllerName, out _)) {
+                controllerPermissions.Add(permission.ControllerName, []);
+            }
+            controllerPermissions[permission.ControllerName].Add(permission);
+        }
+
+        return controllerPermissions;
+    }
 }

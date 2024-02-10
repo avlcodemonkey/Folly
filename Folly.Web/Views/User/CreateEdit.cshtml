@@ -1,8 +1,11 @@
+@using Folly.Extensions
 @using Folly.Resources
 @using Folly.Models
 @using Folly.Services
+@using System.Globalization
 @model User
-@inject IViewService ViewService
+@inject IRoleService _RoleService
+@inject ILanguageService _LanguageService
 
 <content>
     <breadcrumb>
@@ -25,12 +28,12 @@
         <input-group for="LastName" />
         <input-group for="UserName" />
         <input-group for="Email" />
-        <select-group for="LanguageId" options="@(await ViewService.GetLanguageSelectListAsync())" />
+        <select-group for="LanguageId" options="@(await _LanguageService.GetAllLanguagesAsync()).ToSelectList(x => x.Name, x => x.Id.ToString(CultureInfo.InvariantCulture))" />
 
         <div class="mb-1">
             <label asp-for="RoleIds">@Users.Roles</label>
             @{
-                var roles = await ViewService.GetAllRolesAsync();
+                var roles = await _RoleService.GetAllRolesAsync();
                 foreach (var role in roles)
                 {
                     <form-checkbox name="RoleIds" value="@role.Id" label="@role.Name" checked="@Model.RoleIds?.Contains(role.Id) == true" />

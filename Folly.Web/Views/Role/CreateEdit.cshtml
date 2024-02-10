@@ -2,7 +2,7 @@
 @using Folly.Resources;
 @using Folly.Services
 @model Role
-@inject IViewService ViewService
+@inject IPermissionService _PermissionService
 
 <content>
     <breadcrumb>
@@ -23,7 +23,7 @@
         <div class="mb-1">
             <label>@Roles.Permissions</label>
             @{
-                var permissions = await ViewService.GetControllerPermissionsAsync();
+                var permissions = await _PermissionService.GetControllerPermissionsAsync();
                 foreach (var controller in permissions.Keys)
                 {
                     <details open>

@@ -1,4 +1,3 @@
-using Folly.Models;
 using Folly.Resources;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
@@ -12,11 +11,5 @@ public class ErrorController(ILogger<ErrorController> logger) : BaseController(l
         }
 
         return View("Error");
-    }
-
-    [HttpPost]
-    public IActionResult LogJavascriptError(JavascriptError error) {
-        Logger.LogError(new JavaScriptException(error.Message), Core.JavascriptException);
-        return Ok();
     }
 }

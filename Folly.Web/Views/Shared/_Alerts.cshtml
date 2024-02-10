@@ -19,11 +19,11 @@
     }
 }
 
-@if (!string.IsNullOrWhiteSpace(GetData(BaseController.MessageProperty)))
+@if (!string.IsNullOrWhiteSpace(GetData(ViewProperties.Message)))
 {
-    <partial name="_Alert" model="new Alert { Content = GetData(BaseController.MessageProperty) }" />
+    <partial name="_Alert" model="new Alert { Content = GetData(ViewProperties.Message) }" />
 }
-@if (!string.IsNullOrWhiteSpace(GetData(BaseController.ErrorProperty)))
+@if (!string.IsNullOrWhiteSpace(GetData(ViewProperties.Error)))
 {
-    <partial name="_Alert" model="new Alert { Content = GetData(BaseController.ErrorProperty), AlertType = AlertType.Error }" />
+    <partial name="_Alert" model="new Alert { Content = GetData(ViewProperties.Error), AlertType = AlertType.Error }" />
 }

@@ -1,5 +1,4 @@
 using Folly.Constants;
-using Folly.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -17,7 +16,7 @@ public sealed class BreadcrumbItemTagHelper(IHtmlHelper htmlHelper) : BaseTagHel
         Contextualize();
 
         if (Active) {
-            HtmlHelper!.ViewData[BaseController.TitleProperty] = Label;
+            HtmlHelper!.ViewData[ViewProperties.Title] = Label;
             output.Content.Append(Label);
 
             if (!string.IsNullOrWhiteSpace(Label) && HtmlHelper.ViewContext.HttpContext.Request.Headers.Any(x => x.Key == HtmxHeaders.Request)) {

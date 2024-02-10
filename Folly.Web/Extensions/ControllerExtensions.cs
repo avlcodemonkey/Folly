@@ -1,7 +1,5 @@
 using System.Data;
-using System.Text;
-using Folly.Controllers;
-using Folly.Models;
+using Folly.Constants;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -18,8 +16,6 @@ public static class ControllerExtensions {
     /// <param name="request">Current request object.</param>
     /// <returns>True if is an ajax request, else false.</returns>
     public static bool IsAjaxRequest(this HttpRequest request) {
-        ArgumentNullException.ThrowIfNull(request);
-
         if (request.Headers != null) {
             return request.Headers[_RequestedWithHeader] == _XmlHttpRequest;
         }
@@ -35,13 +31,6 @@ public static class ControllerExtensions {
     public static string StripController(this string value) => value[..value.LastIndexOf("Controller")];
 
     /// <summary>
-    /// Convert the ModelStateDictionary into a string of errors a view can display.
-    /// </summary>
-    /// <param name="state">State of a model.</param>
-    /// <returns>Space separated list of errors.</returns>
-    public static string ToErrorString(this ModelStateDictionary state)
-        => string.Join(" <br />", state.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray());
-    /// <summary>
     /// Convert IEnumerable to a list of select list items.
     /// </summary>
     /// <typeparam name="T">Enumerable type.</typeparam>
@@ -53,15 +42,14 @@ public static class ControllerExtensions {
         => enumerable.Select(f => new SelectListItem { Text = text(f), Value = value(f) }).ToList();
 
     /// <summary>
-    /// <summary>
-    /// Adds an error message to the ViewData dictionary.
+    /// Convert the ModelStateDictionary into a string of errors and adds the error message to the ViewData dictionary.
     /// </summary>
     /// <param name="viewData">ViewData to update.</param>
     /// <param name="errorMsg">Error message to add.</param>
     public static void AddError(this ViewDataDictionary viewData, ModelStateDictionary modelState) {
         ArgumentNullException.ThrowIfNull(modelState);
 
-        viewData.AddError(modelState.ToErrorString());
+        viewData.AddError(string.Join(" <br />", modelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray()));
     }
 
     /// <summary>
@@ -72,7 +60,7 @@ public static class ControllerExtensions {
     public static void AddError(this ViewDataDictionary viewData, string error) {
         ArgumentNullException.ThrowIfNull(error);
 
-        viewData[BaseController.ErrorProperty] = error;
+        viewData[ViewProperties.Error] = error;
     }
 
     /// <summary>
@@ -83,6 +71,6 @@ public static class ControllerExtensions {
     public static void AddMessage(this ViewDataDictionary viewData, string message) {
         ArgumentNullException.ThrowIfNull(message);
 
-        viewData[BaseController.MessageProperty] = message;
+        viewData[ViewProperties.Message] = message;
     }
 }

@@ -4,7 +4,7 @@
 @using Folly.Utils;
 
 @{
-    ViewData[BaseController.TitleProperty] = Folly.Resources.Core.Dashboard;
+    ViewData[ViewProperties.Title] = Folly.Resources.Core.Dashboard;
 
     // create a title tag for htmx to swap in if this is an htmx request
     if (ViewContext.HttpContext.Request.Headers.Any(x => x.Key == HtmxHeaders.Request))

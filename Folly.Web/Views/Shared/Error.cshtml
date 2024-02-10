@@ -1,3 +1,4 @@
+@using Folly.Constants
 @using Folly.Controllers;
 @using Folly.Resources;
 @{
@@ -16,7 +17,7 @@
     <div class="container">
         <div class="p-2 m-2">
             <h1><icon name="Storm" class="text-error" /> Error</h1>
-            <p>@(ViewData[BaseController.MessageProperty] ?? @Core.ErrorGeneric)</p>
+            <p>@(ViewData[ViewProperties.Message] ?? @Core.ErrorGeneric)</p>
         </div>
     </div>
 </body>

@@ -90,8 +90,8 @@ public class AuditLogServiceExtensionsTests {
             x => Assert.Equal(auditLog2.NewValues, x.NewValues)
         );
         Assert.Collection(dtos,
-            x => Assert.Null(x.UserFirstName),
-            x => Assert.Null(x.UserFirstName)
+            x => Assert.Equal("", x.UserFirstName),
+            x => Assert.Equal("", x.UserFirstName)
         );
         Assert.Collection(dtos,
             x => Assert.Null(x.UserLastName),

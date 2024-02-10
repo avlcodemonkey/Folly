@@ -1,7 +1,4 @@
-using System.Globalization;
 using System.Text.Encodings.Web;
-using Folly.Constants;
-using Folly.Extensions;
 using Folly.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -32,7 +29,7 @@ public sealed class FormContentTagHelper(IHtmlHelper htmlHelper, IUrlHelperFacto
         output.TagName = "form";
         output.AddClass("container", HtmlEncoder.Default);
         output.Attributes.SetAttribute("method", Method.ToString());
-        output.Attributes.SetAttribute("id", $"{Action!.ToLower(CultureInfo.InvariantCulture)}{Controller.UppercaseFirst()}Form");
+        output.Attributes.SetAttribute("id", $"{Action}{Controller}Form");
 
         var urlHelper = _UrlHelperFactory.GetUrlHelper(HtmlHelper!.ViewContext);
         output.Attributes.SetAttribute("action", urlHelper.Action(Action, Controller, RouteValues));

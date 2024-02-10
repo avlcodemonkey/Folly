@@ -7,11 +7,4 @@ public static class StringExtensions {
     /// <param name="val">Value to attempt to convert.</param>
     /// <returns>Bool value</returns>
     public static bool ToBool(this string? val) => val != null && (val == "1" || val.Equals("true", StringComparison.CurrentCultureIgnoreCase));
-
-    /// <summary>
-    /// Uppercase the first character of a string.
-    /// </summary>
-    /// <param name="value">String to update.</param>
-    /// <returns>Updated string.</returns>
-    public static string UppercaseFirst(this string value) => string.IsNullOrWhiteSpace(value) ? "" : char.ToUpper(value[0]) + value[1..];
 }

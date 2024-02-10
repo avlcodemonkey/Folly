@@ -284,7 +284,7 @@ class Table extends HTMLElement {
     }
 
     /**
-     * Add event handlers for table sorting functionality.
+     * Add event handlers for form submission.
      */
     setupForm() {
         if (this.srcForm) {
@@ -314,16 +314,16 @@ class Table extends HTMLElement {
      * Fetch data from the server at the URL specified in the `src` property.
      */
     async fetchData() {
-        if (!this.srcUrl && !this.srcForm) {
+        if (!(this.srcUrl || this.srcForm)) {
             return;
         }
 
         this.loading = true;
         this.error = false;
 
-        // first clear out the existing data
+        // first clear out the existing data and update the table
         this.rows = [];
-
+        this.filterData();
         this.update();
 
         // now request new data
@@ -705,7 +705,9 @@ class Table extends HTMLElement {
         }
 
         // sort the new array
-        filteredData.sort(this.sortColumns?.length ? this.compare.bind(this.sortColumns) : Table.defaultCompare);
+        if (filteredData.length) {
+            filteredData.sort(this.sortColumns?.length ? this.compare.bind(this.sortColumns) : Table.defaultCompare);
+        }
 
         // cache the total number of filtered records and max number of pages for paging
         this.filteredRowTotal = filteredData.length;

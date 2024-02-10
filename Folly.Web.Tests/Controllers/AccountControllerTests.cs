@@ -17,7 +17,6 @@ public class AccountControllerTests() {
     private readonly Mock<ILanguageService> _MockLanguageService = new();
     private readonly Mock<ILogger<AccountController>> _MockLogger = new();
 
-
     [Fact]
     public void Get_ToggleContextHelp_EnablesHelp() {
         // Arrange
@@ -38,7 +37,6 @@ public class AccountControllerTests() {
         Assert.Equal("ToggleContextHelp", viewResult.ViewName);
         Assert.Null(viewResult.ViewData.Model);
     }
-
 
     [Fact]
     public async Task Get_UpdateAccount_WithValidUser_ReturnsView() {

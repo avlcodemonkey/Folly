@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Folly.Domain;
 using Folly.Domain.Models;
 using Folly.Extensions.Services;
@@ -89,6 +90,9 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
         return (await _DbContext.SaveChangesAsync() > 0) ? "" : Core.ErrorGeneric;
     }
 
+    [SuppressMessage("Performance", "CA1862:Use the 'StringComparison' method overloads to perform case-insensitive string comparisons",
+        Justification = "Linq can't translate stringComparison methods to sql.")
+    ]
     public async Task<IEnumerable<DTO.AutocompleteUser>> FindAutocompleteUsersByNameAsync(string name) {
         var lowerName = (name ?? "").ToLower();
         return await _DbContext.Users

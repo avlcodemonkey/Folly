@@ -4,7 +4,7 @@
 @using Folly.Services
 @using Folly.Utils
 @model AuditLogSearch
-@inject IViewService ViewService
+@inject IAuditLogService _AuditLogService
 
 <content>
     <breadcrumb>
@@ -13,7 +13,7 @@
 
     <partial name="_Alerts" />
 
-    <div class="mb-2">
+    <div class="container mb-2">
         <details>
             <summary><b>@AuditLogs.Filters</b></summary>
             <form method="post" action="@Url.Action("Search", "AuditLog")" id="auditLogSearch" hx-boost="false" class="form-compact">
@@ -30,7 +30,7 @@
                         <input-group for="Entity" />
                     </div>
                     <div class="col">
-                        <select-group for="State" options="@ViewService.GetEntityStatesSelectList()" />
+                        <select-group for="State" options="@_AuditLogService.GetEntityStates().Select(x => new SelectListItem(x.ToString(), x.ToString())).ToList()" />
                     </div>
                 </div>
                 <div class="row">

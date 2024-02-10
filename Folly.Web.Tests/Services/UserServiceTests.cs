@@ -89,7 +89,7 @@ public class UserServiceTests {
     }
 
     [Fact]
-    public async Task GetAllUsersAsync_ReturnsTwoUserDTOs() {
+    public async Task GetAllUsersAsync_ReturnsUserDTOs() {
         // arrange
         var user = _Fixture.User;
         var testUser = _Fixture.TestUser;
@@ -287,5 +287,52 @@ public class UserServiceTests {
         Assert.Equal(newLastName, updatedUser.LastName);
         Assert.Equal(newEmail, updatedUser.Email);
         Assert.Equal(newLanguageId, updatedUser.LanguageId);
+    }
+
+    [Fact]
+    public async Task FindAutocompleteUsersByNameAsync_WithEmptyQuery_ReturnsAllUserDTOs() {
+        // arrange
+        var user = _Fixture.User;
+        var testUser = _Fixture.TestUser;
+        var totalUsers = _Fixture.CreateContext().Users.Where(x => x.Status == true).Count();
+
+        // act
+        var users = await _UserService.FindAutocompleteUsersByNameAsync("");
+
+        // assert
+        Assert.NotEmpty(users);
+        Assert.IsAssignableFrom<IEnumerable<DTO.AutocompleteUser>>(users);
+        Assert.Equal(totalUsers, users.Count());
+        Assert.Collection(users,
+            x => Assert.Equal(testUser.Id, x.Value),   // testUser from fixture
+            x => Assert.Equal(user.Id, x.Value),       // user from fixture
+            x => Assert.Equal(1, x.Value)              // admin user from original db migration
+        );
+    }
+
+    [Fact]
+    public async Task FindAutocompleteUsersByNameAsync_WithUserQuery_ReturnsMatchingDTO() {
+        // arrange
+        var user = _Fixture.User;
+
+        // act
+        var users = await _UserService.FindAutocompleteUsersByNameAsync(user.UserName);
+
+        // assert
+        Assert.NotEmpty(users);
+        Assert.IsAssignableFrom<IEnumerable<DTO.AutocompleteUser>>(users);
+        var resultUser = Assert.Single(users);
+        Assert.Equal(user.Id, resultUser.Value);
+    }
+
+    [Fact]
+    public async Task FindAutocompleteUsersByNameAsync_WithGibberishQuery_ReturnsNoMatches() {
+        // arrange
+
+        // act
+        var users = await _UserService.FindAutocompleteUsersByNameAsync("gibberish");
+
+        // assert
+        Assert.Empty(users);
     }
 }

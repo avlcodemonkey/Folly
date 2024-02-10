@@ -89,10 +89,10 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
         return (await _DbContext.SaveChangesAsync() > 0) ? "" : Core.ErrorGeneric;
     }
 
-    public async Task<IEnumerable<DTO.User>> FindUsersByNameAsync(string name) {
+    public async Task<IEnumerable<DTO.AutocompleteUser>> FindAutocompleteUsersByNameAsync(string name) {
         var lowerName = (name ?? "").ToLower();
         return await _DbContext.Users
             .Where(x => x.Status == true && (x.FirstName.ToLower().Contains(lowerName) || (x.LastName ?? "").ToLower().Contains(lowerName)))
-            .SelectAsNameDTO().ToListAsync();
+            .SelectAsAuditLogUserDTO().OrderBy(x => x.Value).ToListAsync();
     }
 }

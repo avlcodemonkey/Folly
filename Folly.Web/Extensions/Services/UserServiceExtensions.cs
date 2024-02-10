@@ -1,4 +1,5 @@
 using Folly.Domain.Models;
+using Folly.Utils;
 using DTO = Folly.Models;
 
 namespace Folly.Extensions.Services;
@@ -11,6 +12,6 @@ public static class UserServiceExtensions {
         });
 
     // @todo see if there are other userService methods that should use this instead
-    public static IQueryable<DTO.User> SelectAsNameDTO(this IQueryable<User> query)
-        => query.Select(x => new DTO.User { Id = x.Id, FirstName = x.FirstName, LastName = x.LastName, UserName = x.UserName });
+    public static IQueryable<DTO.AutocompleteUser> SelectAsAuditLogUserDTO(this IQueryable<User> query)
+        => query.Select(x => new DTO.AutocompleteUser { Value = x.Id, Label = NameHelper.DisplayName(x.FirstName, x.LastName) });
 }

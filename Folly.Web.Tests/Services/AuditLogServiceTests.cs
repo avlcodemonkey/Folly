@@ -25,20 +25,20 @@ public class AuditLogServiceTests(DatabaseFixture fixture) {
         Assert.Equal(fakeLog.Entity, log.Entity);
         Assert.Equal(fakeLog.State, log.State);
         Assert.Equal(fakeLog.PrimaryKey, log.PrimaryKey);
-        Assert.Equal(fakeLog.UserId, log.UserId);
         Assert.Equal(fakeLog.OldValues, log.OldValues);
         Assert.Equal(fakeLog.NewValues, log.NewValues);
     }
 
     [Fact]
-    public async Task GetLogByIdAsync_WithInvalidId_ThrowsException() {
+    public async Task GetLogByIdAsync_WithInvalidId_ReturnsNull() {
         // arrange
         var logIdToGet = -200;
 
         // act
+        var log = await _AuditLogService.GetLogByIdAsync(logIdToGet);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _AuditLogService.GetLogByIdAsync(logIdToGet));
+        Assert.Null(log);
     }
 
     [Fact]
@@ -54,7 +54,7 @@ public class AuditLogServiceTests(DatabaseFixture fixture) {
 
         // assert
         Assert.NotEmpty(logs);
-        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLog>>(logs);
+        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLogSearchResult>>(logs);
         Assert.Equal(2, logs.Count());
         Assert.Collection(logs,
             x => Assert.Equal(fakeLog1.Id, x.Id),
@@ -102,7 +102,7 @@ public class AuditLogServiceTests(DatabaseFixture fixture) {
 
         // assert
         Assert.NotEmpty(logs);
-        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLog>>(logs);
+        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLogSearchResult>>(logs);
         Assert.Equal(2, logs.Count());
         Assert.Collection(logs,
             x => Assert.Equal(fakeLog1.Id, x.Id),
@@ -124,7 +124,7 @@ public class AuditLogServiceTests(DatabaseFixture fixture) {
 
         // assert
         Assert.NotEmpty(logs);
-        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLog>>(logs);
+        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLogSearchResult>>(logs);
         Assert.Equal(2, logs.Count());
         Assert.Collection(logs,
             x => Assert.Equal(fakeLog1.Id, x.Id),
@@ -143,7 +143,7 @@ public class AuditLogServiceTests(DatabaseFixture fixture) {
 
         // assert
         Assert.NotEmpty(logs);
-        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLog>>(logs);
+        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLogSearchResult>>(logs);
         var singleResult = Assert.Single(logs);
         Assert.Equal(fakeLog1.Id, singleResult.Id);
     }
@@ -171,7 +171,7 @@ public class AuditLogServiceTests(DatabaseFixture fixture) {
 
         // assert
         Assert.NotEmpty(logs);
-        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLog>>(logs);
+        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLogSearchResult>>(logs);
         var singleResult = Assert.Single(logs);
         Assert.Equal(fakeLog1.Id, singleResult.Id);
     }
@@ -199,7 +199,7 @@ public class AuditLogServiceTests(DatabaseFixture fixture) {
 
         // assert
         Assert.NotEmpty(logs);
-        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLog>>(logs);
+        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLogSearchResult>>(logs);
         var singleResult = Assert.Single(logs);
         Assert.Equal(fakeLog1.Id, singleResult.Id);
     }
@@ -227,7 +227,7 @@ public class AuditLogServiceTests(DatabaseFixture fixture) {
 
         // assert
         Assert.NotEmpty(logs);
-        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLog>>(logs);
+        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLogSearchResult>>(logs);
         var singleResult = Assert.Single(logs);
         Assert.Equal(fakeLog1.Id, singleResult.Id);
     }
@@ -243,7 +243,7 @@ public class AuditLogServiceTests(DatabaseFixture fixture) {
 
         // assert
         Assert.NotEmpty(logs);
-        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLog>>(logs);
+        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLogSearchResult>>(logs);
         var singleResult = Assert.Single(logs);
         Assert.Equal(fakeLog2.Id, singleResult.Id);
     }
@@ -272,7 +272,7 @@ public class AuditLogServiceTests(DatabaseFixture fixture) {
 
         // assert
         Assert.NotEmpty(logs);
-        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLog>>(logs);
+        Assert.IsAssignableFrom<IEnumerable<DTO.AuditLogSearchResult>>(logs);
         var singleResult = Assert.Single(logs);
         Assert.Equal(fakeLog1.Id, singleResult.Id);
     }

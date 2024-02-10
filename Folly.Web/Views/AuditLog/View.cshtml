@@ -1,8 +1,8 @@
 @using Folly.Models
 @using Folly.Resources;
 @using Folly.Services
+@using Folly.Utils
 @model AuditLog
-@inject IViewService ViewService
 
 <content>
     <breadcrumb>
@@ -18,12 +18,12 @@
         <dl>
             <dt>@AuditLogs.Date</dt>
             @* @todo replace this date-format when a user setting is added*@
-            <dd><nilla-date data-date-format="MM/DD/YYYY hh:mm:ss A">@Model.UniversalDate</nilla-date></dd>
+            <dd><nilla-date data-date-format="MM/DD/YYYY hh:mm:ss A">@Model.Date.ToString("u")</nilla-date></dd>
         </dl>
 
         <dl>
             <dt>@AuditLogs.User</dt>
-            <dd>@Model.UserFullName</dd>
+            <dd>@NameHelper.DisplayName(Model.UserFirstName, Model.UserLastName)</dd>
         </dl>
 
         <dl>

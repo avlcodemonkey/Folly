@@ -1,9 +1,12 @@
 using Folly.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Folly.Services;
 
 public interface IAuditLogService {
-    Task<IEnumerable<AuditLog>> SearchLogsAsync(AuditLogSearch search);
+    Task<IEnumerable<AuditLogSearchResult>> SearchLogsAsync(AuditLogSearch search);
 
-    Task<AuditLog> GetLogByIdAsync(long id);
+    Task<AuditLog?> GetLogByIdAsync(long id);
+
+    IEnumerable<EntityState> GetEntityStates();
 }

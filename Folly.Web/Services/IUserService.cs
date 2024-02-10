@@ -17,5 +17,5 @@ public interface IUserService {
 
     Task<string> UpdateAccountAsync(UpdateAccount account);
 
-    Task<IEnumerable<User>> FindUsersByNameAsync(string name);
+    Task<IEnumerable<AutocompleteUser>> FindAutocompleteUsersByNameAsync(string name);
 }

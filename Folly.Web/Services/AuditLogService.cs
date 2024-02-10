@@ -10,7 +10,7 @@ public sealed class AuditLogService(FollyDbContext dbContext) : IAuditLogService
 
     public static int MaxResults { get; } = 1000;
 
-    public async Task<IEnumerable<DTO.AuditLog>> SearchLogsAsync(DTO.AuditLogSearch search) {
+    public async Task<IEnumerable<DTO.AuditLogSearchResult>> SearchLogsAsync(DTO.AuditLogSearch search) {
         var query = _DbContext.AuditLog.AsNoTracking();
 
         if (search.StartDate.HasValue) {
@@ -43,9 +43,12 @@ public sealed class AuditLogService(FollyDbContext dbContext) : IAuditLogService
 
         query = query.Take(MaxResults + 1);
 
-        return await query.SelectAsDTO().ToListAsync();
+        return await query.SelectAsSearchResultDTO().ToListAsync();
     }
 
-    public async Task<DTO.AuditLog> GetLogByIdAsync(long id)
-        => await _DbContext.AuditLog.AsNoTracking().Include(x => x.User).Where(x => x.Id == id).SelectAsDTO().FirstAsync();
+    public async Task<DTO.AuditLog?> GetLogByIdAsync(long id)
+        => await _DbContext.AuditLog.AsNoTracking().Include(x => x.User).Where(x => x.Id == id).SelectAsDTO().FirstOrDefaultAsync();
+
+    public IEnumerable<EntityState> GetEntityStates()
+        => new List<EntityState> { EntityState.Deleted, EntityState.Added, EntityState.Modified };
 }

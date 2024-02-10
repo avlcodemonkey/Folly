@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Folly.Models;
 
+/// <summary>
+/// Used to group search params and pass them around.
+/// </summary>
 public sealed record AuditLogSearch {
     [Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.Batch))]
     public Guid? BatchId { get; set; }

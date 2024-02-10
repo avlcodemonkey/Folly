@@ -90,7 +90,7 @@ public sealed class FollyDbContext : DbContext {
     private async Task<List<AuditLog>> CreateAuditLogsAsync(List<EntityEntry> changedEntries, CancellationToken cancellationToken) {
         var auditLogs = new List<AuditLog>();
 
-        if (!changedEntries.Any()) {
+        if (changedEntries.Count == 0) {
             return auditLogs;
         }
 
@@ -124,7 +124,7 @@ public sealed class FollyDbContext : DbContext {
                 auditLog.OldValues = entry.Properties.ToAuditJson(false);
             } else if (entry.State is EntityState.Modified) {
                 var changedProperties = entry.Properties.Where(x => x.IsModified && x.OriginalValue?.ToString() != x.CurrentValue?.ToString()).ToList();
-                if (changedProperties.Any()) {
+                if (changedProperties.Count != 0) {
                     auditLog.OldValues = changedProperties.ToAuditJson(false);
                     auditLog.NewValues = changedProperties.ToAuditJson(true);
                 } else {
@@ -140,7 +140,7 @@ public sealed class FollyDbContext : DbContext {
     }
 
     private async Task SaveAuditLogsAsync(List<EntityEntry> changedEntities, List<AuditLog> auditLogs, CancellationToken cancellationToken) {
-        if (!auditLogs.Any()) {
+        if (auditLogs.Count == 0) {
             return;
         }
 

@@ -9,14 +9,14 @@ public sealed record AuditLogSearchResult : BaseModel {
     // @todo add Display attributes to use when showing these
     public Guid BatchId { get; init; }
 
-    public string? Entity { get; init; }
+    public string Entity { get; init; } = "";
 
     /// <summary>
     /// Descriptive value for the EntityState.
     /// </summary>
-    public string? State { get; init; }
+    public string State { get; init; } = "";
 
-    public string? UniversalDate { get; init; }
+    public string UniversalDate { get; init; } = "";
 
-    public string? UserFullName { get; init; }
+    public string UserFullName { get; init; } = "";
 }

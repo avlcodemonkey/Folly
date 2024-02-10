@@ -12,7 +12,7 @@ public sealed record AuditLog : BaseModel {
     // @todo add Display attributes to use when showing these
     public Guid BatchId { get; init; }
 
-    public string? Entity { get; init; }
+    public string Entity { get; init; } = "";
 
     public long PrimaryKey { get; init; }
 
@@ -25,9 +25,9 @@ public sealed record AuditLog : BaseModel {
 
     public string? UserLastName { get; init; }
 
-    public string? UserFirstName { get; init; }
+    public string UserFirstName { get; init; } = "";
 
-    public string? OldValues { get; init; }
+    public string OldValues { get; init; } = "";
 
-    public string? NewValues { get; init; }
+    public string NewValues { get; init; } = "";
 }

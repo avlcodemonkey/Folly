@@ -17,7 +17,7 @@ public sealed class FormContentTagHelper(IHtmlHelper htmlHelper, IUrlHelperFacto
     public string Action { get; set; } = "";
     public string Controller { get; set; } = "";
     public object? For { get; set; }
-    public HttpVerb Method { get; set; } = HttpVerb.Post;
+    public HttpMethod Method { get; set; } = HttpMethod.Post;
     public object? RouteValues { get; set; }
 
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
@@ -25,8 +25,7 @@ public sealed class FormContentTagHelper(IHtmlHelper htmlHelper, IUrlHelperFacto
 
         if (For != null) {
             Controller = For.GetType().Name;
-            Action = ((BaseModel)For).FormAction;
-            Method = ((BaseModel)For).FormMethod;
+            Method = ((BaseModel)For).IsCreate ? HttpMethod.Post : HttpMethod.Put;
         }
 
         output.TagMode = TagMode.StartTagAndEndTag;

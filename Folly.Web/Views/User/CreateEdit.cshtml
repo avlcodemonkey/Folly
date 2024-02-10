@@ -7,7 +7,7 @@
 <content>
     <breadcrumb>
         <breadcrumb-item label="@Users.ViewAll" controller="User" action="Index" />
-        <breadcrumb-item label="@(Model.IsCreate ? Users.CreateUser : Users.EditUser)" controller="User" action="@Model.FormAction"
+        <breadcrumb-item label="@(Model.IsCreate ? Users.CreateUser : Users.EditUser)" controller="User" action="@(Model.IsCreate ? "Create" : "Edit")"
             route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" active="true"
         />
     </breadcrumb>
@@ -18,7 +18,7 @@
 
     <partial name="_Alerts" />
 
-    <form-content for="Model">
+    <form-content for="Model" action="@(Model.IsCreate ? "Create" : "Edit")">
         <input asp-for="Id" type="hidden" />
 
         <input-group for="FirstName" autofocus />

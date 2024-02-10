@@ -191,13 +191,6 @@ public enum Icon {
     ZoomOut
 }
 
-public enum HttpVerb {
-    Get,
-    Put,
-    Post,
-    Delete
-}
-
 public enum ColumnWidth {
     SingleIcon = 80,
     DoubleIcon = 160,

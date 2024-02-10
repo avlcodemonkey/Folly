@@ -7,14 +7,14 @@
 <content>
     <breadcrumb>
         <breadcrumb-item label="@Roles.ViewAll" controller="Role" action="Index" />
-        <breadcrumb-item label="@(Model.IsCreate ? Roles.CreateRole : Roles.EditRole)" controller="Role" action="@Model.FormAction"
+        <breadcrumb-item label="@(Model.IsCreate ? Roles.CreateRole : Roles.EditRole)" controller="Role" action="@(Model.IsCreate ? "Create" : "Edit")"
             route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" active="true"
         />
     </breadcrumb>
 
     <partial name="_Alerts" />
 
-    <form-content for="Model">
+    <form-content for="Model" action="@(Model.IsCreate ? "Create" : "Edit")">
         <input asp-for="Id" type="hidden" />
 
         <input-group for="Name" autofocus />

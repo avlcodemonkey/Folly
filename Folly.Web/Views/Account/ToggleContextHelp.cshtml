@@ -1,5 +1,7 @@
+@using Folly.Constants
+@using Folly.Extensions
 @using Folly.Resources;
-@model Folly.Models.Help
+@inject Microsoft​.AspNetCore​.Http.IHttpContextAccessor _HttpContextAccessor
 
 <content>
     <breadcrumb>
@@ -8,5 +10,5 @@
 
     <partial name="_Alerts" />
 
-    <partial name="_Alert" model="new Alert { Content = Model.IsEnabled ? Core.HelpEnabled : Core.HelpDisabled, CanDismiss = false }" />
+    <partial name="_Alert" model="new Alert { Content = _HttpContextAccessor.HttpContext?.Session.IsEnabled(SessionProperties.Help) == true ? Core.HelpEnabled : Core.HelpDisabled, CanDismiss = false }" />
 </content>

@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
+using Folly.Constants;
 using Folly.Extensions;
 using Folly.Resources;
 using Microsoft.AspNetCore.Html;
@@ -55,7 +56,7 @@ public class GroupBaseTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(htmlHelp
     }
 
     public async Task<IHtmlContent> BuildHelp() {
-        if (HtmlHelper!.ViewContext.HttpContext?.WantsHelp() != true) {
+        if (HtmlHelper!.ViewContext.HttpContext?.Session.IsEnabled(SessionProperties.Help) != true) {
             return HtmlString.Empty;
         }
 

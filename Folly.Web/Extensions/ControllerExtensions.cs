@@ -41,15 +41,6 @@ public static class ControllerExtensions {
     /// <returns>Space separated list of errors.</returns>
     public static string ToErrorString(this ModelStateDictionary state)
         => string.Join(" <br />", state.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray());
-
-    /// <summary>
-    /// Toogle a boolean session setting.
-    /// </summary>
-    /// <param name="session">Session to modify.</param>
-    /// <param name="settingName">Name of setting to toggle.</param>
-    public static void ToggleSetting(this ISession session, string settingName)
-        => session.SetString(settingName, (!session.GetString(settingName).ToBool()).ToString());
-
     /// <summary>
     /// Convert IEnumerable to a list of select list items.
     /// </summary>
@@ -62,12 +53,6 @@ public static class ControllerExtensions {
         => enumerable.Select(f => new SelectListItem { Text = text(f), Value = value(f) }).ToList();
 
     /// <summary>
-    /// Check if user has help enabled.
-    /// </summary>
-    /// <param name="httpContext">Current request context.</param>
-    /// <returns>True if user enabled help, else false.</returns>
-    public static bool WantsHelp(this HttpContext httpContext) => httpContext.Session.GetString(Help.SettingName).ToBool();
-
     /// <summary>
     /// Adds an error message to the ViewData dictionary.
     /// </summary>

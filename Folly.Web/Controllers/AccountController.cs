@@ -1,6 +1,7 @@
 using System.Globalization;
 using Auth0.AspNetCore.Authentication;
 using Folly.Attributes;
+using Folly.Constants;
 using Folly.Extensions;
 using Folly.Models;
 using Folly.Resources;
@@ -35,8 +36,8 @@ public class AccountController(IUserService userService, ILanguageService langua
 
     [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName), ParentAction(nameof(UpdateAccount))]
     public IActionResult ToggleContextHelp() {
-        HttpContext.Session.ToggleSetting(Help.SettingName);
-        return View("ToggleContextHelp", new Help(HttpContext.Session));
+        HttpContext.Session.ToggleSetting(SessionProperties.Help);
+        return View("ToggleContextHelp");
     }
 
     [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName)]

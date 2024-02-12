@@ -33,7 +33,7 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
 
         await _RoleService.SaveRoleAsync(model);
         ViewData.AddMessage(Roles.SuccessSavingRole);
-        PushAction(nameof(Index));
+        PushUrl(Url.Action(nameof(Index)));
         return Index();
     }
 
@@ -55,7 +55,7 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
         }
 
         await _RoleService.CopyRoleAsync(model);
-        PushAction(nameof(Index));
+        PushUrl(Url.Action(nameof(Index)));
         ViewData.AddMessage(Roles.SuccessCopyingRole);
         return Index();
     }

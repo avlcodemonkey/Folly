@@ -34,7 +34,7 @@ public class UserController(IUserService userService, ILanguageService languageS
 
         await _UserService.SaveUserAsync(model);
         ViewData.AddMessage(Users.SuccessSavingUser);
-        PushAction(nameof(Index));
+        PushUrl(Url.Action(nameof(Index)));
         return Index();
     }
 

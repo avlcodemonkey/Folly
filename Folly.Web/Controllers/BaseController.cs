@@ -6,9 +6,13 @@ namespace Folly.Controllers;
 public abstract class BaseController(ILogger<Controller> logger) : Controller {
     protected ILogger<Controller> Logger { get; set; } = logger;
 
-    public void PushAction(string action) {
-        if (!string.IsNullOrWhiteSpace(action)) {
-            Response.Headers.Append(HtmxHeaders.PushUrl, Url.Action(action));
+    /// <summary>
+    /// Adds a PushUrl header that the client pushes into browser history.
+    /// </summary>
+    /// <param name="url"></param>
+    public void PushUrl(string? url) {
+        if (!string.IsNullOrWhiteSpace(url)) {
+            Response.Headers.Append(HtmxHeaders.PushUrl, url);
         }
     }
 }

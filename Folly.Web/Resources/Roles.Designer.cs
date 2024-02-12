@@ -124,6 +124,15 @@ namespace Folly.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error occurred saving role..
+        /// </summary>
+        public static string ErrorSavingRole {
+            get {
+                return ResourceManager.GetString("ErrorSavingRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Default.
         /// </summary>
         public static string IsDefault {

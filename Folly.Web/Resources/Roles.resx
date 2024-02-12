@@ -171,4 +171,7 @@
   <data name="ConfirmRefreshPermissions" xml:space="preserve">
     <value>This will add any missing permissions, and delete any deprecated ones. Are you sure you want to continue?</value>
   </data>
+  <data name="ErrorSavingRole" xml:space="preserve">
+    <value>Error occurred saving role.</value>
+  </data>
 </root>

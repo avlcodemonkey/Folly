@@ -15,32 +15,52 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
     private readonly IRoleService _RoleService = roleService;
     private readonly IAssemblyService _AssemblyService = assemblyService;
 
-    private ViewResult CreateEditView(Role model) => View("CreateEdit", model);
+    [HttpGet]
+    public IActionResult Index() => View("Index");
 
-    private async Task<Role?> LoadRole(int id) {
-        var model = await _RoleService.GetRoleByIdAsync(id);
-        if (model == null) {
-            ViewData.AddError(Core.ErrorInvalidId);
-        }
-        return model;
-    }
+    [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
+    public async Task<IActionResult> List() => Ok((await _RoleService.GetAllRolesAsync()).Select(x => new { x.Id, x.Name }));
 
     private async Task<IActionResult> Save(Role model) {
         if (!ModelState.IsValid) {
             ViewData.AddError(ModelState);
-            return CreateEditView(model);
+            return View("CreateEdit", model);
         }
 
-        await _RoleService.SaveRoleAsync(model);
+        if (!await _RoleService.SaveRoleAsync(model)) {
+            ViewData.AddError(Roles.ErrorSavingRole);
+            return View("CreateEdit", model);
+        }
+
         ViewData.AddMessage(Roles.SuccessSavingRole);
         PushUrl(Url.Action(nameof(Index)));
         return Index();
     }
 
     [HttpGet, ParentAction(nameof(Edit))]
-    public async Task<IActionResult> Copy(int id) {
-        var model = await LoadRole(id);
+    public IActionResult Create() => View("CreateEdit", new Role());
+
+    [HttpPost, ParentAction(nameof(Edit)), ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(Role model) => await Save(model);
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int id) {
+        var model = await _RoleService.GetRoleByIdAsync(id);
         if (model == null) {
+            ViewData.AddError(Core.ErrorInvalidId);
+            return Index();
+        }
+        return View("CreateEdit", model);
+    }
+
+    [HttpPut, ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(Role model) => await Save(model);
+
+    [HttpGet, ParentAction(nameof(Edit))]
+    public async Task<IActionResult> Copy(int id) {
+        var model = await _RoleService.GetRoleByIdAsync(id);
+        if (model == null) {
+            ViewData.AddError(Core.ErrorInvalidId);
             return Index();
         }
 
@@ -51,20 +71,18 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
     public async Task<IActionResult> Copy(CopyRole model) {
         if (!ModelState.IsValid) {
             ViewData.AddError(ModelState);
-            return Index();
+            return View("Copy", model);
         }
 
-        await _RoleService.CopyRoleAsync(model);
+        if (!await _RoleService.CopyRoleAsync(model)) {
+            ViewData.AddError(Roles.ErrorSavingRole);
+            return View("Copy", model);
+        }
+
         PushUrl(Url.Action(nameof(Index)));
         ViewData.AddMessage(Roles.SuccessCopyingRole);
         return Index();
     }
-
-    [HttpGet, ParentAction(nameof(Edit))]
-    public IActionResult Create() => CreateEditView(new Role());
-
-    [HttpPost, ParentAction(nameof(Edit)), ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Role model) => await Save(model);
 
     [HttpDelete]
     public async Task<IActionResult> Delete(int id) {
@@ -72,21 +90,6 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
         ViewData.AddMessage(Roles.SuccessDeletingRole);
         return Index();
     }
-
-    [HttpGet]
-    public async Task<IActionResult> Edit(int id) {
-        var model = await LoadRole(id);
-        return model == null ? Index() : CreateEditView(model);
-    }
-
-    [HttpPut, ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(Role model) => await Save(model);
-
-    [HttpGet]
-    public IActionResult Index() => View("Index");
-
-    [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
-    public async Task<IActionResult> List() => Ok((await _RoleService.GetAllRolesAsync()).Select(x => new { x.Id, x.Name }));
 
     [HttpGet]
     public async Task<IActionResult> RefreshPermissions() {

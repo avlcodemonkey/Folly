@@ -19,6 +19,7 @@ public class AccountController(IUserService userService, ILanguageService langua
     private readonly ILanguageService _LanguageService = languageService;
     private readonly IUserService _UserService = userService;
 
+    #region Auth0 required endpoints
     public async Task Login(string returnUrl = "/") {
         var authenticationProperties = new LoginAuthenticationPropertiesBuilder()
             .WithRedirectUri(returnUrl)
@@ -34,6 +35,12 @@ public class AccountController(IUserService userService, ILanguageService langua
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).ConfigureAwait(false);
     }
 
+    public IActionResult AccessDenied() {
+        ViewData.AddMessage(Core.ErrorGeneric);
+        return View("Error");
+    }
+    #endregion
+
     [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName), ParentAction(nameof(UpdateAccount))]
     public IActionResult ToggleContextHelp() {
         HttpContext.Session.ToggleSetting(SessionProperties.Help);
@@ -43,6 +50,11 @@ public class AccountController(IUserService userService, ILanguageService langua
     [HttpGet, Authorize(Policy = PermissionRequirementHandler.PolicyName)]
     public async Task<IActionResult> UpdateAccount() {
         var user = await _UserService.GetUserByUserNameAsync(User.Identity!.Name!);
+        if (user == null) {
+            ViewData.AddError(Core.ErrorInvalidId);
+            return View("Error");
+        }
+
         return View("UpdateAccount", new UpdateAccount(user));
     }
 
@@ -56,18 +68,15 @@ public class AccountController(IUserService userService, ILanguageService langua
         var result = await _UserService.UpdateAccountAsync(model);
         if (string.IsNullOrWhiteSpace(result)) {
             var language = await _LanguageService.GetLanguageByIdAsync(model.LanguageId);
-            Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName,
-                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(new CultureInfo(language.LanguageCode)))
-            );
-            ViewData.AddMessage(Account.AccountUpdated);
-            return View("UpdateAccount", model);
+            if (language != null) {
+                Response.Cookies.Append(CookieRequestCultureProvider.DefaultCookieName,
+                    CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(new CultureInfo(language.LanguageCode)))
+                );
+                ViewData.AddMessage(Account.AccountUpdated);
+            }
+        } else {
+            ViewData.AddMessage(result);
         }
-        ViewData.AddMessage(result);
         return View("UpdateAccount", model);
-    }
-
-    public IActionResult AccessDenied() {
-        ViewData.AddMessage(Core.ErrorGeneric);
-        return View("Error");
     }
 }

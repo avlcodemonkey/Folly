@@ -96,7 +96,7 @@ public sealed class FollyDbContext : DbContext {
 
         var batchId = Guid.NewGuid();
         var userName = _HttpContextAccessor?.HttpContext?.User.Identity?.Name;
-        var user = string.IsNullOrEmpty(userName) ? null : await Users.FirstAsync(x => x.UserName == userName, cancellationToken: cancellationToken);
+        var user = string.IsNullOrEmpty(userName) ? null : await Users.FirstOrDefaultAsync(x => x.UserName == userName, cancellationToken: cancellationToken);
 
         foreach (var entry in changedEntries) {
             var primaryKey = entry.GetPrimaryKey();

@@ -79,16 +79,17 @@ public class PermissionServiceTests(DatabaseFixture fixture) {
     }
 
     [Fact]
-    public async Task SavePermissionAsync_UpdateInvalidPermissionId_ThrowsException() {
+    public async Task SavePermissionAsync_UpdateInvalidPermissionId_ReturnsFalse() {
         // arrange
         var updatePermission = new DTO.Permission {
             Id = 999, ControllerName = "update permission controller", ActionName = "update permission action"
         };
 
         // act
+        var result = await _PermissionService.SavePermissionAsync(updatePermission);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _PermissionService.SavePermissionAsync(updatePermission));
+        Assert.False(result);
     }
 
     [Fact]
@@ -114,14 +115,15 @@ public class PermissionServiceTests(DatabaseFixture fixture) {
     }
 
     [Fact]
-    public async Task DeletePermissionAsync_WithInvalidPermissionId_ThrowsException() {
+    public async Task DeletePermissionAsync_WithInvalidPermissionId_ReturnsFalse() {
         // arrange
         var permissionIdToDelete = -200;
 
         // act
+        var result = await _PermissionService.DeletePermissionAsync(permissionIdToDelete);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _PermissionService.DeletePermissionAsync(permissionIdToDelete));
+        Assert.False(result);
     }
 
     [Fact]

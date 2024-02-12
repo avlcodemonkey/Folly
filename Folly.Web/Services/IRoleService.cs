@@ -9,9 +9,9 @@ public interface IRoleService {
 
     Task<IEnumerable<Role>> GetAllRolesAsync();
 
-    Task<Role> GetDefaultRoleAsync();
+    Task<Role?> GetDefaultRoleAsync();
 
-    Task<Role> GetRoleByIdAsync(int id);
+    Task<Role?> GetRoleByIdAsync(int id);
 
     Task<bool> SaveRoleAsync(Role roleDTO);
 

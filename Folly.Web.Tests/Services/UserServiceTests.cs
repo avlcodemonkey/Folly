@@ -45,14 +45,15 @@ public class UserServiceTests {
     }
 
     [Fact]
-    public async Task GetUserByIdAsync_WithInvalidUserId_ThrowsException() {
+    public async Task GetUserByIdAsync_WithInvalidUserId_ReturnsNull() {
         // arrange
         var userIdToGet = -200;
 
         // act
+        var result = await _UserService.GetUserByIdAsync(userIdToGet);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _UserService.GetUserByIdAsync(userIdToGet));
+        Assert.Null(result);
     }
 
     [Fact]
@@ -78,14 +79,15 @@ public class UserServiceTests {
     }
 
     [Fact]
-    public async Task GetUserByUserNameAsync_WithInvalidUserName_ThrowsException() {
+    public async Task GetUserByUserNameAsync_WithInvalidUserName_ReturnsNull() {
         // arrange
         var userNameToGet = "fakeUser";
 
         // act
+        var result = await _UserService.GetUserByUserNameAsync(userNameToGet);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _UserService.GetUserByUserNameAsync(userNameToGet));
+        Assert.Null(result);
     }
 
     [Fact]
@@ -170,7 +172,7 @@ public class UserServiceTests {
     }
 
     [Fact]
-    public async Task SaveUserAsync_UpdateInvalidUserId_ThrowsException() {
+    public async Task SaveUserAsync_UpdateInvalidUserId_ReturnsFalse() {
         // arrange
         var updateUser = new DTO.User {
             Id = 999, UserName = "updateUserName", FirstName = "update first", LastName = "update last", Email = "update@email.com",
@@ -178,9 +180,10 @@ public class UserServiceTests {
         };
 
         // act
+        var result = await _UserService.SaveUserAsync(updateUser);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _UserService.SaveUserAsync(updateUser));
+        Assert.False(result);
     }
 
     [Fact]
@@ -206,14 +209,15 @@ public class UserServiceTests {
     }
 
     [Fact]
-    public async Task DeleteUserAsync_WithInvalidUserId_ThrowsException() {
+    public async Task DeleteUserAsync_WithInvalidUserId_ReturnsFalse() {
         // arrange
         var userIdToDelete = -200;
 
         // act
+        var result = await _UserService.DeleteUserAsync(userIdToDelete);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _UserService.DeleteUserAsync(userIdToDelete));
+        Assert.False(result);
     }
 
     [Fact]

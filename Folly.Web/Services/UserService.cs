@@ -14,7 +14,11 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
     private readonly IHttpContextAccessor _HttpContextAccessor = httpContextAccessor;
 
     public async Task<bool> DeleteUserAsync(int id) {
-        var user = await _DbContext.Users.FirstAsync(x => x.Id == id && x.Status == true);
+        var user = await _DbContext.Users.FirstOrDefaultAsync(x => x.Id == id && x.Status == true);
+        if (user == null) {
+            return false;
+        }
+
         user.Status = false;
         _DbContext.Users.Update(user);
         return await _DbContext.SaveChangesAsync() > 0;
@@ -33,15 +37,19 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
             .Select(x => new DTO.UserClaim { Id = x.Id, ActionName = x.ActionName, ControllerName = x.ControllerName })
             .ToListAsync();
 
-    public async Task<DTO.User> GetUserByIdAsync(int id)
-        => await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Id == id && x.Status == true).SelectAsDTO().FirstAsync();
+    public async Task<DTO.User?> GetUserByIdAsync(int id)
+        => await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Id == id && x.Status == true).SelectAsDTO().FirstOrDefaultAsync();
 
-    public async Task<DTO.User> GetUserByUserNameAsync(string userName)
-        => await _DbContext.Users.Where(x => x.UserName == userName && x.Status == true).SelectAsDTO().FirstAsync();
+    public async Task<DTO.User?> GetUserByUserNameAsync(string userName)
+        => await _DbContext.Users.Where(x => x.UserName == userName && x.Status == true).SelectAsDTO().FirstOrDefaultAsync();
 
     public async Task<bool> SaveUserAsync(DTO.User userDTO) {
         if (userDTO.Id > 0) {
-            var user = await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Id == userDTO.Id).FirstAsync();
+            var user = await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Id == userDTO.Id).FirstOrDefaultAsync();
+            if (user == null) {
+                return false;
+            }
+
             await MapToEntity(userDTO, user);
             _DbContext.Users.Update(user);
         } else {
@@ -80,7 +88,11 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
             return Core.ErrorGeneric;
         }
 
-        var user = await _DbContext.Users.FirstAsync(x => x.UserName == userName && x.Status == true);
+        var user = await _DbContext.Users.FirstOrDefaultAsync(x => x.UserName == userName && x.Status == true);
+        if (user == null) {
+            return Core.ErrorGeneric;
+        }
+
         user.FirstName = account.FirstName;
         user.LastName = account.LastName;
         user.LanguageId = account.LanguageId;

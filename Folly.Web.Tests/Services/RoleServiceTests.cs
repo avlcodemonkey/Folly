@@ -43,14 +43,15 @@ public class RoleServiceTests(DatabaseFixture fixture) {
     }
 
     [Fact]
-    public async Task GetRoleByIdAsync_WithInvalidRoleId_ThrowsException() {
+    public async Task GetRoleByIdAsync_WithInvalidRoleId_ReturnsNull() {
         // arrange
         var roleIdToGet = -200;
 
         // act
+        var result = await _RoleService.GetRoleByIdAsync(roleIdToGet);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _RoleService.GetRoleByIdAsync(roleIdToGet));
+        Assert.Null(result);
     }
 
     [Fact]
@@ -129,7 +130,7 @@ public class RoleServiceTests(DatabaseFixture fixture) {
     }
 
     [Fact]
-    public async Task SaveRoleAsync_UpdateInvalidRoleId_ThrowsException() {
+    public async Task SaveRoleAsync_UpdateInvalidRoleId_ReturnsFalse() {
         // arrange
         var updateRole = new DTO.Role {
             Id = 999, Name = "Update role", IsDefault = false,
@@ -137,9 +138,10 @@ public class RoleServiceTests(DatabaseFixture fixture) {
         };
 
         // act
+        var result = await _RoleService.SaveRoleAsync(updateRole);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _RoleService.SaveRoleAsync(updateRole));
+        Assert.False(result);
     }
 
     [Fact]
@@ -165,14 +167,15 @@ public class RoleServiceTests(DatabaseFixture fixture) {
     }
 
     [Fact]
-    public async Task CopyRoleAsync_WithInvalidRoleId_ThrowsException() {
+    public async Task CopyRoleAsync_WithInvalidRoleId_ReturnsFalse() {
         // arrange
         var copyRole = new DTO.CopyRole { Id = -300, Prompt = "Copy" };
 
         // act
+        var result = await _RoleService.CopyRoleAsync(copyRole);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _RoleService.CopyRoleAsync(copyRole));
+        Assert.False(result);
     }
 
     [Fact]
@@ -196,13 +199,14 @@ public class RoleServiceTests(DatabaseFixture fixture) {
     }
 
     [Fact]
-    public async Task DeleteRoleAsync_WithInvalidRoleId_ThrowsException() {
+    public async Task DeleteRoleAsync_WithInvalidRoleId_ReturnsFalse() {
         // arrange
         var roleIdToDelete = -200;
 
         // act
+        var result = await _RoleService.DeleteRoleAsync(roleIdToDelete);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _RoleService.DeleteRoleAsync(roleIdToDelete));
+        Assert.False(result);
     }
 }

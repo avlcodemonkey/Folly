@@ -9,9 +9,9 @@ public interface IUserService {
 
     Task<IEnumerable<UserClaim>> GetClaimsByUserIdAsync(int id);
 
-    Task<User> GetUserByIdAsync(int id);
+    Task<User?> GetUserByIdAsync(int id);
 
-    Task<User> GetUserByUserNameAsync(string userName);
+    Task<User?> GetUserByUserNameAsync(string userName);
 
     Task<bool> SaveUserAsync(User userDTO);
 

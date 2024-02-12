@@ -9,5 +9,5 @@ namespace Folly.Services;
 public interface ILanguageService {
     Task<IEnumerable<Language>> GetAllLanguagesAsync();
 
-    Task<Language> GetLanguageByIdAsync(int id);
+    Task<Language?> GetLanguageByIdAsync(int id);
 }

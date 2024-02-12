@@ -10,7 +10,11 @@ public sealed class PermissionService(FollyDbContext dbContext) : IPermissionSer
     private readonly FollyDbContext _DbContext = dbContext;
 
     public async Task<bool> DeletePermissionAsync(int permissionId) {
-        var permission = await _DbContext.Permissions.FirstAsync(x => x.Id == permissionId);
+        var permission = await _DbContext.Permissions.FirstOrDefaultAsync(x => x.Id == permissionId);
+        if (permission == null) {
+            return false;
+        }
+
         _DbContext.Remove(permission);
         return await _DbContext.SaveChangesAsync() > 0;
     }
@@ -19,7 +23,11 @@ public sealed class PermissionService(FollyDbContext dbContext) : IPermissionSer
 
     public async Task<bool> SavePermissionAsync(DTO.Permission permissionDTO) {
         if (permissionDTO.Id > 0) {
-            var permission = await _DbContext.Permissions.Where(x => x.Id == permissionDTO.Id).FirstAsync();
+            var permission = await _DbContext.Permissions.Where(x => x.Id == permissionDTO.Id).FirstOrDefaultAsync();
+            if (permission == null) {
+                return false;
+            }
+
             MapToEntity(permissionDTO, permission);
             _DbContext.Permissions.Update(permission);
         } else {

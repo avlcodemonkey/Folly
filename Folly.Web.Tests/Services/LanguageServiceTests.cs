@@ -26,14 +26,15 @@ public class LanguageServiceTests(DatabaseFixture fixture) {
     }
 
     [Fact]
-    public async Task GetLanguageByIdAsync_WithInvalidLanguageId_ThrowsException() {
+    public async Task GetLanguageByIdAsync_WithInvalidLanguageId_ReturnsNull() {
         // arrange
         var languageIdToGet = -200;
 
         // act
+        var result = await _LanguageService.GetLanguageByIdAsync(languageIdToGet);
 
         // assert
-        await Assert.ThrowsAsync<InvalidOperationException>(async () => await _LanguageService.GetLanguageByIdAsync(languageIdToGet));
+        Assert.Null(result);
     }
 
     [Fact]

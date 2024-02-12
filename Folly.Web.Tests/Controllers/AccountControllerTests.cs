@@ -66,6 +66,32 @@ public class AccountControllerTests() {
     }
 
     [Fact]
+    public async Task Get_UpdateAccount_WithInvalidUser_ReturnsError() {
+        // Arrange
+        var user = new User { UserName = "test", Email = "a@b.com" };
+        _MockUserService.Setup(x => x.GetUserByUserNameAsync(It.IsAny<string>())).ReturnsAsync(null as User);
+
+        var claimsIdentity = new ClaimsIdentity([new Claim(ClaimTypes.Name, user.UserName)]);
+        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object) {
+            ControllerContext = new ControllerContext {
+                HttpContext = new DefaultHttpContext() {
+                    User = claimsPrincipal
+                }
+            }
+        };
+
+        // Act
+        var result = await controller.UpdateAccount();
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("Error", viewResult.ViewName);
+        Assert.Equal(Core.ErrorInvalidId, viewResult.ViewData[ViewProperties.Error]?.ToString());
+        _MockUserService.Verify(x => x.GetUserByUserNameAsync(It.IsAny<string>()), Times.Once);
+    }
+
+    [Fact]
     public async Task Post_UpdateAccount_WithInvalidModel_ReturnsUpdateWithError() {
         // Arrange
         var updateAccount = new UpdateAccount { FirstName = "first", LastName = "last", Email = "a@b.com" };
@@ -149,5 +175,41 @@ public class AccountControllerTests() {
         Assert.Equal("Error", viewResult.ViewName);
         Assert.Equal(Core.ErrorGeneric, viewResult.ViewData[ViewProperties.Message]?.ToString());
         Assert.Null(viewResult.ViewData.Model);
+    }
+
+    [Fact]
+    public void Get_PushUrl_WithNotEmptyUrl_AddsHeader() {
+        // Arrange
+        // PushUrl is part of the abstract BaseController, so use an AccountController instance to test it.
+        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object) {
+            ControllerContext = new ControllerContext {
+                HttpContext = new DefaultHttpContext()
+            }
+        };
+        var url = "/test";
+
+        // Act
+        controller.PushUrl(url);
+
+        // Assert
+        Assert.True(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+        Assert.Equal(url, headerUrl.ToString());
+    }
+
+    [Fact]
+    public void Get_PushUrl_WithEmptyUrl_DoesNotAddHeader() {
+        // Arrange
+        // PushUrl is part of the abstract BaseController, so use an AccountController instance to test it.
+        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object) {
+            ControllerContext = new ControllerContext {
+                HttpContext = new DefaultHttpContext()
+            }
+        };
+
+        // Act
+        controller.PushUrl("");
+
+        // Assert
+        Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var _));
     }
 }

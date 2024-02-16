@@ -97,6 +97,15 @@ namespace Folly.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error occurred deleting role..
+        /// </summary>
+        public static string ErrorDeletingRole {
+            get {
+                return ResourceManager.GetString("ErrorDeletingRole", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Another role is already set as the default role..
         /// </summary>
         public static string ErrorDuplicateDefault {
@@ -106,7 +115,7 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A role with this name already exists..
+        ///   Looks up a localized string similar to Role with this name already exists..
         /// </summary>
         public static string ErrorDuplicateName {
             get {
@@ -115,11 +124,20 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to A name is required to create a role..
+        ///   Looks up a localized string similar to Name is required to create a role..
         /// </summary>
         public static string ErrorNameRequired {
             get {
                 return ResourceManager.GetString("ErrorNameRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error occurred refreshing permissions..
+        /// </summary>
+        public static string ErrorRefreshingPermissions {
+            get {
+                return ResourceManager.GetString("ErrorRefreshingPermissions", resourceCulture);
             }
         }
         

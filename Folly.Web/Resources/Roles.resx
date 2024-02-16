@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorDuplicateName" xml:space="preserve">
-    <value>A role with this name already exists.</value>
+    <value>Role with this name already exists.</value>
   </data>
   <data name="Name" xml:space="preserve">
     <value>Name</value>
@@ -154,7 +154,7 @@
     <value>Enter the name for the new role.</value>
   </data>
   <data name="ErrorNameRequired" xml:space="preserve">
-    <value>A name is required to create a role.</value>
+    <value>Name is required to create a role.</value>
   </data>
   <data name="ErrorDuplicateDefault" xml:space="preserve">
     <value>Another role is already set as the default role.</value>
@@ -173,5 +173,11 @@
   </data>
   <data name="ErrorSavingRole" xml:space="preserve">
     <value>Error occurred saving role.</value>
+  </data>
+  <data name="ErrorDeletingRole" xml:space="preserve">
+    <value>Error occurred deleting role.</value>
+  </data>
+  <data name="ErrorRefreshingPermissions" xml:space="preserve">
+    <value>Error occurred refreshing permissions.</value>
   </data>
 </root>

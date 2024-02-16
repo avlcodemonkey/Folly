@@ -10,7 +10,9 @@ using Microsoft.AspNetCore.Mvc;
 namespace Folly.Controllers;
 
 [Authorize(Policy = PermissionRequirementHandler.PolicyName)]
-public class RoleController(IRoleService roleService, IPermissionService permissionService, IAssemblyService assemblyService, ILogger<RoleController> logger) : BaseController(logger) {
+public class RoleController(IRoleService roleService, IPermissionService permissionService, IAssemblyService assemblyService, ILogger<RoleController> logger)
+    : BaseController(logger) {
+
     private readonly IPermissionService _PermissionService = permissionService;
     private readonly IRoleService _RoleService = roleService;
     private readonly IAssemblyService _AssemblyService = assemblyService;
@@ -19,7 +21,8 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
     public IActionResult Index() => View("Index");
 
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
-    public async Task<IActionResult> List() => Ok((await _RoleService.GetAllRolesAsync()).Select(x => new { x.Id, x.Name }));
+    public async Task<IActionResult> List()
+        => Ok((await _RoleService.GetAllRolesAsync()).Select(x => new RoleListResult { Id = x.Id, Name = x.Name }));
 
     private async Task<IActionResult> Save(Role model) {
         if (!ModelState.IsValid) {
@@ -86,14 +89,22 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
 
     [HttpDelete]
     public async Task<IActionResult> Delete(int id) {
-        await _RoleService.DeleteRoleAsync(id);
+        if (!await _RoleService.DeleteRoleAsync(id)) {
+            ViewData.AddError(Roles.ErrorDeletingRole);
+            return Index();
+        }
+
         ViewData.AddMessage(Roles.SuccessDeletingRole);
         return Index();
     }
 
     [HttpGet]
     public async Task<IActionResult> RefreshPermissions() {
-        await new PermissionManager(_AssemblyService, _PermissionService, _RoleService).RegisterAsync();
+        if (!await new PermissionManager(_AssemblyService, _PermissionService, _RoleService).RegisterAsync()) {
+            ViewData.AddError(Roles.ErrorRefreshingPermissions);
+            return Index();
+        }
+
         ViewData.AddMessage(Roles.SuccessRefreshingPermissions);
         return Index();
     }

@@ -17,17 +17,36 @@ public class AccountControllerTests() {
     private readonly Mock<ILanguageService> _MockLanguageService = new();
     private readonly Mock<ILogger<AccountController>> _MockLogger = new();
 
-    [Fact]
-    public void Get_ToggleContextHelp_EnablesHelp() {
-        // Arrange
-        var mockSession = new Mock<ISession>();
-        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object) {
+    private readonly User _UserForSuccess = new() { UserName = "success", Email = "a@b.com" };
+    private readonly User _UserForFailure = new() { UserName = "failure", Email = "b@c.com" };
+    private readonly UpdateAccount _UpdateAccountForSucccess = new() { FirstName = "success", LastName = "last", Email = "a@b.com" };
+    private readonly UpdateAccount _UpdateAccountForFailure = new() { FirstName = "failure", LastName = "last", Email = "b@c.com" };
+    private readonly Language _Language = new() { Id = 1, Name = "test lang", LanguageCode = "en" };
+
+    private AccountController CreateController(string? userName = null) {
+        var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.Name, userName ?? _UserForSuccess.UserName)]));
+
+        _MockUserService.Setup(x => x.GetUserByUserNameAsync(_UserForSuccess.UserName)).ReturnsAsync(_UserForSuccess);
+        _MockUserService.Setup(x => x.GetUserByUserNameAsync(_UserForFailure.UserName)).ReturnsAsync(null as User);
+        _MockUserService.Setup(x => x.UpdateAccountAsync(_UpdateAccountForSucccess)).ReturnsAsync("");
+        _MockUserService.Setup(x => x.UpdateAccountAsync(_UpdateAccountForFailure)).ReturnsAsync("gibberish");
+
+        _MockLanguageService.Setup(x => x.GetLanguageByIdAsync(It.IsAny<int>())).ReturnsAsync(_Language);
+
+        return new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext() {
-                    Session = mockSession.Object
+                    Session = new Mock<ISession>().Object,
+                    User = claimsPrincipal
                 }
             }
         };
+    }
+
+    [Fact]
+    public void Get_ToggleContextHelp_EnablesHelp() {
+        // Arrange
+        var controller = CreateController();
 
         // Act
         var result = controller.ToggleContextHelp();
@@ -41,18 +60,7 @@ public class AccountControllerTests() {
     [Fact]
     public async Task Get_UpdateAccount_WithValidUser_ReturnsView() {
         // Arrange
-        var user = new User { UserName = "test", Email = "a@b.com" };
-        _MockUserService.Setup(x => x.GetUserByUserNameAsync(It.IsAny<string>())).ReturnsAsync(user);
-
-        var claimsIdentity = new ClaimsIdentity([new Claim(ClaimTypes.Name, user.UserName)]);
-        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object) {
-            ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext() {
-                    User = claimsPrincipal
-                }
-            }
-        };
+        var controller = CreateController();
 
         // Act
         var result = await controller.UpdateAccount();
@@ -61,25 +69,14 @@ public class AccountControllerTests() {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("UpdateAccount", viewResult.ViewName);
         var model = Assert.IsAssignableFrom<UpdateAccount>(viewResult.ViewData.Model);
-        Assert.Equal(user.Email, model.Email);
+        Assert.Equal(_UserForSuccess.Email, model.Email);
         _MockUserService.Verify(x => x.GetUserByUserNameAsync(It.IsAny<string>()), Times.Once);
     }
 
     [Fact]
     public async Task Get_UpdateAccount_WithInvalidUser_ReturnsError() {
         // Arrange
-        var user = new User { UserName = "test", Email = "a@b.com" };
-        _MockUserService.Setup(x => x.GetUserByUserNameAsync(It.IsAny<string>())).ReturnsAsync(null as User);
-
-        var claimsIdentity = new ClaimsIdentity([new Claim(ClaimTypes.Name, user.UserName)]);
-        var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object) {
-            ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext() {
-                    User = claimsPrincipal
-                }
-            }
-        };
+        var controller = CreateController(_UserForFailure.UserName);
 
         // Act
         var result = await controller.UpdateAccount();
@@ -94,78 +91,62 @@ public class AccountControllerTests() {
     [Fact]
     public async Task Post_UpdateAccount_WithInvalidModel_ReturnsUpdateWithError() {
         // Arrange
-        var updateAccount = new UpdateAccount { FirstName = "first", LastName = "last", Email = "a@b.com" };
-        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object);
+        var controller = CreateController();
         controller.ModelState.AddModelError("error", "some error");
 
         // Act
-        var result = await controller.UpdateAccount(updateAccount);
+        var result = await controller.UpdateAccount(_UpdateAccountForSucccess);
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("UpdateAccount", viewResult.ViewName);
         var model = Assert.IsAssignableFrom<UpdateAccount>(viewResult.ViewData.Model);
-        Assert.Equal(updateAccount.Email, model.Email);
+        Assert.Equal(_UpdateAccountForSucccess.Email, model.Email);
         Assert.Contains("some error", viewResult.ViewData[ViewProperties.Error]?.ToString());
+        _MockUserService.Verify(x => x.UpdateAccountAsync(It.IsAny<UpdateAccount>()), Times.Never);
     }
 
     [Fact]
     public async Task Post_UpdateAccount_WithValidModel_UpdatesAccount() {
         // Arrange
-        var updateAccount = new UpdateAccount { FirstName = "first", LastName = "last", Email = "a@b.com" };
-        var language = new Language { Id = 1, Name = "test lang", LanguageCode = "en" };
-        var user = new User { UserName = "test", Email = "a@b.com" };
-        _MockUserService.Setup(x => x.UpdateAccountAsync(It.IsAny<UpdateAccount>())).ReturnsAsync("");
-        _MockLanguageService.Setup(x => x.GetLanguageByIdAsync(It.IsAny<int>())).ReturnsAsync(language);
-        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object) {
-            ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext()
-            }
-        };
+        var controller = CreateController();
 
         // Act
-        var result = await controller.UpdateAccount(updateAccount);
+        var result = await controller.UpdateAccount(_UpdateAccountForSucccess);
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("UpdateAccount", viewResult.ViewName);
         var model = Assert.IsAssignableFrom<UpdateAccount>(viewResult.ViewData.Model);
-        Assert.Equal(updateAccount.Email, model.Email);
+        Assert.Equal(_UpdateAccountForSucccess.Email, model.Email);
         Assert.Equal(Account.AccountUpdated, viewResult.ViewData[ViewProperties.Message]?.ToString());
         Assert.True(controller.Response.Headers.TryGetValue("Set-Cookie", out var cookieValue));
         Assert.Contains(CookieRequestCultureProvider.DefaultCookieName, cookieValue.ToString());
+        _MockUserService.Verify(x => x.UpdateAccountAsync(It.IsAny<UpdateAccount>()), Times.Once);
     }
 
     [Fact]
     public async Task Post_UpdateAccount_WithUserServiceError_ReturnsError() {
         // Arrange
-        var updateAccount = new UpdateAccount { FirstName = "first", LastName = "last", Email = "a@b.com" };
-        var language = new Language { Id = 1, Name = "test lang", LanguageCode = "en" };
-        var user = new User { UserName = "test", Email = "a@b.com" };
-        _MockUserService.Setup(x => x.UpdateAccountAsync(It.IsAny<UpdateAccount>())).ReturnsAsync("gibberish");
-        _MockLanguageService.Setup(x => x.GetLanguageByIdAsync(It.IsAny<int>())).ReturnsAsync(language);
-        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object) {
-            ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext()
-            }
-        };
+        var controller = CreateController();
 
         // Act
-        var result = await controller.UpdateAccount(updateAccount);
+        var result = await controller.UpdateAccount(_UpdateAccountForFailure);
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("UpdateAccount", viewResult.ViewName);
         var model = Assert.IsAssignableFrom<UpdateAccount>(viewResult.ViewData.Model);
-        Assert.Equal(updateAccount.Email, model.Email);
+        Assert.Equal(_UpdateAccountForFailure.Email, model.Email);
         Assert.Equal("gibberish", viewResult.ViewData[ViewProperties.Message]?.ToString());
-        Assert.False(controller.Response.Headers.TryGetValue("Set-Cookie", out var cookieValue));
+        Assert.False(controller.Response.Headers.TryGetValue("Set-Cookie", out _));
+        _MockUserService.Verify(x => x.UpdateAccountAsync(It.IsAny<UpdateAccount>()), Times.Once);
     }
 
     [Fact]
     public void Get_AccessDenied_ReturnsView() {
         // Arrange
-        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object);
+        var controller = CreateController();
 
         // Act
         var result = controller.AccessDenied();
@@ -181,12 +162,9 @@ public class AccountControllerTests() {
     public void Get_PushUrl_WithNotEmptyUrl_AddsHeader() {
         // Arrange
         // PushUrl is part of the abstract BaseController, so use an AccountController instance to test it.
-        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object) {
-            ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext()
-            }
-        };
         var url = "/test";
+
+        var controller = CreateController();
 
         // Act
         controller.PushUrl(url);
@@ -200,11 +178,7 @@ public class AccountControllerTests() {
     public void Get_PushUrl_WithEmptyUrl_DoesNotAddHeader() {
         // Arrange
         // PushUrl is part of the abstract BaseController, so use an AccountController instance to test it.
-        var controller = new AccountController(_MockUserService.Object, _MockLanguageService.Object, _MockLogger.Object) {
-            ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext()
-            }
-        };
+        var controller = CreateController();
 
         // Act
         controller.PushUrl("");

@@ -12,14 +12,21 @@ namespace Folly.Web.Tests.Controllers;
 public class ErrorControllerTests() {
     private readonly Mock<ILogger<ErrorController>> _MockLogger = new();
 
-    [Fact]
-    public void Get_Index_WithNoCode_ReturnsView() {
-        // Arrange
-        var controller = new ErrorController(_MockLogger.Object) {
+    private ErrorController CreateController() {
+        _MockLogger.Setup(x => x.Log(LogLevel.Error, It.IsAny<EventId>(), It.Is<It.IsAnyType>((v, t) => true),
+            It.IsAny<Exception>(), It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)));
+
+        return new ErrorController(_MockLogger.Object) {
             ControllerContext = new ControllerContext {
                 HttpContext = new DefaultHttpContext()
             }
         };
+    }
+
+    [Fact]
+    public void Get_Index_WithNoCode_ReturnsView() {
+        // Arrange
+        var controller = CreateController();
 
         // Act
         var result = controller.Index();
@@ -27,22 +34,14 @@ public class ErrorControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("Error", viewResult.ViewName);
-        _MockLogger.Verify(x => x.Log(
-            LogLevel.Error,
-            It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, t) => true),
-            It.IsAny<Exception>(),
-            It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Never);
+        _MockLogger.Verify(x => x.Log(LogLevel.Error, It.IsAny<EventId>(), It.Is<It.IsAnyType>((v, t) => true),
+            It.IsAny<Exception>(), It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Never);
     }
 
     [Fact]
     public void Get_Index_WithCode_LogsErrorAndReturnsView() {
         // Arrange
-        var controller = new ErrorController(_MockLogger.Object) {
-            ControllerContext = new ControllerContext {
-                HttpContext = new DefaultHttpContext()
-            }
-        };
+        var controller = CreateController();
 
         // Act
         var result = controller.Index("code");
@@ -50,11 +49,7 @@ public class ErrorControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("Error", viewResult.ViewName);
-        _MockLogger.Verify(x => x.Log(
-            LogLevel.Error,
-            It.IsAny<EventId>(),
-            It.Is<It.IsAnyType>((v, t) => true),
-            It.IsAny<Exception>(),
-            It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Once);
+        _MockLogger.Verify(x => x.Log(LogLevel.Error, It.IsAny<EventId>(), It.Is<It.IsAnyType>((v, t) => true),
+            It.IsAny<Exception>(), It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Once);
     }
 }

@@ -15,11 +15,22 @@ public class AuditLogControllerTests() {
     private readonly Mock<IAuditLogService> _MockAuditLogService = new();
     private readonly Mock<ILogger<AuditLogController>> _MockLogger = new();
 
+    private readonly AuditLog _AuditLogForSuccess = new() { Id = -100L, BatchId = Guid.NewGuid() };
+    private readonly AuditLog _AuditLogForFailure = new() { Id = -101L, BatchId = Guid.NewGuid() };
+
+    private AuditLogController CreateController() {
+        _MockAuditLogService.Setup(x => x.GetLogByIdAsync(_AuditLogForSuccess.Id)).ReturnsAsync(_AuditLogForSuccess);
+        _MockAuditLogService.Setup(x => x.GetLogByIdAsync(_AuditLogForFailure.Id)).ReturnsAsync(null as AuditLog);
+
+        return new AuditLogController(_MockAuditLogService.Object, _MockUserService.Object, _MockLogger.Object);
+    }
+
     [Fact]
     public void Get_Index_ReturnsView_WithSearchModel() {
         // Arrange
-        var controller = new AuditLogController(_MockAuditLogService.Object, _MockUserService.Object, _MockLogger.Object);
-        var auditLogSearchModel = new AuditLogSearch() { BatchId = Guid.NewGuid() };
+        var auditLogSearchModel = new AuditLogSearch { BatchId = Guid.NewGuid() };
+
+        var controller = CreateController();
 
         // Act
         var result = controller.Index(auditLogSearchModel);
@@ -34,32 +45,29 @@ public class AuditLogControllerTests() {
     [Fact]
     public async Task Get_View_WithValidId_ReturnsView() {
         // Arrange
-        var auditLog = new AuditLog { Id = 1L, BatchId = Guid.NewGuid() };
-        _MockAuditLogService.Setup(x => x.GetLogByIdAsync(It.IsAny<long>())).ReturnsAsync(auditLog);
-        var controller = new AuditLogController(_MockAuditLogService.Object, _MockUserService.Object, _MockLogger.Object);
+        var controller = CreateController();
 
         // Act
-        var result = await controller.View(1L);
+        var result = await controller.View(_AuditLogForSuccess.Id);
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         var model = Assert.IsAssignableFrom<AuditLog>(viewResult.ViewData.Model);
         Assert.Equal("View", viewResult.ViewName);
-        Assert.Equal(auditLog.BatchId, model.BatchId);
+        Assert.Equal(_AuditLogForSuccess.BatchId, model.BatchId);
     }
 
     [Fact]
     public async Task Get_View_WithInvalidId_ReturnsIndexWithError() {
         // Arrange
-        _MockAuditLogService.Setup(x => x.GetLogByIdAsync(It.IsAny<long>())).ReturnsAsync(null as AuditLog);
-        var controller = new AuditLogController(_MockAuditLogService.Object, _MockUserService.Object, _MockLogger.Object);
+        var controller = CreateController();
 
         // Act
-        var result = await controller.View(1L);
+        var result = await controller.View(_AuditLogForFailure.Id);
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsAssignableFrom<AuditLogSearch>(viewResult.ViewData.Model);
+        _ = Assert.IsAssignableFrom<AuditLogSearch>(viewResult.ViewData.Model);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Core.ErrorInvalidId, viewResult.ViewData[ViewProperties.Error]);
     }
@@ -67,10 +75,11 @@ public class AuditLogControllerTests() {
     [Fact]
     public async Task Get_UserList_WithNoQuery_ReturnsFullUserList() {
         // Arrange
-        var user1 = new AutocompleteUser { Value = -1, Label = "last, first" };
-        var user2 = new AutocompleteUser { Value = -2, Label = "berish, gib" };
+        var user1 = new AutocompleteUser { Value = -1, Label = NameHelper.DisplayName("first", "last") };
+        var user2 = new AutocompleteUser { Value = -2, Label = NameHelper.DisplayName("gib", "berish") };
+
         _MockUserService.Setup(x => x.FindAutocompleteUsersByNameAsync(It.IsAny<string>())).ReturnsAsync(new List<AutocompleteUser> { user1, user2 });
-        var controller = new AuditLogController(_MockAuditLogService.Object, _MockUserService.Object, _MockLogger.Object);
+        var controller = CreateController();
 
         // Act
         var result = await controller.UserList("");
@@ -93,8 +102,9 @@ public class AuditLogControllerTests() {
     public async Task Get_UserList_WithQuery_ReturnsMatchingUserList() {
         // Arrange
         var user = new AutocompleteUser { Value = -2, Label = NameHelper.DisplayName("gib", "berish") };
+
         _MockUserService.Setup(x => x.FindAutocompleteUsersByNameAsync(It.IsAny<string>())).ReturnsAsync(new List<AutocompleteUser> { user });
-        var controller = new AuditLogController(_MockAuditLogService.Object, _MockUserService.Object, _MockLogger.Object);
+        var controller = CreateController();
 
         // Act
         var result = await controller.UserList("gib");
@@ -111,9 +121,10 @@ public class AuditLogControllerTests() {
     public async Task Post_Search_WithMatches_ReturnsResultList() {
         // Arrange
         var auditLogSearchResult = new AuditLogSearchResult { Id = 1L, BatchId = Guid.NewGuid() };
+        var auditLogSearchModel = new AuditLogSearch { BatchId = auditLogSearchResult.BatchId, StartDate = null, EndDate = null };
+
         _MockAuditLogService.Setup(x => x.SearchLogsAsync(It.IsAny<AuditLogSearch>())).ReturnsAsync(new List<AuditLogSearchResult> { auditLogSearchResult });
-        var controller = new AuditLogController(_MockAuditLogService.Object, _MockUserService.Object, _MockLogger.Object);
-        var auditLogSearchModel = new AuditLogSearch() { BatchId = auditLogSearchResult.BatchId, StartDate = null, EndDate = null };
+        var controller = CreateController();
 
         // Act
         var result = await controller.Search(auditLogSearchModel);
@@ -128,9 +139,10 @@ public class AuditLogControllerTests() {
     [Fact]
     public async Task Post_Search_WithNoMatches_ReturnsEmptyResultList() {
         // Arrange
+        var auditLogSearchModel = new AuditLogSearch { BatchId = Guid.NewGuid(), StartDate = null, EndDate = null };
+
         _MockAuditLogService.Setup(x => x.SearchLogsAsync(It.IsAny<AuditLogSearch>())).ReturnsAsync(new List<AuditLogSearchResult>());
-        var controller = new AuditLogController(_MockAuditLogService.Object, _MockUserService.Object, _MockLogger.Object);
-        var auditLogSearchModel = new AuditLogSearch() { BatchId = Guid.NewGuid(), StartDate = null, EndDate = null };
+        var controller = CreateController();
 
         // Act
         var result = await controller.Search(auditLogSearchModel);

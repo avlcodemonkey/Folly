@@ -100,4 +100,32 @@ public class PermissionManagerTests {
         mockPermissionService.Verify(x => x.DeletePermissionAsync(It.IsAny<int>()), Times.Exactly(3));
         mockRoleService.Verify(x => x.AddPermissionsToDefaultRoleAsync(It.IsAny<IEnumerable<int>>()), Times.Never);
     }
+
+    [Fact]
+    public async Task Register_WithServiceError_ReturnsFalse() {
+        // arrange
+        var mockAssemblyService = new Mock<IAssemblyService>();
+        mockAssemblyService.Setup(x => x.GetActionList()).Returns([]);
+
+        var mockPermissionService = new Mock<IPermissionService>();
+        mockPermissionService.Setup(x => x.GetAllPermissionsAsync()).ReturnsAsync(_PermissionList);
+        mockPermissionService.Setup(x => x.SavePermissionAsync(It.IsAny<Permission>())).ReturnsAsync(true);
+        // returning false here will trigger the manager to return false
+        mockPermissionService.Setup(x => x.DeletePermissionAsync(It.IsAny<int>())).ReturnsAsync(false);
+
+        var mockRoleService = new Mock<IRoleService>();
+        mockRoleService.Setup(x => x.AddPermissionsToDefaultRoleAsync(It.IsAny<IEnumerable<int>>())).ReturnsAsync(true);
+
+        var permissionManager = new PermissionManager(mockAssemblyService.Object, mockPermissionService.Object, mockRoleService.Object);
+
+        // act
+        var result = await permissionManager.RegisterAsync();
+
+        // assert
+        Assert.False(result);
+        mockPermissionService.Verify(x => x.GetAllPermissionsAsync(), Times.Once);
+        mockPermissionService.Verify(x => x.SavePermissionAsync(It.IsAny<Permission>()), Times.Never);
+        mockPermissionService.Verify(x => x.DeletePermissionAsync(It.IsAny<int>()), Times.Once);
+        mockRoleService.Verify(x => x.AddPermissionsToDefaultRoleAsync(It.IsAny<IEnumerable<int>>()), Times.Never);
+    }
 }

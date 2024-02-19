@@ -61,8 +61,8 @@ public class RoleControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.Null(viewResult.ViewData.Model);
         Assert.Equal("Index", viewResult.ViewName);
+        Assert.Null(viewResult.ViewData.Model);
     }
 
     [Fact]
@@ -77,6 +77,10 @@ public class RoleControllerTests() {
         var okResult = Assert.IsType<OkObjectResult>(result);
         var returnValue = Assert.IsAssignableFrom<IEnumerable<RoleListResult>>(okResult.Value);
         var role = returnValue.FirstOrDefault();
+        Assert.Collection(returnValue,
+            x => Assert.Equal(_RoleForSuccess.Id, x.Id),
+            x => Assert.Equal(_RoleForFailure.Id, x.Id)
+        );
         Assert.Collection(returnValue,
             x => Assert.Equal(_RoleForSuccess.Name, x.Name),
             x => Assert.Equal(_RoleForFailure.Name, x.Name)
@@ -93,8 +97,9 @@ public class RoleControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
         Assert.Equal("CreateEdit", viewResult.ViewName);
+
+        var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
         Assert.Equal(0, model.Id);
     }
 
@@ -110,8 +115,10 @@ public class RoleControllerTests() {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Roles.SuccessSavingRole, viewResult.ViewData[ViewProperties.Message]?.ToString());
+
         Assert.True(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
         Assert.Equal(_Url, headerUrl.ToString());
+
         _MockRoleService.Verify(x => x.SaveRoleAsync(It.IsAny<Role>()), Times.Once);
     }
 
@@ -128,7 +135,12 @@ public class RoleControllerTests() {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("CreateEdit", viewResult.ViewName);
         Assert.Contains("some error", viewResult.ViewData[ViewProperties.Error]?.ToString());
+
         Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+
+        var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
+        Assert.Equal(_RoleForSuccess.Id, model.Id);
+
         _MockRoleService.Verify(x => x.SaveRoleAsync(It.IsAny<Role>()), Times.Never);
     }
 
@@ -144,7 +156,12 @@ public class RoleControllerTests() {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("CreateEdit", viewResult.ViewName);
         Assert.Contains(Roles.ErrorSavingRole, viewResult.ViewData[ViewProperties.Error]?.ToString());
+
         Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+
+        var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
+        Assert.Equal(_RoleForFailure.Id, model.Id);
+
         _MockRoleService.Verify(x => x.SaveRoleAsync(It.IsAny<Role>()), Times.Once);
     }
 
@@ -158,8 +175,9 @@ public class RoleControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
         Assert.Equal("CreateEdit", viewResult.ViewName);
+
+        var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
         Assert.Equal(_RoleForSuccess.Id, model.Id);
     }
 
@@ -173,9 +191,9 @@ public class RoleControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.Null(viewResult.ViewData.Model);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Core.ErrorInvalidId, viewResult.ViewData[ViewProperties.Error]?.ToString());
+        Assert.Null(viewResult.ViewData.Model);
     }
 
     [Fact]
@@ -190,8 +208,11 @@ public class RoleControllerTests() {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Roles.SuccessSavingRole, viewResult.ViewData[ViewProperties.Message]?.ToString());
+        Assert.Null(viewResult.ViewData.Model);
+
         Assert.True(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
         Assert.Equal(_Url, headerUrl.ToString());
+
         _MockRoleService.Verify(x => x.SaveRoleAsync(It.IsAny<Role>()), Times.Once);
     }
 
@@ -208,7 +229,12 @@ public class RoleControllerTests() {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("CreateEdit", viewResult.ViewName);
         Assert.Contains("some error", viewResult.ViewData[ViewProperties.Error]?.ToString());
+
         Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+
+        var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
+        Assert.Equal(_RoleForSuccess.Id, model.Id);
+
         _MockRoleService.Verify(x => x.SaveRoleAsync(It.IsAny<Role>()), Times.Never);
     }
 
@@ -224,7 +250,12 @@ public class RoleControllerTests() {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("CreateEdit", viewResult.ViewName);
         Assert.Contains(Roles.ErrorSavingRole, viewResult.ViewData[ViewProperties.Error]?.ToString());
+
         Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+
+        var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
+        Assert.Equal(_RoleForFailure.Id, model.Id);
+
         _MockRoleService.Verify(x => x.SaveRoleAsync(It.IsAny<Role>()), Times.Once);
     }
 
@@ -238,10 +269,12 @@ public class RoleControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsAssignableFrom<CopyRole>(viewResult.ViewData.Model);
         Assert.Equal("Copy", viewResult.ViewName);
+
+        var model = Assert.IsAssignableFrom<CopyRole>(viewResult.ViewData.Model);
         Assert.Equal(_RoleForSuccess.Id, model.Id);
     }
+
     [Fact]
     public async Task Get_Copy_WithInvalidId_ReturnsIndexViewWithError() {
         // Arrange
@@ -252,9 +285,9 @@ public class RoleControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.Null(viewResult.ViewData.Model);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Core.ErrorInvalidId, viewResult.ViewData[ViewProperties.Error]?.ToString());
+        Assert.Null(viewResult.ViewData.Model);
     }
 
     [Fact]
@@ -269,8 +302,12 @@ public class RoleControllerTests() {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Roles.SuccessCopyingRole, viewResult.ViewData[ViewProperties.Message]?.ToString());
+
         Assert.True(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
         Assert.Equal(_Url, headerUrl.ToString());
+
+        Assert.Null(viewResult.ViewData.Model);
+
         _MockRoleService.Verify(x => x.CopyRoleAsync(It.IsAny<CopyRole>()), Times.Once);
     }
 
@@ -287,7 +324,9 @@ public class RoleControllerTests() {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("Copy", viewResult.ViewName);
         Assert.Contains("some error", viewResult.ViewData[ViewProperties.Error]?.ToString());
+
         Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+
         _MockRoleService.Verify(x => x.CopyRoleAsync(It.IsAny<CopyRole>()), Times.Never);
     }
 
@@ -303,7 +342,9 @@ public class RoleControllerTests() {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("Copy", viewResult.ViewName);
         Assert.Contains(Roles.ErrorSavingRole, viewResult.ViewData[ViewProperties.Error]?.ToString());
+
         Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+
         _MockRoleService.Verify(x => x.CopyRoleAsync(It.IsAny<CopyRole>()), Times.Once);
     }
 
@@ -317,9 +358,10 @@ public class RoleControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.Null(viewResult.ViewData.Model);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Roles.SuccessDeletingRole, viewResult.ViewData[ViewProperties.Message]?.ToString());
+        Assert.Null(viewResult.ViewData.Model);
+
         _MockRoleService.Verify(x => x.DeleteRoleAsync(It.IsAny<int>()), Times.Once);
     }
 
@@ -333,9 +375,10 @@ public class RoleControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.Null(viewResult.ViewData.Model);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Roles.ErrorDeletingRole, viewResult.ViewData[ViewProperties.Error]?.ToString());
+        Assert.Null(viewResult.ViewData.Model);
+
         _MockRoleService.Verify(x => x.DeleteRoleAsync(It.IsAny<int>()), Times.Once);
     }
 
@@ -349,9 +392,9 @@ public class RoleControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.Null(viewResult.ViewData.Model);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Roles.SuccessRefreshingPermissions, viewResult.ViewData[ViewProperties.Message]?.ToString());
+        Assert.Null(viewResult.ViewData.Model);
     }
 
     [Fact]
@@ -365,8 +408,8 @@ public class RoleControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        Assert.Null(viewResult.ViewData.Model);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Roles.ErrorRefreshingPermissions, viewResult.ViewData[ViewProperties.Error]?.ToString());
+        Assert.Null(viewResult.ViewData.Model);
     }
 }

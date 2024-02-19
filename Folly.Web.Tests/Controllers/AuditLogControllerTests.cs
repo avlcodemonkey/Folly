@@ -37,8 +37,9 @@ public class AuditLogControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsAssignableFrom<AuditLogSearch>(viewResult.ViewData.Model);
         Assert.Equal("Index", viewResult.ViewName);
+
+        var model = Assert.IsAssignableFrom<AuditLogSearch>(viewResult.ViewData.Model);
         Assert.Equal(auditLogSearchModel.BatchId, model.BatchId);
     }
 
@@ -52,8 +53,9 @@ public class AuditLogControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        var model = Assert.IsAssignableFrom<AuditLog>(viewResult.ViewData.Model);
         Assert.Equal("View", viewResult.ViewName);
+
+        var model = Assert.IsAssignableFrom<AuditLog>(viewResult.ViewData.Model);
         Assert.Equal(_AuditLogForSuccess.BatchId, model.BatchId);
     }
 
@@ -67,9 +69,9 @@ public class AuditLogControllerTests() {
 
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
-        _ = Assert.IsAssignableFrom<AuditLogSearch>(viewResult.ViewData.Model);
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Core.ErrorInvalidId, viewResult.ViewData[ViewProperties.Error]);
+        _ = Assert.IsAssignableFrom<AuditLogSearch>(viewResult.ViewData.Model);
     }
 
     [Fact]

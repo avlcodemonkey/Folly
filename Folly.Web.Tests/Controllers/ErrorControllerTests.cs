@@ -34,8 +34,10 @@ public class ErrorControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("Error", viewResult.ViewName);
+
         _MockLogger.Verify(x => x.Log(LogLevel.Error, It.IsAny<EventId>(), It.Is<It.IsAnyType>((v, t) => true),
-            It.IsAny<Exception>(), It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Never);
+            It.IsAny<Exception>(), It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Never
+        );
     }
 
     [Fact]
@@ -49,7 +51,9 @@ public class ErrorControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("Error", viewResult.ViewName);
+
         _MockLogger.Verify(x => x.Log(LogLevel.Error, It.IsAny<EventId>(), It.Is<It.IsAnyType>((v, t) => true),
-            It.IsAny<Exception>(), It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Once);
+            It.IsAny<Exception>(), It.Is<Func<It.IsAnyType, Exception?, string>>((v, t) => true)), Times.Once
+        );
     }
 }

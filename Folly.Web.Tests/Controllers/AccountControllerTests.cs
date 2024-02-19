@@ -68,8 +68,10 @@ public class AccountControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("UpdateAccount", viewResult.ViewName);
+
         var model = Assert.IsAssignableFrom<UpdateAccount>(viewResult.ViewData.Model);
         Assert.Equal(_UserForSuccess.Email, model.Email);
+
         _MockUserService.Verify(x => x.GetUserByUserNameAsync(It.IsAny<string>()), Times.Once);
     }
 
@@ -85,6 +87,7 @@ public class AccountControllerTests() {
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("Error", viewResult.ViewName);
         Assert.Equal(Core.ErrorInvalidId, viewResult.ViewData[ViewProperties.Error]?.ToString());
+
         _MockUserService.Verify(x => x.GetUserByUserNameAsync(It.IsAny<string>()), Times.Once);
     }
 
@@ -100,9 +103,11 @@ public class AccountControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("UpdateAccount", viewResult.ViewName);
+        Assert.Contains("some error", viewResult.ViewData[ViewProperties.Error]?.ToString());
+
         var model = Assert.IsAssignableFrom<UpdateAccount>(viewResult.ViewData.Model);
         Assert.Equal(_UpdateAccountForSucccess.Email, model.Email);
-        Assert.Contains("some error", viewResult.ViewData[ViewProperties.Error]?.ToString());
+
         _MockUserService.Verify(x => x.UpdateAccountAsync(It.IsAny<UpdateAccount>()), Times.Never);
     }
 
@@ -117,11 +122,14 @@ public class AccountControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("UpdateAccount", viewResult.ViewName);
+        Assert.Equal(Account.AccountUpdated, viewResult.ViewData[ViewProperties.Message]?.ToString());
+
         var model = Assert.IsAssignableFrom<UpdateAccount>(viewResult.ViewData.Model);
         Assert.Equal(_UpdateAccountForSucccess.Email, model.Email);
-        Assert.Equal(Account.AccountUpdated, viewResult.ViewData[ViewProperties.Message]?.ToString());
+
         Assert.True(controller.Response.Headers.TryGetValue("Set-Cookie", out var cookieValue));
         Assert.Contains(CookieRequestCultureProvider.DefaultCookieName, cookieValue.ToString());
+
         _MockUserService.Verify(x => x.UpdateAccountAsync(It.IsAny<UpdateAccount>()), Times.Once);
     }
 
@@ -136,10 +144,13 @@ public class AccountControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("UpdateAccount", viewResult.ViewName);
+        Assert.Equal("gibberish", viewResult.ViewData[ViewProperties.Message]?.ToString());
+
         var model = Assert.IsAssignableFrom<UpdateAccount>(viewResult.ViewData.Model);
         Assert.Equal(_UpdateAccountForFailure.Email, model.Email);
-        Assert.Equal("gibberish", viewResult.ViewData[ViewProperties.Message]?.ToString());
+
         Assert.False(controller.Response.Headers.TryGetValue("Set-Cookie", out _));
+
         _MockUserService.Verify(x => x.UpdateAccountAsync(It.IsAny<UpdateAccount>()), Times.Once);
     }
 

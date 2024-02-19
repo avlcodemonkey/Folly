@@ -165,4 +165,7 @@
   <data name="ExplainCreate" xml:space="preserve">
     <value>Users are automatically provisioned the first time they single sign-on.  It's best to let that process create users.  If you must create a user manually, make sure you have the correct "name identifier" created by Auth0 to use as the username.</value>
   </data>
+  <data name="ErrorDeletingUser" xml:space="preserve">
+    <value>Error occurred deleting user.</value>
+  </data>
 </root>

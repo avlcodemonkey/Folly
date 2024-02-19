@@ -10,8 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Folly.Controllers;
 
 [Authorize(Policy = PermissionRequirementHandler.PolicyName)]
-public class UserController(IUserService userService, ILanguageService languageService, ILogger<UserController> logger) : BaseController(logger) {
-    private readonly ILanguageService _LanguageService = languageService;
+public class UserController(IUserService userService, ILogger<UserController> logger) : BaseController(logger) {
     private readonly IUserService _UserService = userService;
 
     [HttpGet]
@@ -19,7 +18,9 @@ public class UserController(IUserService userService, ILanguageService languageS
 
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
     public async Task<IActionResult> List()
-        => Ok((await _UserService.GetAllUsersAsync()).Select(x => new { x.Id, x.UserName, x.FirstName, x.LastName, x.Email }));
+        => Ok((await _UserService.GetAllUsersAsync()).Select(x =>
+            new UserListResult { Id = x.Id, UserName = x.UserName, FirstName = x.FirstName, LastName = x.LastName ?? "", Email = x.Email }
+        ));
 
     private async Task<IActionResult> Save(User model) {
         if (!ModelState.IsValid) {
@@ -27,7 +28,11 @@ public class UserController(IUserService userService, ILanguageService languageS
             return View("CreateEdit", model);
         }
 
-        await _UserService.SaveUserAsync(model);
+        if (!await _UserService.SaveUserAsync(model)) {
+            ViewData.AddError(Users.ErrorSavingUser);
+            return View("CreateEdit", model);
+        }
+
         ViewData.AddMessage(Users.SuccessSavingUser);
         PushUrl(Url.Action(nameof(Index)));
         return Index();
@@ -54,7 +59,11 @@ public class UserController(IUserService userService, ILanguageService languageS
 
     [HttpDelete]
     public async Task<IActionResult> Delete(int id) {
-        await _UserService.DeleteUserAsync(id);
+        if (!await _UserService.DeleteUserAsync(id)) {
+            ViewData.AddError(Users.ErrorDeletingUser);
+            return Index();
+        }
+
         ViewData.AddMessage(Users.SuccessDeletingUser);
         return Index();
     }

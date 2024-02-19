@@ -88,6 +88,15 @@ namespace Folly.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error occurred deleting user..
+        /// </summary>
+        public static string ErrorDeletingUser {
+            get {
+                return ResourceManager.GetString("ErrorDeletingUser", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A user with this username already exists..
         /// </summary>
         public static string ErrorDuplicateUserName {

@@ -165,4 +165,7 @@
   <data name="ExplainCreate" xml:space="preserve">
     <value>Los usuarios se aprovisionan automáticamente la primera vez que inician sesión única.  Lo mejor es dejar que ese proceso cree usuarios.  Si debe crear un usuario manualmente, asegúrese de tener el "identificador de nombre" correcto creado por Auth0 para usar como nombre de usuario.</value>
   </data>
+  <data name="ErrorDeletingUser" xml:space="preserve">
+    <value>Se produjo un error al eliminar el usuario.</value>
+  </data>
 </root>

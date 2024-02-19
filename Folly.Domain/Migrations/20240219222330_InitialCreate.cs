@@ -14,26 +14,6 @@ namespace Folly.Domain.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "AuditLog",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    BatchId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Entity = table.Column<string>(type: "TEXT", nullable: false),
-                    PrimaryKey = table.Column<long>(type: "INTEGER", nullable: false),
-                    State = table.Column<int>(type: "INTEGER", nullable: false),
-                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UserId = table.Column<long>(type: "INTEGER", nullable: true),
-                    OldValues = table.Column<string>(type: "TEXT", nullable: true),
-                    NewValues = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AuditLog", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Language",
                 columns: table => new
                 {
@@ -132,6 +112,31 @@ namespace Folly.Domain.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "AuditLog",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    BatchId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Entity = table.Column<string>(type: "TEXT", nullable: false),
+                    PrimaryKey = table.Column<long>(type: "INTEGER", nullable: false),
+                    State = table.Column<int>(type: "INTEGER", nullable: false),
+                    Date = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UserId = table.Column<int>(type: "INTEGER", nullable: true),
+                    OldValues = table.Column<string>(type: "TEXT", nullable: true),
+                    NewValues = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AuditLog", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AuditLog_User_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "UserRole",
                 columns: table => new
                 {
@@ -218,6 +223,11 @@ namespace Folly.Domain.Migrations
                 table: "UserRole",
                 columns: new[] { "Id", "RoleId", "UserId" },
                 values: new object[] { 1, 1, 1 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AuditLog_UserId",
+                table: "AuditLog",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RolePermission_PermissionId",

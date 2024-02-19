@@ -15,7 +15,7 @@ namespace Folly.Domain.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "7.0.12");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
 
             modelBuilder.Entity("Folly.Domain.Models.AuditLog", b =>
                 {
@@ -45,10 +45,12 @@ namespace Folly.Domain.Migrations
                     b.Property<int>("State")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("UserId")
+                    b.Property<int?>("UserId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("AuditLog");
                 });
@@ -496,6 +498,15 @@ namespace Folly.Domain.Migrations
                             UpdatedDate = new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             UserId = 1
                         });
+                });
+
+            modelBuilder.Entity("Folly.Domain.Models.AuditLog", b =>
+                {
+                    b.HasOne("Folly.Domain.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Folly.Domain.Models.RolePermission", b =>

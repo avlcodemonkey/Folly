@@ -7,6 +7,6 @@ namespace Folly.Domain.Attributes;
 /// Attribute equivalent of https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.relationalpropertybuilderextensions.hasdefaultvalue?view=efcore-7.0
 /// </remarks>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
-public class DefaultValueAttribute(object defaultValue) : Attribute {
+public sealed class DefaultValueAttribute(object defaultValue) : Attribute {
     public object DefaultValue { get; } = defaultValue ?? throw new ArgumentException("Default value cannot be empty.", nameof(defaultValue));
 }

@@ -7,7 +7,7 @@ namespace Folly.Domain.Attributes;
 /// Attribute equivalent of https://learn.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.relationalpropertybuilderextensions.hasdefaultvaluesql?view=efcore-7.0
 /// </remarks>
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field, AllowMultiple = false)]
-public class DefaultValueSqlAttribute : Attribute {
+public sealed class DefaultValueSqlAttribute : Attribute {
     public string Sql { get; }
 
     public DefaultValueSqlAttribute(string sql) {

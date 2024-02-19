@@ -171,4 +171,13 @@
   <data name="ConfirmRefreshPermissions" xml:space="preserve">
     <value>Esto añadirá los permisos que falten y eliminará los obsoletos. ¡¿Seguro que quieres continuar?!</value>
   </data>
+  <data name="ErrorSavingRole" xml:space="preserve">
+    <value>Se produjo un error al guardar el rol.</value>
+  </data>
+  <data name="ErrorDeletingRole" xml:space="preserve">
+    <value>Se produjo un error al eliminar el rol.</value>
+  </data>
+  <data name="ErrorRefreshingPermissions" xml:space="preserve">
+    <value>Se produjo un error al actualizar los permisos.</value>
+  </data>
 </root>

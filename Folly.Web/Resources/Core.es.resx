@@ -306,4 +306,7 @@
   <data name="TableTooManyResults" xml:space="preserve">
     <value>Demasiados datos para mostrar.</value>
   </data>
+  <data name="AutocompleteNoMatches" xml:space="preserve">
+    <value>No hay coincidencias.</value>
+  </data>
 </root>

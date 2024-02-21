@@ -175,7 +175,9 @@ public class ControllerExtensionsTests {
         var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
 
         // act
+#pragma warning disable CS8604 // Possible null reference argument.
         Assert.Throws<ArgumentNullException>(() => viewData.AddError(null as ModelStateDictionary));
+#pragma warning restore CS8604 // Possible null reference argument.
     }
 
     [Fact]
@@ -216,7 +218,9 @@ public class ControllerExtensionsTests {
         var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
 
         // act
+#pragma warning disable CS8604 // Possible null reference argument.
         viewData.AddError(null as string);
+#pragma warning restore CS8604 // Possible null reference argument.
 
         // assert
         Assert.False(viewData.ContainsKey(ViewProperties.Error));
@@ -260,7 +264,9 @@ public class ControllerExtensionsTests {
         var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
 
         // act
+#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
         viewData.AddMessage(null);
+#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
         // assert
         Assert.False(viewData.ContainsKey(ViewProperties.Message));

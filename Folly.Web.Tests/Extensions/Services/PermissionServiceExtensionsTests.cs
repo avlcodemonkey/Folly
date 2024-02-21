@@ -4,9 +4,6 @@ using Folly.Extensions.Services;
 namespace Folly.Web.Tests.Extensions.Services;
 
 public class PermissionServiceExtensionsTests {
-
-    public PermissionServiceExtensionsTests() { }
-
     [Fact]
     public void SelectSingleAsDTO_ReturnsProjectedDTO() {
         // arrange

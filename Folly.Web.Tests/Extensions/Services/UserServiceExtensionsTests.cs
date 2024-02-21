@@ -5,9 +5,6 @@ using Folly.Utils;
 namespace Folly.Web.Tests.Extensions.Services;
 
 public class UserServiceExtensionsTests {
-
-    public UserServiceExtensionsTests() { }
-
     [Fact]
     public void SelectSingleAsDTO_ReturnsProjectedDTO() {
         // arrange

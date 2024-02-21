@@ -28,7 +28,10 @@ public static class ControllerExtensions {
     /// </summary>
     /// <param name="value">Controller name to strip.</param>
     /// <returns>Shortened controller name.</returns>
-    public static string StripController(this string value) => value[..value.LastIndexOf("Controller")];
+    public static string StripController(this string value) {
+        var i = value.LastIndexOf("Controller", StringComparison.InvariantCultureIgnoreCase);
+        return i > -1 ? value[..i] : value;
+    }
 
     /// <summary>
     /// Convert IEnumerable to a list of select list items.
@@ -39,7 +42,7 @@ public static class ControllerExtensions {
     /// <param name="value">Funciton to get the option value.</param>
     /// <returns>List of select list items.</returns>
     public static List<SelectListItem> ToSelectList<T>(this IEnumerable<T> enumerable, Func<T, string> text, Func<T, string> value)
-        => enumerable.Select(f => new SelectListItem { Text = text(f), Value = value(f) }).ToList();
+        => enumerable.Select(x => new SelectListItem { Text = text(x), Value = value(x) }).ToList();
 
     /// <summary>
     /// Convert the ModelStateDictionary into a string of errors and adds the error message to the ViewData dictionary.
@@ -49,7 +52,10 @@ public static class ControllerExtensions {
     public static void AddError(this ViewDataDictionary viewData, ModelStateDictionary modelState) {
         ArgumentNullException.ThrowIfNull(modelState);
 
-        viewData.AddError(string.Join(" <br />", modelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToArray()));
+        var errors = modelState.Values.SelectMany(x => x.Errors).Where(x => !string.IsNullOrWhiteSpace(x.ErrorMessage));
+        if (errors.Any()) {
+            viewData.AddError(string.Join(" <br />", errors.Select(x => x.ErrorMessage).ToArray()));
+        }
     }
 
     /// <summary>
@@ -58,9 +64,9 @@ public static class ControllerExtensions {
     /// <param name="viewData">ViewData to update.</param>
     /// <param name="error">Error message to add.</param>
     public static void AddError(this ViewDataDictionary viewData, string error) {
-        ArgumentNullException.ThrowIfNull(error);
-
-        viewData[ViewProperties.Error] = error;
+        if (!string.IsNullOrWhiteSpace(error)) {
+            viewData[ViewProperties.Error] = error;
+        }
     }
 
     /// <summary>
@@ -69,8 +75,8 @@ public static class ControllerExtensions {
     /// <param name="viewData">ViewData to update.</param>
     /// <param name="message">Message to add.</param>
     public static void AddMessage(this ViewDataDictionary viewData, string message) {
-        ArgumentNullException.ThrowIfNull(message);
-
-        viewData[ViewProperties.Message] = message;
+        if (!string.IsNullOrWhiteSpace(message)) {
+            viewData[ViewProperties.Message] = message;
+        }
     }
 }

@@ -6,5 +6,5 @@ public static class StringExtensions {
     /// </summary>
     /// <param name="val">Value to attempt to convert.</param>
     /// <returns>Bool value</returns>
-    public static bool ToBool(this string? val) => val != null && (val == "1" || val.Equals("true", StringComparison.CurrentCultureIgnoreCase));
+    public static bool ToBool(this string? val) => val != null && (val == "1" || val.Equals("true", StringComparison.InvariantCultureIgnoreCase));
 }

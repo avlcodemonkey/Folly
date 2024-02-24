@@ -10,9 +10,6 @@ const args = {
     platform: 'browser',
     sourcemap: true,
     target: 'esnext',
-    loader: {
-        '.woff2': 'dataurl',
-    },
     logLevel: 'info'
 };
 

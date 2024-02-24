@@ -8,10 +8,12 @@
         "eslint-config-airbnb": "^19.0.4",
         "eslint-config-airbnb-base": "^15.0.0",
         "fs": "^0.0.1-security",
+        "jsdom": "^24.0.0",
         "path": "^0.12.7",
         "stylelint": "^16.1.0",
         "stylelint-config-standard": "^36.0.0",
-        "svgo": "^3.1.0"
+        "svgo": "^3.1.0",
+        "vitest": "^1.3.1"
     },
     "scripts": {
         "build": "node build.mjs",
@@ -19,6 +21,7 @@
         "svgo": "svgo -f Assets/icons/svg -o Assets/icons/optimized",
         "css:lint": "stylelint Assets/src/css/*.css",
         "css:fix": "stylelint Assets/src/css/*.css --fix",
+        "test": "vitest"
     },
     "dependencies": {
         "autocompleter": "^9.1.2",

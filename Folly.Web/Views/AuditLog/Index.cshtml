@@ -56,7 +56,7 @@
             <th width="@Html.Width(ColumnWidth.SingleIcon)"></th>
             <th data-property="universalDate">@AuditLogs.Date</th>
             <th data-property="userFullName">@AuditLogs.User</th>
-            <th data-property="stateDesc">@AuditLogs.State</th>
+            <th data-property="state">@AuditLogs.State</th>
             <th data-property="entity">@AuditLogs.Entity</th>
             <th data-property="batchId">@AuditLogs.Batch</th>
         </data-head>
@@ -69,7 +69,7 @@
             @* @todo replace this date-format when a user setting is added*@
             <td><nilla-date data-date-format="MM/DD/YYYY hh:mm:ss A">{{universalDate}}</nilla-date></td>
             <td>{{userFullName}}</td>
-            <td>{{stateDesc}}</td>
+            <td>{{state}}</td>
             <td>{{entity}}</td>
             <td>{{batchId}}</td>
         </data-body>

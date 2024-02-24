@@ -3,7 +3,7 @@ import esbuild from "esbuild";
 const watch = process.argv.includes("--watch");
 
 const args = {
-    entryPoints: ['./Assets/js/index.js', './Assets/css/index.css'],
+    entryPoints: ['./Assets/src/js/index.js', './Assets/src/css/index.css'],
     outdir: 'wwwroot',
     bundle: true,
     minify: true,

@@ -1,13 +1,13 @@
 /* chota.css */
-@import url("../external/chota/src/_base.css");
-@import url("../external/chota/src/_grid.css");
-@import url("../external/chota/src/_form.css");
-@import url("../external/chota/src/_card.css");
-@import url("../external/chota/src/_dropdown.css");
-@import url("../external/chota/src/_util.css");
+@import url("../../external/chota/src/_base.css");
+@import url("../../external/chota/src/_grid.css");
+@import url("../../external/chota/src/_form.css");
+@import url("../../external/chota/src/_card.css");
+@import url("../../external/chota/src/_dropdown.css");
+@import url("../../external/chota/src/_util.css");
 
 /* menu styles */
-@import url("../external/luxbar/css/luxbar.css");
+@import url("../../external/luxbar/css/luxbar.css");
 
 /* custom styles */
 @import url("./root.css");

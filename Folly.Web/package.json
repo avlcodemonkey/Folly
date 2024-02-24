@@ -17,8 +17,8 @@
         "build": "node build.mjs",
         "watch": "node build.mjs --watch",
         "svgo": "svgo -f Assets/icons/svg -o Assets/icons/optimized",
-        "css:lint": "stylelint Assets/css/*.css",
-        "css:fix": "stylelint Assets/css/*.css --fix"
+        "css:lint": "stylelint Assets/src/css/*.css",
+        "css:fix": "stylelint Assets/src/css/*.css --fix",
     },
     "dependencies": {
         "autocompleter": "^9.1.2",

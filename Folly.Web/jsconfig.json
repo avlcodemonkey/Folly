@@ -10,7 +10,7 @@
         "maxNodeModuleJsDepth": 0  // needed to disable type checking in node_modules. tsconfig defaults to zero but jsconfig default to 2
     },
     "include": [
-        "Assets/js"
+        "Assets/src/js"
     ],
     "exclude": [
         "node_modules",

@@ -6,7 +6,7 @@
     <ScopedCssEnabled>false</ScopedCssEnabled>
     <RootNamespace>Folly</RootNamespace>
     <Product>Folly</Product>
-    <AssemblyVersion>1.0.0.41</AssemblyVersion>
+    <AssemblyVersion>1.0.0.42</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <TypeScriptTarget>ESNext</TypeScriptTarget>

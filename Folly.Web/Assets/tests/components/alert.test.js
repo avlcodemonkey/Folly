@@ -40,6 +40,7 @@ function getAlert() {
 function getDismissButton() {
     return getAlert()?.querySelector('[data-dismiss]');
 }
+
 /**
  * Gets the button that should do nothing.
  * @returns {HTMLElement | null | undefined} Dismiss button
@@ -55,20 +56,33 @@ describe('dismissable alert', async () => {
     });
 
     it('should have test text', async () => {
-        const node = getAlert();
-        expect(node.innerHTML).toContain(textContent);
+        const alert = getAlert();
+
+        expect(alert.innerHTML).toContain(textContent);
     });
 
     it('should hide on dismiss button click', async () => {
-        getDismissButton()?.click();
+        const alert = getAlert();
+        const dismissButton = getDismissButton();
+
+        dismissButton?.click();
         await tick();
-        expect(getAlert()?.classList ?? []).toContain('is-hidden');
+
+        expect(alert).toBeTruthy();
+        expect(dismissButton).toBeTruthy();
+        expect(alert.classList).toContain('is-hidden');
     });
 
     it('should not hide on do nothing button click', async () => {
+        const alert = getAlert();
+        const doNothingButton = getDoNothingButton();
+
         getDoNothingButton()?.click();
         await tick();
-        expect(getAlert()?.classList ?? []).not.toContain('is-hidden');
+
+        expect(alert).toBeTruthy();
+        expect(doNothingButton).toBeTruthy();
+        expect(alert.classList).not.toContain('is-hidden');
     });
 });
 
@@ -79,17 +93,26 @@ describe('not dismissable alert', async () => {
     });
 
     it('should have test text', async () => {
-        const node = getAlert();
-        expect(node.innerHTML).toContain(textContent);
+        const alert = getAlert();
+
+        expect(alert.innerHTML).toContain(textContent);
     });
 
     it('should have no dismiss button', async () => {
-        expect(getDismissButton()).toBeFalsy();
+        const dismissButton = getDismissButton();
+
+        expect(dismissButton).toBeFalsy();
     });
 
     it('should not hide on do nothing button click', async () => {
-        getDoNothingButton()?.click();
+        const alert = getAlert();
+        const doNothingButton = getDoNothingButton();
+
+        doNothingButton?.click();
         await tick();
-        expect(getAlert()?.classList ?? []).not.toContain('is-hidden');
+
+        expect(alert).toBeTruthy();
+        expect(doNothingButton).toBeTruthy();
+        expect(alert.classList).not.toContain('is-hidden');
     });
 });

@@ -46,3 +46,6 @@ details {
     justify-content: flex-end;
 }
 
+.h-scroll {
+    overflow-x: auto;
+}

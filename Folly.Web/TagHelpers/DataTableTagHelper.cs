@@ -48,6 +48,7 @@ public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(h
 
         var rowDiv = new TagBuilder("div");
         rowDiv.AddCssClass("row");
+        rowDiv.AddCssClass("h-scroll");
         rowDiv.InnerHtml.AppendHtml(sortAscTemplate);
         rowDiv.InnerHtml.AppendHtml(sortDescTemplate);
         rowDiv.InnerHtml.AppendHtml(table);

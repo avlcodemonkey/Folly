@@ -130,6 +130,12 @@ class BaseDialog extends HTMLElement {
         document.body.appendChild(this.dialog);
 
         this.registerTabTrap();
+
+        // manually close the dialog when clicking a button instead of using `form method="dialog"` so this is testable
+        this.dialog.querySelector('[data-dialog-footer]').querySelectorAll('button').forEach((x) => x.addEventListener('click', () => {
+            this.dialog.close(x.value);
+        }));
+
         this.dialog.addEventListener('close', () => {
             const { returnValue } = this.dialog;
             this.removeDocumentEventListeners();
@@ -153,7 +159,7 @@ class BaseDialog extends HTMLElement {
     makeDialogHtml(content, ok, cancel) {
         return `<dialog hx-disable>
             <p class="p-2">${mustache.escape(content)}</p>
-            <form method="dialog" class="ml-2">${this.makeDialogButtons(ok, cancel)}</form>
+            <div class="ml-2" data-dialog-footer>${this.makeDialogButtons(ok, cancel)}</div>
         </dialog>`;
     }
 
@@ -166,10 +172,10 @@ class BaseDialog extends HTMLElement {
     // eslint-disable-next-line class-methods-use-this
     makeDialogButtons(ok, cancel) {
         if (cancel) {
-            return `<button class="button primary" value="cancel" autofocus>${mustache.escape(cancel)}</button>
-                <button class="button dark" value="ok">${mustache.escape(ok)}</button>`;
+            return `<button type="button" class="button primary" value="cancel" autofocus>${mustache.escape(cancel)}</button>
+                <button type="button" class="button dark" value="ok">${mustache.escape(ok)}</button>`;
         }
-        return `<button class="button success" value="ok" autofocus>${mustache.escape(ok)}</button>`;
+        return `<button type="button" class="button success" value="ok" autofocus>${mustache.escape(ok)}</button>`;
     }
 }
 

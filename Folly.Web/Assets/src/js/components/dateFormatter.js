@@ -11,13 +11,14 @@ class DateFormatter extends HTMLElement {
         super();
 
         this.dateFormat = this.dataset.dateFormat;
-        try {
-            const date = new Date(this.textContent);
-            if (date) {
-                const formattedDate = this.dateFormat ? format(date, this.dateFormat) : date.toLocaleString();
-                this.textContent = formattedDate;
-            }
-        } catch { /* empty */ }
+        if (this.textContent) {
+            try {
+                const date = new Date(this.textContent);
+                if (date && date.toString() !== 'Invalid Date') {
+                    this.textContent = this.dateFormat ? format(date, this.dateFormat) : date.toLocaleString();
+                }
+            } catch { /* empty */ }
+        }
     }
 }
 

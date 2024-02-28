@@ -1,3 +1,8 @@
+/**
+ * Unit tests for nilla-date.
+ * Doesn't try to test 3rd party fecha library.
+ */
+
 import {
     describe, expect, it,
 } from 'vitest';

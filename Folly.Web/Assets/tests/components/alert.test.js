@@ -1,3 +1,7 @@
+/**
+ * Unit tests for nilla-alert.
+ */
+
 import {
     beforeEach, describe, expect, it,
 } from 'vitest';

@@ -1,3 +1,8 @@
+/**
+ * Unit tests for nilla-json.
+ * Doesn't try to test 3rd party prettyPrintJson library.
+ */
+
 import {
     beforeEach, describe, expect, it,
 } from 'vitest';

@@ -88,7 +88,7 @@ class Autocomplete extends HTMLElement {
 
     disconnectedCallback() {
         // this could cause trouble if we later start detaching/reattaching autocompletes from the DOM
-        this.autocompleter.destroy();
+        this.autocompleter?.destroy();
     }
 }
 

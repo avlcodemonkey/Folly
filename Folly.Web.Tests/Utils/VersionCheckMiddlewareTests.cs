@@ -23,14 +23,14 @@ public class VersionCheckMiddlewareTests {
         // arrange
         var mockHttpContext = new Mock<HttpContext>();
         var headerDictionary = new HeaderDictionary();
-        mockHttpContext.Setup(x => x.Request.Headers[HtmxHeaders.Version]).Returns(_VersionNumber);
+        mockHttpContext.Setup(x => x.Request.Headers[PJax.Version]).Returns(_VersionNumber);
         mockHttpContext.Setup(x => x.Response.Headers).Returns(headerDictionary);
 
         // act
         var result = _VersionCheckMiddleware.InvokeAsync(mockHttpContext.Object);
 
         // assert
-        Assert.False(headerDictionary.ContainsKey(HtmxHeaders.Refresh));
+        Assert.False(headerDictionary.ContainsKey(PJax.Refresh));
         mockHttpContext.Verify(x => x.Request.Headers, Times.Once);
         mockHttpContext.Verify(x => x.Response.Headers, Times.Never);
     }
@@ -47,7 +47,7 @@ public class VersionCheckMiddlewareTests {
         var result = _VersionCheckMiddleware.InvokeAsync(mockHttpContext.Object);
 
         // assert
-        Assert.False(headerDictionary.ContainsKey(HtmxHeaders.Refresh));
+        Assert.False(headerDictionary.ContainsKey(PJax.Refresh));
         mockHttpContext.Verify(x => x.Request.Headers, Times.Once);
         mockHttpContext.Verify(x => x.Response.Headers, Times.Never);
     }
@@ -57,14 +57,14 @@ public class VersionCheckMiddlewareTests {
         // arrange
         var mockHttpContext = new Mock<HttpContext>();
         var headerDictionary = new HeaderDictionary();
-        mockHttpContext.Setup(x => x.Request.Headers[HtmxHeaders.Version]).Returns("-1.0.0.0");
+        mockHttpContext.Setup(x => x.Request.Headers[PJax.Version]).Returns("-1.0.0.0");
         mockHttpContext.Setup(x => x.Response.Headers).Returns(headerDictionary);
 
         // act
         var result = _VersionCheckMiddleware.InvokeAsync(mockHttpContext.Object);
 
         // assert
-        Assert.True(headerDictionary.ContainsKey(HtmxHeaders.Refresh));
+        Assert.True(headerDictionary.ContainsKey(PJax.Refresh));
         mockHttpContext.Verify(x => x.Request.Headers, Times.Once);
         mockHttpContext.Verify(x => x.Response.Headers, Times.Once);
     }

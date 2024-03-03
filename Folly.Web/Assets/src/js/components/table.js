@@ -1,4 +1,3 @@
-import * as htmx from 'htmx.org';
 // @ts-ignore VS doesn't like this import but it builds fine
 import ky from 'ky';
 import mustache from 'mustache';
@@ -545,9 +544,6 @@ class Table extends HTMLElement {
 
         const html = this.filteredRows.map((row) => mustache.render(template.innerHTML, row)).join('\n');
         tbody.insertAdjacentHTML('beforeend', html);
-
-        // after rendering let htmx reprocess the table rows to add event listeners
-        htmx.process(tbody);
     }
 
     /**

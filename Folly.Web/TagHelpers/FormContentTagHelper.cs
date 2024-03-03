@@ -28,7 +28,16 @@ public sealed class FormContentTagHelper(IHtmlHelper htmlHelper, IUrlHelperFacto
         output.TagMode = TagMode.StartTagAndEndTag;
         output.TagName = "form";
         output.AddClass("container", HtmlEncoder.Default);
-        output.Attributes.SetAttribute("method", Method.ToString());
+
+        if (Method == HttpMethod.Get || Method == HttpMethod.Post) {
+            // GET and POST can use standard method attribute
+            output.Attributes.SetAttribute("method", Method.ToString());
+        } else {
+            // other methods have to use custom attribute
+            // @todo move attribute name into a constant somewhere else
+            output.Attributes.SetAttribute("data-pjax-method", Method.ToString());
+        }
+
         output.Attributes.SetAttribute("id", $"{Action}{Controller}Form");
 
         var urlHelper = _UrlHelperFactory.GetUrlHelper(HtmlHelper!.ViewContext);

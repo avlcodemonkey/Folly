@@ -16,9 +16,9 @@ public sealed class VersionCheckMiddleware {
     }
 
     public async Task InvokeAsync(HttpContext context) {
-        var acceptVersion = context.Request.Headers[HtmxHeaders.Version].ToString();
+        var acceptVersion = context.Request.Headers[PJax.Version].ToString();
         if (!string.IsNullOrWhiteSpace(acceptVersion) && _VersionNumber != acceptVersion) {
-            context.Response.Headers[HtmxHeaders.Refresh] = "true";
+            context.Response.Headers[PJax.Refresh] = "true";
         }
         await _Next(context);
     }

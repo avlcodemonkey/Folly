@@ -17,61 +17,63 @@
         <script src="~/js/index.js" asp-append-version="true" defer></script>
     </head>
 
-    <body hx-boost="true" hx-target="#main" hx-history="false" hx-indicator="#htmx-indicator" hx-headers='{"@HtmxHeaders.Version": "@Html.ApplicationVersionNumber()"}' data-environment>
-        <header id="luxbar" class="luxbar">
-            <input type="checkbox" id="luxbar-checkbox" />
-            <div class="luxbar-menu">
-                <ul class="luxbar-navigation">
-                    <li authorize-roles="dashboard.index" class="luxbar-header">
-                        <a asp-controller="Dashboard" asp-action="Index" class="luxbar-brand"><icon name="Sun" label="@Core.Brand" show-label /></a>
-                        <label class="luxbar-hamburger" for="luxbar-checkbox"> <span></span> </label>
-                    </li>
+    <body data-environment>
+        <nilla-pjax data-target="#main" data-loading-indicator="#pjax-indicator" data-version="@Html.ApplicationVersionNumber()">
+            <header id="luxbar" class="luxbar">
+                <input type="checkbox" id="luxbar-checkbox" />
+                <div class="luxbar-menu">
+                    <ul class="luxbar-navigation">
+                        <li authorize-roles="dashboard.index" class="luxbar-header">
+                            <a asp-controller="Dashboard" asp-action="Index" class="luxbar-brand"><icon name="Sun" label="@Core.Brand" show-label /></a>
+                            <label class="luxbar-hamburger" for="luxbar-checkbox"> <span></span> </label>
+                        </li>
 
-                    @if (User.Identity?.IsAuthenticated == true)
-                    {
-                        <li authorize-roles="role.index">
-                            <a asp-controller="Role" asp-action="Index"><icon name="Lock" label="@Roles.MenuItem" show-label /></a>
-                        </li>
-                        <li authorize-roles="user.index">
-                            <a asp-controller="User" asp-action="Index"><icon name="Users" label="@Users.MenuItem" show-label /></a>
-                        </li>
-                        <li authorize-roles="auditlog.index">
-                            <a asp-controller="AuditLog" asp-action="Index"><icon name="DocumentEmpty" label="@AuditLogs.MenuItem" show-label /></a>
-                        </li>
-                        <li class="luxbar-dropdown">
-                            <a href="#"><icon name="Settings" label="@Account.Settings" show-label /></a>
-                            <ul>
-                                <li authorize-roles="account.updateAccount">
-                                    <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Flag" label="@Core.Help" show-label /></a>
-                                </li>
-                                <li authorize-roles="account.updateAccount">
-                                    <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" label="@Account.UpdateAccount" show-label /></a>
-                                </li>
-                                <li>
-                                    <nilla-info data-dialog-content="@Html.ApplicationVersionName()" data-dialog-ok="@Core.Okay">
-                                        <a href="#"><icon name="Sun" label="@Core.About" show-label /></a>
-                                    </nilla-info>
-                                </li>
-                                <li>
-                                    <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" label="@Account.Logout" show-label /></a>
-                                </li>
-                            </ul>
-                        </li>
-                    }
-                    else
-                    {
-                        <li>
-                            <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="LogIn" label="@Account.Login" show-label /></a>
-                        </li>
-                    }
-                </ul>
-            </div>
-        </header>
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            <li authorize-roles="role.index">
+                                <a asp-controller="Role" asp-action="Index"><icon name="Lock" label="@Roles.MenuItem" show-label /></a>
+                            </li>
+                            <li authorize-roles="user.index">
+                                <a asp-controller="User" asp-action="Index"><icon name="Users" label="@Users.MenuItem" show-label /></a>
+                            </li>
+                            <li authorize-roles="auditlog.index">
+                                <a asp-controller="AuditLog" asp-action="Index"><icon name="DocumentEmpty" label="@AuditLogs.MenuItem" show-label /></a>
+                            </li>
+                            <li class="luxbar-dropdown">
+                                <a href="#"><icon name="Settings" label="@Account.Settings" show-label /></a>
+                                <ul>
+                                    <li authorize-roles="account.updateAccount">
+                                        <a asp-controller="Account" asp-action="ToggleContextHelp"><icon name="Flag" label="@Core.Help" show-label /></a>
+                                    </li>
+                                    <li authorize-roles="account.updateAccount">
+                                        <a asp-controller="Account" asp-action="UpdateAccount"><icon name="User" label="@Account.UpdateAccount" show-label /></a>
+                                    </li>
+                                    <li>
+                                        <nilla-info data-dialog-content="@Html.ApplicationVersionName()" data-dialog-ok="@Core.Okay">
+                                            <a href="#"><icon name="Sun" label="@Core.About" show-label /></a>
+                                        </nilla-info>
+                                    </li>
+                                    <li>
+                                        <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" label="@Account.Logout" show-label /></a>
+                                    </li>
+                                </ul>
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="LogIn" label="@Account.Login" show-label /></a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </header>
 
-        <div id="main" hx-history-elt>
-            @RenderBody()
-        </div>
+                <div id="main" hx-history-elt>
+                    @RenderBody()
+                </div>
 
-        <div id="htmx-indicator"></div>
+            <div id="pjax-indicator"></div>
+        </nilla-pjax>
     </body>
 </html>

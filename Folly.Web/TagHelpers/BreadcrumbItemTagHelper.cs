@@ -15,20 +15,18 @@ public sealed class BreadcrumbItemTagHelper(IHtmlHelper htmlHelper) : BaseTagHel
     public override async Task ProcessAsync(TagHelperContext context, TagHelperOutput output) {
         Contextualize();
 
-        if (Active) {
-            HtmlHelper!.ViewData[ViewProperties.Title] = Label;
-            output.Content.Append(Label);
+        if (HtmlHelper != null) {
+            if (Active) {
+                HtmlHelper.ViewData[ViewProperties.Title] = Label;
+                output.Content.Append(Label);
 
-            if (!string.IsNullOrWhiteSpace(Label) && HtmlHelper.ViewContext.HttpContext.Request.Headers.Any(x => x.Key == HtmxHeaders.Request)) {
-                // create a new title tag that htmx will swap out
-                var title = new TagBuilder("title");
-                title.MergeAttribute("id", "page-title");
-                title.MergeAttribute("hx-swap-oob", "true");
-                title.InnerHtml.Append(Label);
-                output.PostContent.AppendHtml(title);
+                var httpContext = HtmlHelper.ViewContext.HttpContext;
+                if (!string.IsNullOrWhiteSpace(Label) && httpContext.Request.Headers.Any(x => x.Key.ToLowerInvariant() == PJax.Request)) {
+                    httpContext.Response.Headers.Append(PJax.Title, Label);
+                }
+            } else {
+                output.Content.AppendHtml(HtmlHelper.ActionLink(Label, Action, Controller, RouteValues));
             }
-        } else {
-            output.Content.AppendHtml(HtmlHelper.ActionLink(Label, Action, Controller, RouteValues));
         }
 
         output.TagName = "li";

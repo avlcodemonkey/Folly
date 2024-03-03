@@ -94,6 +94,7 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
             return Index();
         }
 
+        PushUrl(Url.Action(nameof(Index)));
         ViewData.AddMessage(Roles.SuccessDeletingRole);
         return Index();
     }

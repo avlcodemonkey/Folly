@@ -181,7 +181,7 @@ public class AccountControllerTests() {
         controller.PushUrl(url);
 
         // Assert
-        Assert.True(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+        Assert.True(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
         Assert.Equal(url, headerUrl.ToString());
     }
 
@@ -195,6 +195,6 @@ public class AccountControllerTests() {
         controller.PushUrl("");
 
         // Assert
-        Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var _));
+        Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var _));
     }
 }

@@ -116,7 +116,7 @@ public class UserControllerTests() {
         Assert.Equal(Users.SuccessSavingUser, viewResult.ViewData[ViewProperties.Message]?.ToString());
         Assert.Null(viewResult.ViewData.Model);
 
-        Assert.True(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+        Assert.True(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
         Assert.Equal(_Url, headerUrl.ToString());
 
         _MockUserService.Verify(x => x.SaveUserAsync(It.IsAny<User>()), Times.Once);
@@ -136,7 +136,7 @@ public class UserControllerTests() {
         Assert.Equal("CreateEdit", viewResult.ViewName);
         Assert.Contains("some error", viewResult.ViewData[ViewProperties.Error]?.ToString());
 
-        Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+        Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
 
         var model = Assert.IsAssignableFrom<User>(viewResult.ViewData.Model);
         Assert.Equal(_UserForSuccess.Id, model.Id);
@@ -157,7 +157,7 @@ public class UserControllerTests() {
         Assert.Equal("CreateEdit", viewResult.ViewName);
         Assert.Contains(Users.ErrorSavingUser, viewResult.ViewData[ViewProperties.Error]?.ToString());
 
-        Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+        Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
 
         var model = Assert.IsAssignableFrom<User>(viewResult.ViewData.Model);
         Assert.Equal(_UserForFailure.Id, model.Id);
@@ -209,7 +209,7 @@ public class UserControllerTests() {
         Assert.Equal("Index", viewResult.ViewName);
         Assert.Equal(Users.SuccessSavingUser, viewResult.ViewData[ViewProperties.Message]?.ToString());
 
-        Assert.True(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+        Assert.True(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
         Assert.Equal(_Url, headerUrl.ToString());
 
         Assert.Null(viewResult.ViewData.Model);
@@ -231,7 +231,7 @@ public class UserControllerTests() {
         Assert.Equal("CreateEdit", viewResult.ViewName);
         Assert.Contains("some error", viewResult.ViewData[ViewProperties.Error]?.ToString());
 
-        Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+        Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
 
         var model = Assert.IsAssignableFrom<User>(viewResult.ViewData.Model);
         Assert.Equal(_UserForSuccess.Id, model.Id);
@@ -252,7 +252,7 @@ public class UserControllerTests() {
         Assert.Equal("CreateEdit", viewResult.ViewName);
         Assert.Contains(Users.ErrorSavingUser, viewResult.ViewData[ViewProperties.Error]?.ToString());
 
-        Assert.False(controller.Response.Headers.TryGetValue(HtmxHeaders.PushUrl, out var headerUrl));
+        Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
 
         var model = Assert.IsAssignableFrom<User>(viewResult.ViewData.Model);
         Assert.Equal(_UserForFailure.Id, model.Id);

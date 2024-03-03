@@ -29,7 +29,7 @@
                     <icon name="EditAlt" label="@Users.EditUser" />
                 </a>
                 <nilla-confirm authorize-roles="user.delete">
-                    <a href="@Url.ActionForMustache("Delete")" class="button dark" role="button" data-pjax-method="delete" data-dialog-ok="@Core.Okay"
+                    <a href="@Url.ActionForMustache("Delete")" class="button dark" data-pjax-method="delete" data-dialog-ok="@Core.Okay"
                         data-dialog-cancel="@Core.Cancel" data-dialog-content="@string.Format(Core.ConfirmDeleteBody, Users.UserLower)"
                     >
                         <icon name="DeleteAlt" label="@Core.Delete" />

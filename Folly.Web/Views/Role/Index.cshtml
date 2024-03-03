@@ -17,11 +17,11 @@
                     <icon name="Add" label="@Roles.CreateRole" />
                 </a>
                 <nilla-confirm authorize-roles="role.refreshpermissions">
-                    <button class="button primary" role="button" type="button" hx-get="@Url.Action("RefreshPermissions", "Role")"
-                        data-dialog-ok="@Core.Okay" data-dialog-cancel="@Core.Cancel" data-dialog-content="@Roles.ConfirmRefreshPermissions"
+                    <a href="@Url.Action("RefreshPermissions", "Role")" class="button primary" data-dialog-ok="@Core.Okay"
+                        data-dialog-cancel="@Core.Cancel" data-dialog-content="@Roles.ConfirmRefreshPermissions"
                     >
                         <icon name="Refresh" label="@Roles.RefreshPermissions" />
-                    </button>
+                    </a>
                 </nilla-confirm>
             </th>
             <th width="@Html.Width(ColumnWidth.Id)" data-property="id">@Core.Id</th>
@@ -36,7 +36,7 @@
                     <icon name="Copy" label="@Core.Copy" />
                 </a>
                 <nilla-confirm authorize-roles="role.delete">
-                    <a href="@Url.ActionForMustache("Delete")" class="button dark" role="button" data-pjax-method="delete" data-dialog-ok="@Core.Okay"
+                    <a href="@Url.ActionForMustache("Delete")" class="button dark" data-pjax-method="delete" data-dialog-ok="@Core.Okay"
                         data-dialog-cancel="@Core.Cancel" data-dialog-content="@string.Format(Core.ConfirmDeleteBody, Roles.RoleLower)"
                     >
                         <icon name="DeleteAlt" label="@Core.Delete" />

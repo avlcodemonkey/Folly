@@ -70,11 +70,11 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter the name for the new role..
+        ///   Looks up a localized string similar to Copy Role.
         /// </summary>
-        public static string CopyBody {
+        public static string CopyRole {
             get {
-                return ResourceManager.GetString("CopyBody", resourceCulture);
+                return ResourceManager.GetString("CopyRole", resourceCulture);
             }
         }
         
@@ -174,6 +174,15 @@ namespace Folly.Resources {
         public static string Name {
             get {
                 return ResourceManager.GetString("Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Name.
+        /// </summary>
+        public static string NewName {
+            get {
+                return ResourceManager.GetString("NewName", resourceCulture);
             }
         }
         

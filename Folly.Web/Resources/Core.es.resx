@@ -309,4 +309,7 @@
   <data name="AutocompleteNoMatches" xml:space="preserve">
     <value>No hay coincidencias.</value>
   </data>
+  <data name="ErrorTryRefreshing" xml:space="preserve">
+    <value>Se produjo un error no controlado.</value>
+  </data>
 </root>

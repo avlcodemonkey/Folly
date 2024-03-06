@@ -1,5 +1,11 @@
 // @ts-ignore VS doesn't like this import but it builds fine
-import ky, { HTTPError } from 'ky';
+import ky from 'ky';
+import BaseComponent from './baseComponent';
+import { getResponseBody, isJson } from './responseUtils';
+
+/**
+ * @typedef {import('ky').HTTPError} HTTPError
+ */
 
 /**
  * Enum for http request methods.
@@ -14,49 +20,34 @@ const HttpVerbs = Object.freeze({
 });
 
 /**
- * Get content type from reponse.
- * @param {Response} response
- * @returns {string} content type
+ * Enum for identifiers to query DOM elements.
+ * @readonly
+ * @enum {string}
  */
-function getContentType(response) {
-    return response && response.headers.has('content-type') ? response.headers.get('content-type') : '';
-}
+const Elements = Object.freeze({
+    Target: 'target',
+    LoadingIndicator: 'loading-indicator',
+    InfoDialog: 'info-dialog',
+});
 
 /**
- * Check if response is json.
- * @param {Response} response
- * @returns {boolean} True if response is json.
+ * Enum for special headers.
+ * @readonly
+ * @enum {string}
  */
-function isJson(response) {
-    return getContentType(response).indexOf('application/json') > -1;
-}
-
-/**
-* Get the body from the response.
-* @param {Response} response
-* @returns {Promise<string>} Response content.
-*/
-async function getResponseBody(response) {
-    const body = await (getContentType(response).indexOf('application/json') > -1 ? response.json() : response.text());
-    return body;
-}
+const Headers = Object.freeze({
+    Title: 'x-pjax-title',
+    PushUrl: 'x-pjax-push-url',
+    Refresh: 'x-pjax-refresh',
+    PJax: 'x-pjax',
+    PJaxVersion: 'x-pjax-version',
+    RequestedWith: 'X-Requested-With'
+});
 
 /**
  * Web component for pushState + ajax support.
  */
-class PJax extends HTMLElement {
-    /**
-     * Selector for the target container that responses should be replaced into.
-     * @type {string}
-     */
-    target = '';
-
-    /**
-     * Selector for the loading indicator.
-     * @type {string}
-     */
-    loadingIndicator = '';
-
+class PJax extends BaseComponent {
     /**
      * Version number to include with requests.
      * @type {string}
@@ -77,19 +68,19 @@ class PJax extends HTMLElement {
 
     /**
      * Bound popState event listener.
-     * @type {(event: any) => Promise<void>}
+     * @type {(event: any) => Promise<void>|undefined}
      */
     popStateListener;
 
     /**
      * Bound click event listener.
-     * @type {(event: any) => Promise<void>}
+     * @type {(event: any) => Promise<void>|undefined}
      */
     clickListener;
 
     /**
      * Bound submit event listener.
-     * @type {(event: any) => Promise<void>}
+     * @type {(event: any) => Promise<void>|undefined}
      */
     submitListener;
 
@@ -98,12 +89,6 @@ class PJax extends HTMLElement {
      * @type {string}
      */
     currentUrlForHistory;
-
-    /**
-     * Request method of the current page to use when creating history.
-     * @type {string}
-     */
-    currentMethodForHistory;
 
     /**
      * Url origin
@@ -117,21 +102,11 @@ class PJax extends HTMLElement {
     constructor() {
         super();
 
-        // @todo maybe convert to use destructing?
-        if (this.dataset.target) {
-            this.target = this.dataset.target;
-        }
-        if (this.dataset.loadingIndicator) {
-            this.loadingIndicator = this.dataset.loadingIndicator;
-        }
+        // set the prefix to use when querying/caching elements
+        super.elementPrefix = 'pjax';
+
         if (this.dataset.version) {
             this.version = this.dataset.version;
-        }
-        if (this.dataset.ignoreFileTypes) {
-            this.ignoreFileTypes = this.dataset.ignoreFileTypes.split(',') ?? [];
-        }
-        if (this.dataset.excludeAttribute) {
-            this.excludeAttribute = this.dataset.excludeAttribute;
         }
 
         this.popStateListener = (event) => this.onPopState(event);
@@ -143,21 +118,31 @@ class PJax extends HTMLElement {
         this.addEventListener('submit', this.submitListener);
 
         // create a state object for the current page with out special properties
-        window.history.replaceState({ url: document.location.href, title: document.title, method: HttpVerbs.GET }, '');
+        window.history.replaceState({ url: document.location.href, title: document.title }, '');
 
         const currentUrl = new URL(document.location.href);
         this.currentUrlForHistory = currentUrl.pathname;
-        this.currentMethodForHistory = HttpVerbs.GET;
         this.origin = currentUrl.origin;
     }
 
     /**
-     * Removes event listeners.
+     * Clean up when removing component.
      */
     disconnectedCallback() {
-        window.removeEventListener('popstate', this.popStateListener);
-        this.removeEventListener('click', this.clickListener);
-        this.removeEventListener('submit', this.submitListener);
+        if (this.popStateListener) {
+            window.removeEventListener('popstate', this.popStateListener);
+            this.popStateListener = undefined;
+        }
+        if (this.clickListener) {
+            this.removeEventListener('click', this.clickListener);
+            this.clickListener = undefined;
+        }
+        if (this.submitListener) {
+            this.removeEventListener('submit', this.submitListener);
+            this.submitListener = undefined;
+        }
+
+        super.disconnectedCallback();
     }
 
     /**
@@ -166,13 +151,14 @@ class PJax extends HTMLElement {
      */
     async onPopState(event) {
         if (event.state !== null) {
-            // stop if url or method is missing from state
-            if (!(event.state.url && event.state.method && URL.canParse(event.state.url, this.origin))) {
+            // stop if url is missing from state
+            if (!(event.state.url && URL.canParse(event.state.url, this.origin))) {
                 return;
             }
 
             // If there is a state object, handle it as a page load.
-            await this.requestPage(new URL(event.state.url, this.origin), event.state.method, false);
+            // history is only designed to work with GET requests.  don't want to try to store/rebuild request body for other methods like POST/PUT
+            await this.requestPage(new URL(event.state.url, this.origin), HttpVerbs.GET, false);
         }
     }
 
@@ -183,6 +169,7 @@ class PJax extends HTMLElement {
     async onClickListener(event) {
         /** @type {HTMLLinkElement} */
         // @ts-ignore HTMLLinkElement is correct type but js can't cast
+        // eslint-disable-next-line prefer-destructuring
         let target = event.target; // || event.srcElement;
         if (target.nodeName !== 'A') {
             // @ts-ignore HTMLLinkElement is correct type but js can't cast
@@ -219,17 +206,11 @@ class PJax extends HTMLElement {
             return;
         }
 
-        // Allow middle click (pages in new windows)
-        // @todo how should i fix this?
-        if (event.which > 1 || event.metaKey || event.ctrlKey) {
-            return;
-        }
-
         // Don't fire normal event
         event.preventDefault();
 
-        // Take no action if we are already on said page and reload isn't allowed
-        if (document.location.href === target.href && !target.hasAttribute('data-pjax-reload')) {
+        // Take no action if we are already on requested page
+        if (document.location.href === target.href) {
             return;
         }
 
@@ -238,43 +219,8 @@ class PJax extends HTMLElement {
             method = HttpVerbs.GET;
         }
 
-        // @todo shouldn't have to worry about confirmation, but may want to handle form changes still
-        // Check for confirmation or form changes before loading content.
-        // if (target.getAttribute('data-confirm')) {
-        //    Alertify.dismissAll();
-        //    Alertify.confirm(target.getAttribute('data-confirm'), pjax.handle.bind(null, options), function(e) { e.target.focus(); });
-        // } else if (target.getAttribute('data-prompt')) {
-        //    Alertify.dismissAll();
-        //    Alertify.prompt(target.getAttribute('data-prompt'), function(promptValue) {
-        //        if (!promptValue) {
-        //            Alertify.error(pjax.errorMessagePrompt);
-        //            return false;
-        //        }
-        //        options.url += ((!/[?&]/.test(options.url)) ? '?prompt' : '&prompt') + '=' + encodeURIComponent(promptValue);
-        //        pjax.invoke(options);
-        //    });
-        // } else {
-        //    var form = $.get('form.has-changes');
-        //    if (form)
-        //        Alertify.confirm(form.getAttribute('data-confirm'), pjax.handle.bind(null, options), function(e) { e.target.focus(); });
-        //    else
-        //        pjax.handle(options);
-        // }
-
         await this.requestPage(url, method, true);
     }
-
-    /**
-     * Form change listener.
-     * @todo might want to implement this later still
-     */
-    // $.on(document, 'change', function(event) {
-    //    var target = event.target || event.srcElement;
-    //    // Ignore change unless its form input
-    //    if (['INPUT', 'SELECT', 'TEXTAREA'].indexOf(target.nodeName) === -1)
-    //        return;
-    //    $.addClass($.closest('FORM', target), 'has-changes');
-    // });
 
     /**
      * Form submit listener.
@@ -283,8 +229,8 @@ class PJax extends HTMLElement {
     async onSubmitListener(event) {
         /** @type {HTMLFormElement} */
         // @ts-ignore HTMLFormElement is correct type but js can't cast
-        // @todo do i need to replace srcElement somehow?
-        let target = event.target; // || event.srcElement;
+        // eslint-disable-next-line prefer-destructuring
+        let target = event.target;
         if (target.nodeName !== 'FORM') {
             target = target.closest('form');
         }
@@ -312,8 +258,16 @@ class PJax extends HTMLElement {
         // Don't fire normal event
         event.preventDefault();
 
+        let method = target.dataset.pjaxMethod;
+        if (!(method && method.toUpperCase() in HttpVerbs)) {
+            method = target.method;
+        }
+        if (!(method && method.toUpperCase() in HttpVerbs)) {
+            method = HttpVerbs.POST;
+        }
+
         // handle the submission
-        await this.submitForm(target);
+        await this.submitForm(url, method, target);
     }
 
     /**
@@ -330,15 +284,11 @@ class PJax extends HTMLElement {
 
         try {
             const response = await ky(url, {
-                method: method || 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-PJax': 'true',
-                    'X-PJax-Version': this.version,
-                },
+                method,
+                headers: this.buildRequestHeaders(),
             });
 
-            await this.processResponse(url, method, updateHistory, response);
+            await this.processResponse(url, updateHistory, response);
         } catch (error) {
             await this.handleResponseError(error);
         } finally {
@@ -348,33 +298,21 @@ class PJax extends HTMLElement {
 
     /**
      * Performs form submission to server and handles the result.
+     * @param {URL} url Url to request.
+     * @param {string} method Http method to use for request.
      * @param {HTMLFormElement} form
      */
-    async submitForm(form) {
+    async submitForm(url, method, form) {
         this.showLoadingIndicator();
-
-        const url = new URL(form.action);
-
-        let method = form.dataset.pjaxMethod;
-        if (!(method && method.toUpperCase() in HttpVerbs)) {
-            method = form.method;
-        }
-        if (!(method && method.toUpperCase() in HttpVerbs)) {
-            method = HttpVerbs.POST;
-        }
 
         try {
             const response = await ky(url, {
                 method,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'X-PJax': 'true',
-                    'X-PJax-Version': this.version,
-                },
+                headers: this.buildRequestHeaders(),
                 body: new FormData(form),
             });
 
-            await this.processResponse(url, method, true, response);
+            await this.processResponse(url, true, response);
         } catch (error) {
             await this.handleResponseError(error);
         } finally {
@@ -383,17 +321,28 @@ class PJax extends HTMLElement {
     }
 
     /**
+     * Creates headers to use with requests to server.
+     * @returns {object} Headers for ky request
+     */
+    buildRequestHeaders() {
+        const headers = {};
+        headers[Headers.RequestedWith] = 'XMLHttpRequest';
+        headers[Headers.PJax] = true;
+        headers[Headers.PJaxVersion] = this.version;
+        return headers;
+    }
+
+    /**
      * Process a response from the server.
      * @param {URL} requestUrl Requested url.
-     * @param {string} requestMethod Request method.
      * @param {boolean} updateHistory Update browser history if true.
      * @param {Response} response Fetch response.
      */
-    async processResponse(requestUrl, requestMethod, updateHistory, response) {
+    async processResponse(requestUrl, updateHistory, response) {
         const body = await getResponseBody(response);
 
         // reload the page if the refresh header was included
-        if (response.headers.has('x-pjax-refresh')) {
+        if (response.headers.has(Headers.Refresh)) {
             document.location.href = requestUrl.href;
             return;
         }
@@ -401,40 +350,31 @@ class PJax extends HTMLElement {
         // make sure request is successful and response is HTML
         if (response.ok && !isJson(response)) {
             if (updateHistory) {
-                const newUrl = response.headers.has('x-pjax-push-url') ? response.headers.get('x-pjax-push-url') : requestUrl.pathname;
-                const newMethod = (response.headers.has('x-pjax-push-method') ? response.headers.get('x-pjax-push-method') : requestMethod).toLowerCase();
+                const newUrl = response.headers.has(Headers.PushUrl) ? response.headers.get(Headers.PushUrl) : requestUrl.pathname;
 
-                // @todo this isn't building history correctly for deleted
-                if (this.currentUrlForHistory !== newUrl || this.currentMethodForHistory !== newMethod) {
-                    // don't add page to history unless the url or method changed
-                    // this makes sure requests like deletes don't create duplicate history
+                if (this.currentUrlForHistory !== newUrl) {
+                    // don't add page to history unless the url changed
                     this.currentUrlForHistory = newUrl;
-                    this.currentMethodForHistory = newMethod;
 
                     // push the page into the history
-                    window.history.pushState({
-                        url: this.currentUrlForHistory, title: document.title, method: this.currentMethodForHistory,
-                    }, '', this.currentUrlForHistory);
+                    window.history.pushState({ url: this.currentUrlForHistory, title: document.title }, '', this.currentUrlForHistory);
                 }
             }
 
-            // Update the DOM with the new content
-            const targetElement = this.target ? document.querySelector(this.target) : this;
+            // update the DOM with the new content
+            const targetElement = this.getElement(Elements.Target);
             if (targetElement) {
                 targetElement.innerHTML = body;
             }
 
             // set the document title if title header exists
-            if (response.headers.has('x-pjax-title')) {
-                document.title = response.headers.get('x-pjax-title');
+            if (response.headers.has(Headers.Title)) {
+                document.title = response.headers.get(Headers.Title);
             }
 
-            // @todo should this scroll to 0,0 or use this.getBoundingClientRect().top/left
             window.scrollTo(0, 0);
         } else {
-            // @todo implement error handler
-            // error response should be json
-            // dialog.alert(body?.error ?? body.message);
+            this.showErrorDialog();
         }
     }
 
@@ -442,7 +382,7 @@ class PJax extends HTMLElement {
      * Shows the loading indicator.
      */
     showLoadingIndicator() {
-        const element = this.loadingIndicator ? document.querySelector(this.loadingIndicator) : undefined;
+        const element = this.getElement(Elements.LoadingIndicator);
         if (element) {
             element.classList.add('pjax-request');
         }
@@ -452,7 +392,7 @@ class PJax extends HTMLElement {
      * Hides the loading indicator.
      */
     hideLoadingIndicator() {
-        const element = this.loadingIndicator ? document.querySelector(this.loadingIndicator) : undefined;
+        const element = this.getElement(Elements.LoadingIndicator);
         if (element) {
             element.classList.remove('pjax-request');
         }
@@ -463,18 +403,20 @@ class PJax extends HTMLElement {
      * @param {HTTPError} error
      */
     async handleResponseError(error) {
-        // @todo error handling needs more testing
-        if (error.response?.status && [400, 401, 402, 403].indexOf(error.response.status) > -1) {
-            // try to find a safe place to redirect this user to since we don't know what went wrong
-            const locationHeader = error.response.headers.get('location');
-            if (locationHeader) {
-                window.location.href = locationHeader;
-            } else {
-                window.location.reload();
-            }
-        } else {
-            // @todo how do i display errors to the user?  maybe use a nilla-info?
-            // dialog.alert((await error.response?.text()) ?? 'An unhandled error occurred.');
+        // @todo may want to display error.message to user somehow
+        console.error(error.message);
+
+        this.showErrorDialog();
+    }
+
+    /**
+     * Shows the error dialog.
+     */
+    showErrorDialog() {
+        const element = this.getElement(Elements.InfoDialog);
+        if (element) {
+            // @ts-ignore element will be a nilla-info dialog so `show` will work.
+            element.show();
         }
     }
 }

@@ -150,9 +150,6 @@
   <data name="MenuItem" xml:space="preserve">
     <value>Roles</value>
   </data>
-  <data name="CopyBody" xml:space="preserve">
-    <value>Escriba el nombre para el nuevo papel.</value>
-  </data>
   <data name="ErrorNameRequired" xml:space="preserve">
     <value>Un nombre es necesaria para crear un rol.</value>
   </data>
@@ -179,5 +176,11 @@
   </data>
   <data name="ErrorRefreshingPermissions" xml:space="preserve">
     <value>Se produjo un error al actualizar los permisos.</value>
+  </data>
+  <data name="NewName" xml:space="preserve">
+    <value>Nuevo nombre</value>
+  </data>
+  <data name="CopyRole" xml:space="preserve">
+    <value>Copiar rol</value>
   </data>
 </root>

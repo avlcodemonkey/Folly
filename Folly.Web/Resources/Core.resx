@@ -309,4 +309,7 @@
   <data name="AutocompleteNoMatches" xml:space="preserve">
     <value>No matching results.</value>
   </data>
+  <data name="ErrorTryRefreshing" xml:space="preserve">
+    <value>An unhandled error occurred.  Try refreshing the page.</value>
+  </data>
 </root>

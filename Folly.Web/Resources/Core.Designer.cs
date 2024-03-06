@@ -340,6 +340,15 @@ namespace Folly.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An unhandled error occurred.  Try refreshing the page..
+        /// </summary>
+        public static string ErrorTryRefreshing {
+            get {
+                return ResourceManager.GetString("ErrorTryRefreshing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You must select a user or a role..
         /// </summary>
         public static string ErrorUserOrRole {

@@ -18,7 +18,7 @@
     </head>
 
     <body data-environment>
-        <nilla-pjax data-target="#main" data-loading-indicator="#pjax-indicator" data-version="@Html.ApplicationVersionNumber()">
+        <nilla-pjax data-version="@Html.ApplicationVersionNumber()">
             <header id="luxbar" class="luxbar">
                 <input type="checkbox" id="luxbar-checkbox" />
                 <div class="luxbar-menu">
@@ -54,7 +54,7 @@
                                         </nilla-info>
                                     </li>
                                     <li>
-                                        <a asp-controller="Account" asp-action="Logout" hx-boost="false"><icon name="LogOut" label="@Account.Logout" show-label /></a>
+                                        <a asp-controller="Account" asp-action="Logout" data-pjax-no-follow><icon name="LogOut" label="@Account.Logout" show-label /></a>
                                     </li>
                                 </ul>
                             </li>
@@ -62,18 +62,19 @@
                         else
                         {
                             <li>
-                                <a asp-controller="Account" asp-action="Login" hx-boost="false"><icon name="LogIn" label="@Account.Login" show-label /></a>
+                                <a asp-controller="Account" asp-action="Login" data-pjax-no-follow><icon name="LogIn" label="@Account.Login" show-label /></a>
                             </li>
                         }
                     </ul>
                 </div>
             </header>
 
-                <div id="main" hx-history-elt>
+                <div id="main" data-pjax-target>
                     @RenderBody()
                 </div>
 
-            <div id="pjax-indicator"></div>
+            <div id="pjax-indicator" data-pjax-loading-indicator></div>
+            <nilla-info id="pjax-info-dialog" data-pjax-info-dialog data-dialog-content="@Core.ErrorTryRefreshing" data-dialog-ok="@Core.Okay"></nilla-info>
         </nilla-pjax>
     </body>
 </html>

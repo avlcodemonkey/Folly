@@ -64,8 +64,8 @@ public class UserController(IUserService userService, ILogger<UserController> lo
             return Index();
         }
 
-        PushUrl(Url.Action(nameof(Index)));
         ViewData.AddMessage(Users.SuccessDeletingUser);
+        PushUrl(Url.Action(nameof(Index)));
         return Index();
     }
 }

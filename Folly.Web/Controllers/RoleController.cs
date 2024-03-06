@@ -82,8 +82,8 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
             return View("Copy", model);
         }
 
-        PushUrl(Url.Action(nameof(Index)));
         ViewData.AddMessage(Roles.SuccessCopyingRole);
+        PushUrl(Url.Action(nameof(Index)));
         return Index();
     }
 
@@ -94,8 +94,8 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
             return Index();
         }
 
-        PushUrl(Url.Action(nameof(Index)));
         ViewData.AddMessage(Roles.SuccessDeletingRole);
+        PushUrl(Url.Action(nameof(Index)));
         return Index();
     }
 
@@ -107,6 +107,7 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
         }
 
         ViewData.AddMessage(Roles.SuccessRefreshingPermissions);
+        PushUrl(Url.Action(nameof(Index)));
         return Index();
     }
 }

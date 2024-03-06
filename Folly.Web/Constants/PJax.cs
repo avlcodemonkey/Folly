@@ -1,11 +1,11 @@
 namespace Folly.Constants;
 
 /// <summary>
-/// Custom headers to use with pjax.
+/// Constants to use with pjax.
 /// </summary>
 public class PJax {
     /// <summary>
-    /// Request header that is always true when HTMX initiates the request.
+    /// Request header that is always true when pjax initiates the request.
     /// </summary>
     public const string Request = "x-pjax";
 
@@ -23,11 +23,6 @@ public class PJax {
     /// Response header that pushes a new url into the history stack.
     /// </summary>
     public const string PushUrl = "x-pjax-push-url";
-
-    /// <summary>
-    /// Response header that pushes a new request method into the history stack.
-    /// </summary>
-    public const string PushMethod = "x-pjax-push-method";
 
     /// <summary>
     /// Response header that will do a full refresh of the page client side if set to true.

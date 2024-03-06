@@ -1,6 +1,7 @@
 // @ts-ignore VS doesn't like this import but it builds fine
 import ky from 'ky';
 import mustache from 'mustache';
+import BaseComponent from './baseComponent';
 import FetchError from './fetchError';
 
 /**
@@ -69,7 +70,7 @@ const Elements = Object.freeze({
 /**
  * Web component for rendering table data.
  */
-class Table extends HTMLElement {
+class Table extends BaseComponent {
     /**
      * Unique identifier for this table.
      * @type {string}
@@ -161,16 +162,13 @@ class Table extends HTMLElement {
     error = false;
 
     /**
-     * Stores commonly queried nodes to improve performance.
-     * @type {Node[]}
-     */
-    elementCache = [];
-
-    /**
      * Initialize table by loading settings from sessionStorage, processing HTML to add event handlers, and fetching data from the server.
      */
     constructor() {
         super();
+
+        // set the prefix to use when querying/caching elements
+        super.elementPrefix = 'table';
 
         this.key = this.dataset.key;
         this.srcUrl = this.dataset.srcUrl;
@@ -197,23 +195,10 @@ class Table extends HTMLElement {
     }
 
     /**
-     * Removes references to elements when the component is removed from the document.
-     * Doing this to help with garbage collection, but may not be strictly necessary.
+     * Clean up when removing component.
      */
     disconnectedCallback() {
-        this.elementCache = [];
-    }
-
-    /**
-     * Gets the specified DOM element. Will load from cache, or find using querySelector and add to cache if not in cache.
-     * @param {Elements} elementKey Key for the element to find.
-     * @returns {HTMLElement} Element to find.
-     */
-    getElement(elementKey) {
-        if (!this.elementCache[elementKey]) {
-            this.elementCache[elementKey] = this.querySelector(`[data-table-${elementKey}]`);
-        }
-        return this.elementCache[elementKey];
+        super.disconnectedCallback();
     }
 
     /**

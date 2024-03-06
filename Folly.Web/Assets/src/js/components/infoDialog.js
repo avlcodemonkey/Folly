@@ -4,11 +4,21 @@ import BaseDialog from './baseDialog';
  * Extend the custom dialog class to create the alert web component.
  */
 class InfoDialog extends BaseDialog {
+    /**
+     * Initialize component.
+     */
     constructor() {
         super();
 
         // add event listener for all links and buttons inside the component
         this.querySelectorAll('a, button').forEach((x) => x.addEventListener('click', this));
+    }
+
+    /**
+     * Clean up when removing component.
+     */
+    disconnectedCallback() {
+        super.disconnectedCallback();
     }
 
     /**
@@ -26,6 +36,16 @@ class InfoDialog extends BaseDialog {
         event.stopImmediatePropagation();
 
         this.showDialog(dialogContent, dialogOk);
+    }
+
+    /**
+     * Manually show the modal.
+     */
+    show() {
+        const { dialogContent, dialogOk } = this.dataset;
+        if (dialogContent && dialogOk) {
+            this.showDialog(dialogContent, dialogOk);
+        }
     }
 }
 

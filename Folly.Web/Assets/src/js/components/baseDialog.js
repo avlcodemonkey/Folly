@@ -1,46 +1,30 @@
 import mustache from 'mustache';
+import BaseComponent from './baseComponent';
 
 /**
- * Wraps event listeners for tracking/removal.
- * @typedef TrackedListener
- * @type {object}
- * @property {string} type Event type.
- * @property {EventListener} listener Callback function for event.
+ * Extend the base component to provide common functionality for custom dialogs.
  */
-
-/**
- * Extend the HTMLElement class to create custom dialogs.
- */
-class BaseDialog extends HTMLElement {
+class BaseDialog extends BaseComponent {
     /** @type {HTMLDialogElement} */
     dialog;
 
     /**
-     * Tracks added event listeners so they can be cleaned up.
-     * @type { TrackedListener[] }
+     * Bound focusin event listener.
+     * @type {(event: any) => void|undefined}
      */
-    documentEventListeners = [];
+    focusInListener;
 
     /**
-     * Add event tracked listener to the document.
-     * @param {string} type Event type
-     * @param {EventListener} listener Callback function
+     * Clean up when the component is removed from the document.
      */
-    addDocumentEventListener(type, listener) {
-        document.addEventListener(type, listener);
-        this.documentEventListeners.push({ type, listener });
-    }
-
-    /**
-     * Remove all tracked document event listeners.
-     */
-    removeDocumentEventListeners() {
-        let eventListenerReference;
-        // eslint-disable-next-line no-cond-assign
-        while ((eventListenerReference = this.documentEventListeners.shift())) {
-            document.removeEventListener(eventListenerReference.type, eventListenerReference.listener);
-            eventListenerReference = undefined;
+    disconnectedCallback() {
+        // listener should have been removed when the dialog closed, but better safe
+        if (this.focusInListener) {
+            document.removeEventListener('focusin', this.focusInListener);
+            this.focusInListener = undefined;
         }
+
+        super.disconnectedCallback();
     }
 
     /**
@@ -71,13 +55,13 @@ class BaseDialog extends HTMLElement {
         const firstTabbableElement = tabbableElements[0];
         const lastTabbableElement = tabbableElements[tabbableElements.length - 1];
 
-        this.addDocumentEventListener('focusin', (event) => {
-            // @ts-ignore target type is Node but VS can't infer that
+        this.focusInListener = (event) => {
             if (!this.dialog.contains(event.target)) {
                 event.preventDefault();
                 firstTabbableElement.focus();
             }
-        });
+        };
+        document.addEventListener('focusin', this.focusInListener);
 
         firstTabbableElement.addEventListener('keydown', (event) => {
             if (event.key === 'Tab' && event.shiftKey) {
@@ -138,7 +122,11 @@ class BaseDialog extends HTMLElement {
 
         this.dialog.addEventListener('close', () => {
             const { returnValue } = this.dialog;
-            this.removeDocumentEventListeners();
+
+            if (this.focusInListener) {
+                document.removeEventListener('focusin', this.focusInListener);
+                this.focusInListener = undefined;
+            }
             this.dialog.remove();
             this.dialog = undefined;
 
@@ -151,14 +139,14 @@ class BaseDialog extends HTMLElement {
 
     /**
      * Create the HTML for the dialog element.
-     * @param {string} content Text to display in the body of the dialog.
-     * @param {string} ok Label for the ok button.
-     * @param {string|undefined} cancel Label for the cancel button
+     * @param {string} content HTML to display in the body of the dialog.
+     * @param {string} ok Text label for the ok button.
+     * @param {string|undefined} cancel Text label for the cancel button
      * @returns {string} HTML for the dialog.
      */
     makeDialogHtml(content, ok, cancel) {
-        return `<dialog hx-disable>
-            <p class="p-2">${mustache.escape(content)}</p>
+        return `<dialog>
+            <p class="p-2">${content}</p>
             <div class="ml-2" data-dialog-footer>${this.makeDialogButtons(ok, cancel)}</div>
         </dialog>`;
     }

@@ -8,11 +8,21 @@ import BaseDialog from './baseDialog';
  * Web component that wraps confirm logic around any links or buttons it contains.
  */
 class ConfirmDialog extends BaseDialog {
+    /**
+     * Initialize component.
+     */
     constructor() {
         super();
 
         // add event listener for all links and buttons inside the component
         this.querySelectorAll('a, button').forEach((x) => x.addEventListener('click', this));
+    }
+
+    /**
+     * Clean up when removing component.
+     */
+    disconnectedCallback() {
+        super.disconnectedCallback();
     }
 
     /**

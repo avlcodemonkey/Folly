@@ -1,23 +1,12 @@
 // @ts-ignore VS doesn't like this import but it builds fine
 import ky from 'ky';
 import BaseComponent from './baseComponent';
-import { getResponseBody, isJson } from './responseUtils';
+import { getResponseBody, isJson } from '../utils/response';
 
 /**
  * @typedef {import('ky').HTTPError} HTTPError
  */
-
-/**
- * Enum for http request methods.
- * @readonly
- * @enum {string}
- */
-const HttpVerbs = Object.freeze({
-    GET: 'get',
-    POST: 'post',
-    PUT: 'put',
-    DELETE: 'delete',
-});
+import HttpMethods from '../constants/httpMethods';
 
 /**
  * Enum for identifiers to query DOM elements.
@@ -158,7 +147,7 @@ class PJax extends BaseComponent {
 
             // If there is a state object, handle it as a page load.
             // history is only designed to work with GET requests.  don't want to try to store/rebuild request body for other methods like POST/PUT
-            await this.requestPage(new URL(event.state.url, this.origin), HttpVerbs.GET, false);
+            await this.requestPage(new URL(event.state.url, this.origin), HttpMethods.GET, false);
         }
     }
 
@@ -215,8 +204,8 @@ class PJax extends BaseComponent {
         }
 
         let method = target.dataset.pjaxMethod;
-        if (!(method && method.toUpperCase() in HttpVerbs)) {
-            method = HttpVerbs.GET;
+        if (!(method && method.toUpperCase() in HttpMethods)) {
+            method = HttpMethods.GET;
         }
 
         await this.requestPage(url, method, true);
@@ -259,15 +248,15 @@ class PJax extends BaseComponent {
         event.preventDefault();
 
         let method = target.dataset.pjaxMethod;
-        if (!(method && method.toUpperCase() in HttpVerbs)) {
+        if (!(method && method.toUpperCase() in HttpMethods)) {
             method = target.method;
         }
-        if (!(method && method.toUpperCase() in HttpVerbs)) {
-            method = HttpVerbs.POST;
+        if (!(method && method.toUpperCase() in HttpMethods)) {
+            method = HttpMethods.POST;
         }
 
         // handle the submission
-        await this.submitForm(url, method, target);
+        await this.submitForm(url, method, new FormData(target));
     }
 
     /**
@@ -300,16 +289,16 @@ class PJax extends BaseComponent {
      * Performs form submission to server and handles the result.
      * @param {URL} url Url to request.
      * @param {string} method Http method to use for request.
-     * @param {HTMLFormElement} form
+     * @param {FormData} formData Form element to sub
      */
-    async submitForm(url, method, form) {
+    async submitForm(url, method, formData) {
         this.showLoadingIndicator();
 
         try {
             const response = await ky(url, {
                 method,
                 headers: this.buildRequestHeaders(),
-                body: new FormData(form),
+                body: formData,
             });
 
             await this.processResponse(url, true, response);

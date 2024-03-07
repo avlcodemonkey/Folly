@@ -30,6 +30,7 @@ nilla-table {
     & th {
         min-width: 100px;
         vertical-align: bottom;
+        user-select: none;
 
         &[data-property] {
             cursor: pointer;

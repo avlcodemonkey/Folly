@@ -362,6 +362,11 @@ class PJax extends BaseComponent {
             }
 
             window.scrollTo(0, 0);
+
+            const elementToFocus = /** @type {HTMLElement} */ (targetElement.querySelector('[autofocus]'));
+            if (elementToFocus) {
+                elementToFocus.focus();
+            }
         } else {
             this.showErrorDialog();
         }

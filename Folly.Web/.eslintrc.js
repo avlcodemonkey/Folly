@@ -2,9 +2,11 @@ module.exports = {
     /* See all the pre-defined configs here: https://www.npmjs.com/package/eslint-config-defaults */
     extends: [
         'eslint-config-airbnb-base',
+        'plugin:jsdoc/recommended-error',
     ],
     plugins: [
         'import',
+        'jsdoc',
     ],
     env: {
         browser: true,
@@ -33,5 +35,5 @@ module.exports = {
         'max-len': ['error', { code: 160 }],
         'no-underscore-dangle': ['error', { allow: ['_index'] }],
     },
-    ignorePatterns: ['node_modules', 'wwwroot'],
+    ignorePatterns: ['node_modules', 'wwwroot', 'Assets/external'],
 };

@@ -4,9 +4,10 @@
     "private": true,
     "devDependencies": {
         "esbuild": "0.17.18",
-        "eslint": "^8.36.0",
+        "eslint": "^8.57.0",
         "eslint-config-airbnb": "^19.0.4",
         "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-plugin-jsdoc": "^48.2.1",
         "fs": "^0.0.1-security",
         "jsdom": "^24.0.0",
         "path": "^0.12.7",
@@ -21,7 +22,9 @@
         "svgo": "svgo -f Assets/icons/svg -o Assets/icons/optimized",
         "css:lint": "stylelint Assets/src/css/*.css",
         "css:fix": "stylelint Assets/src/css/*.css --fix",
-        "test": "vitest"
+        "test": "vitest",
+        "js:lint": "eslint .",
+        "js:fix": "eslint --fix ."
     },
     "dependencies": {
         "autocompleter": "^9.1.2",

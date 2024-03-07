@@ -28,4 +28,9 @@ public class PJax {
     /// Response header that will do a full refresh of the page client side if set to true.
     /// </summary>
     public const string Refresh = "x-pjax-refresh";
+
+    /// <summary>
+    /// Name of attribute to use to override the request method client side.
+    /// </summary>
+    public const string MethodAttribute = "data-pjax-method";
 }

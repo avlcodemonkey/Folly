@@ -1,4 +1,5 @@
 using System.Text.Encodings.Web;
+using Folly.Constants;
 using Folly.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -34,8 +35,7 @@ public sealed class FormContentTagHelper(IHtmlHelper htmlHelper, IUrlHelperFacto
             output.Attributes.SetAttribute("method", Method.ToString());
         } else {
             // other methods have to use custom attribute
-            // @todo move attribute name into a constant somewhere else
-            output.Attributes.SetAttribute("data-pjax-method", Method.ToString());
+            output.Attributes.SetAttribute(PJax.MethodAttribute, Method.ToString());
         }
 
         output.Attributes.SetAttribute("id", $"{Action}{Controller}Form");

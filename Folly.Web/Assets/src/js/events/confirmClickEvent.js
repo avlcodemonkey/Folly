@@ -1,7 +1,7 @@
 /**
- * Wrapper for PointerEvent for use with confirm dialog.
+ * Wrapper for Event for use with confirm dialog.
  */
-class ConfirmClickEvent extends PointerEvent {
+class ConfirmClickEvent extends Event {
     /**
      * True if event has already been confirmed.
      */

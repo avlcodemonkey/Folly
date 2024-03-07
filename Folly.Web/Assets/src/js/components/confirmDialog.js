@@ -1,8 +1,5 @@
 import BaseDialog from './baseDialog';
-
-/**
- * @typedef {import("./confirmClickEvent").default} ConfirmClickEvent
- */
+import ConfirmClickEvent from '../events/confirmClickEvent';
 
 /**
  * Web component that wraps confirm logic around any links or buttons it contains.
@@ -47,6 +44,7 @@ class ConfirmDialog extends BaseDialog {
             if (returnValue === 'ok') {
                 // eslint-disable-next-line no-param-reassign
                 event.isConfirmed = true;
+
                 // re-dispatch event on the original target
                 event.target.dispatchEvent(event);
             }

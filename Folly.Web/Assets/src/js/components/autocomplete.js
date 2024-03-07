@@ -1,5 +1,5 @@
 import autocomplete from 'autocompleter';
-// @ts-ignore VS doesn't like this import but it builds fine
+// @ts-ignore doesn't like this import but it builds fine
 import ky from 'ky';
 import FetchError from './fetchError';
 
@@ -12,10 +12,6 @@ import FetchError from './fetchError';
 
 /**
  * @typedef {import("autocompleter").AutocompleteResult} AutocompleteResult
- */
-
-/**
- * @typedef {import("autocompleter").PreventSubmit} PreventSubmit
  */
 
 /**

@@ -1,12 +1,9 @@
-// @ts-ignore VS doesn't like this import but it builds fine
-import ky from 'ky';
+// @ts-ignore doesn't like this import but it builds fine
+import ky, { HTTPError } from 'ky';
 import BaseComponent from './baseComponent';
 import { getResponseBody, isJson } from '../utils/response';
-
-/**
- * @typedef {import('ky').HTTPError} HTTPError
- */
 import HttpMethods from '../constants/httpMethods';
+import NillaInfo from './infoDialog';
 
 /**
  * Enum for identifiers to query DOM elements.
@@ -30,7 +27,7 @@ const Headers = Object.freeze({
     Refresh: 'x-pjax-refresh',
     PJax: 'x-pjax',
     PJaxVersion: 'x-pjax-version',
-    RequestedWith: 'X-Requested-With'
+    RequestedWith: 'X-Requested-With',
 });
 
 /**
@@ -156,12 +153,9 @@ class PJax extends BaseComponent {
      * @param {Event} event Click event
      */
     async onClickListener(event) {
-        /** @type {HTMLLinkElement} */
-        // @ts-ignore HTMLLinkElement is correct type but js can't cast
         // eslint-disable-next-line prefer-destructuring
-        let target = event.target; // || event.srcElement;
+        let target = /** @type {HTMLAnchorElement} */ (event.target);
         if (target.nodeName !== 'A') {
-            // @ts-ignore HTMLLinkElement is correct type but js can't cast
             target = target.closest('a');
         }
 
@@ -216,10 +210,8 @@ class PJax extends BaseComponent {
      * @param {Event} event Submit event.
      */
     async onSubmitListener(event) {
-        /** @type {HTMLFormElement} */
-        // @ts-ignore HTMLFormElement is correct type but js can't cast
         // eslint-disable-next-line prefer-destructuring
-        let target = event.target;
+        let target = /** @type {HTMLFormElement} */ (event.target);
         if (target.nodeName !== 'FORM') {
             target = target.closest('form');
         }
@@ -394,10 +386,11 @@ class PJax extends BaseComponent {
 
     /**
      * Handle response errors.
-     * @param {HTTPError} error
+     * @param {HTTPError} error Error from ky.
      */
     async handleResponseError(error) {
         // @todo may want to display error.message to user somehow
+        // eslint-disable-next-line no-console
         console.error(error.message);
 
         this.showErrorDialog();
@@ -407,9 +400,8 @@ class PJax extends BaseComponent {
      * Shows the error dialog.
      */
     showErrorDialog() {
-        const element = this.getElement(Elements.InfoDialog);
+        const element = /** @type {NillaInfo} */ (this.getElement(Elements.InfoDialog));
         if (element) {
-            // @ts-ignore element will be a nilla-info dialog so `show` will work.
             element.show();
         }
     }

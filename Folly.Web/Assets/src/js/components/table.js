@@ -91,7 +91,7 @@ class Table extends BaseComponent {
 
     /**
      * Max number of results to display.
-     * @type {Number|undefined}
+     * @type {number|undefined}
      */
     maxResults = undefined;
 
@@ -205,9 +205,7 @@ class Table extends BaseComponent {
      * Sets the default value and adds event handler for the search input.
      */
     setupHeader() {
-        /** @type {HTMLInputElement} */
-        // @ts-ignore HTMLInputElement is correct type but js can't cast
-        const searchInput = this.getElement(Elements.Search);
+        const searchInput = /** @type {HTMLInputElement} */ (this.getElement(Elements.Search));
         if (searchInput) {
             searchInput.value = this.search;
             searchInput.addEventListener('input', (/** @type {InputEvent} */ e) => this.onSearchInput(e));
@@ -239,9 +237,7 @@ class Table extends BaseComponent {
             lastPageButton.addEventListener('click', () => this.onLastPageClick());
         }
 
-        /** @type {HTMLSelectElement} */
-        // @ts-ignore HTMLSelectElement is correct type but js can't cast
-        const tablePerPageSelect = this.getElement(Elements.PerPage);
+        const tablePerPageSelect = /** @type {HTMLSelectElement} */ (this.getElement(Elements.PerPage));
         if (tablePerPageSelect) {
             tablePerPageSelect.value = `${this.perPage}`;
             tablePerPageSelect.addEventListener('change', (/** @type {InputEvent} */ e) => this.onPerPageChange(e));
@@ -272,9 +268,7 @@ class Table extends BaseComponent {
      */
     setupForm() {
         if (this.srcForm) {
-            /** @type {HTMLFormElement} */
-            // @ts-ignore HTMLFormElement is correct type but js can't cast
-            const formElement = document.getElementById(this.srcForm);
+            const formElement = /** @type {HTMLFormElement} */ (document.getElementById(this.srcForm));
             if (formElement) {
                 this.loadFormData();
 
@@ -318,9 +312,7 @@ class Table extends BaseComponent {
             };
 
             if (this.srcForm) {
-                /** @type {HTMLFormElement} */
-                // @ts-ignore HTMLFormElement is correct type but js can't cast
-                const formElement = document.getElementById(this.srcForm);
+                const formElement = /** @type {HTMLFormElement} */ (document.getElementById(this.srcForm));
                 if (formElement) {
                     url = formElement.action;
                     options.body = new FormData(formElement);
@@ -362,9 +354,7 @@ class Table extends BaseComponent {
      * Enable/disable search input.
      */
     updateSearch() {
-        /** @type {HTMLInputElement} */
-        // @ts-ignore HTMLInputElement is correct type but js can't cast
-        const searchInput = this.getElement(Elements.Search);
+        const searchInput = /** @type {HTMLInputElement} */ (this.getElement(Elements.Search));
         if (searchInput) {
             searchInput.disabled = this.loading || this.error;
         }
@@ -400,37 +390,27 @@ class Table extends BaseComponent {
     updatePageButtons() {
         const shouldDisable = this.loading || this.error;
 
-        /** @type {HTMLButtonElement} */
-        // @ts-ignore HTMLButtonElement is correct type but js can't cast
-        const firstPageButton = this.getElement(Elements.FirstPage);
+        const firstPageButton = /** @type {HTMLButtonElement} */ (this.getElement(Elements.FirstPage));
         if (firstPageButton) {
             firstPageButton.disabled = shouldDisable || this.isFirstPage;
         }
 
-        /** @type {HTMLButtonElement} */
-        // @ts-ignore HTMLButtonElement is correct type but js can't cast
-        const previousPageButton = this.getElement(Elements.PreviousPage);
+        const previousPageButton = /** @type {HTMLButtonElement} */ (this.getElement(Elements.PreviousPage));
         if (previousPageButton) {
             previousPageButton.disabled = shouldDisable || this.isFirstPage;
         }
 
-        /** @type {HTMLButtonElement} */
-        // @ts-ignore HTMLButtonElement is correct type but js can't cast
-        const nextPageButton = this.getElement(Elements.NextPage);
+        const nextPageButton = /** @type {HTMLButtonElement} */ (this.getElement(Elements.NextPage));
         if (nextPageButton) {
             nextPageButton.disabled = shouldDisable || this.isLastPage;
         }
 
-        /** @type {HTMLButtonElement} */
-        // @ts-ignore HTMLButtonElement is correct type but js can't cast
-        const lastPageButton = this.getElement(Elements.LastPage);
+        const lastPageButton = /** @type {HTMLButtonElement} */ (this.getElement(Elements.LastPage));
         if (lastPageButton) {
             lastPageButton.disabled = shouldDisable || this.isLastPage;
         }
 
-        /** @type {HTMLSelectElement} */
-        // @ts-ignore HTMLSelectElement is correct type but js can't cast
-        const tablePerPageSelect = this.getElement(Elements.PerPage);
+        const tablePerPageSelect = /** @type {HTMLSelectElement} */ (this.getElement(Elements.PerPage));
         if (tablePerPageSelect) {
             tablePerPageSelect.disabled = shouldDisable;
         }
@@ -553,9 +533,7 @@ class Table extends BaseComponent {
      * Loads form data from storage and populates the form.
      */
     loadFormData() {
-        /** @type {HTMLFormElement} */
-        // @ts-ignore HTMLFormElement is correct type but js can't cast
-        const formElement = document.getElementById(this.srcForm);
+        const formElement = /** @type {HTMLFormElement} */ (document.getElementById(this.srcForm));
         if (!formElement) {
             return;
         }
@@ -576,13 +554,13 @@ class Table extends BaseComponent {
                     if (Array.isArray(value)) {
                         // @todo are there other types that need special logic?
 
-                        // @ts-ignore input will be a multi-select
+                        // @ts-ignore input will be a HTMLSelectElement
                         input.options.forEach((opt) => {
                             // eslint-disable-next-line no-param-reassign
                             opt.selected = value.includes(opt.value);
                         });
                     } else {
-                        // @ts-ignore will be an input with a value property
+                        // @ts-ignore input will be a HTMLInputElement
                         input.value = value;
                     }
                 }
@@ -594,9 +572,7 @@ class Table extends BaseComponent {
      * Saves form data to session storage.
      */
     saveFormData() {
-        /** @type {HTMLFormElement} */
-        // @ts-ignore HTMLFormElement is correct type but js can't cast
-        const formElement = document.getElementById(this.srcForm);
+        const formElement = /** @type {HTMLFormElement} */ (document.getElementById(this.srcForm));
         if (!formElement) {
             return;
         }
@@ -617,8 +593,8 @@ class Table extends BaseComponent {
 
     /**
      * Sorts rows by their original index.
-     * @param {IndexedRow} a
-     * @param {IndexedRow} b
+     * @param {IndexedRow} a First row.
+     * @param {IndexedRow} b Row to compare first row to.
      * @returns {number} Negative if a is less than b, positive if a is greater than b, and zero if they are equal
      */
     static defaultCompare(a, b) {
@@ -660,10 +636,10 @@ class Table extends BaseComponent {
     }
 
     /**
-     * Searches for a string in the properties of an object.
-     * @this {string} String to search for.
+     * Searches for a string(`this`) in the properties of an object.
+     * @this {string}
      * @param {IndexedRow} obj Object to search in.
-     * @returns True if object contains search string, else false.
+     * @returns {boolean} True if object contains search string, else false.
      */
     filterArray(obj) {
         const tokens = (this || '').split(' ');
@@ -713,19 +689,19 @@ class Table extends BaseComponent {
             return;
         }
 
-        // @ts-ignore target will be a HTMLInputElement with a value
-        const val = (event?.target)?.value;
+        const target = /** @type {HTMLInputElement} */ (event?.target);
+        const newValue = target?.value;
         if (this.debounceTimer) {
             clearTimeout(this.debounceTimer);
         }
         this.debounceTimer = window.setTimeout(() => {
-            if (this.search !== val) {
+            if (this.search !== newValue) {
                 this.currentPage = 0;
                 this.saveSetting(TableSetting.CurrentPage, 0);
             }
 
-            this.search = val;
-            this.saveSetting(TableSetting.Search, val);
+            this.search = newValue;
+            this.saveSetting(TableSetting.Search, newValue);
 
             this.filterData();
         }, 250);
@@ -740,8 +716,8 @@ class Table extends BaseComponent {
             return;
         }
 
-        // @ts-ignore target will be a HTMLSelectElement with a value
-        const newVal = Number((event?.target)?.value ?? '10');
+        const target = /** @type {HTMLSelectElement} */ (event?.target);
+        const newVal = Number(target?.value ?? '10');
         if (this.perPage !== newVal) {
             this.currentPage = 0;
             this.saveSetting(TableSetting.CurrentPage, 0);

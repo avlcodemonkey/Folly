@@ -31,9 +31,7 @@ class BaseDialog extends BaseComponent {
      * Traps focus within the dialog.
      */
     registerTabTrap() {
-        /** @type {HTMLElement[]} */
-        // @ts-ignore target type is HTMLElement but VS can't infer that
-        const tabbableElements = Array.from(this.dialog.querySelectorAll('a, button, input'))
+        const tabbableElements = /** @type {HTMLElement[]} */ (Array.from(this.dialog.querySelectorAll('a, button, input'))
             .filter((tabbableElement) => {
                 // @ts-ignore disabled doesn't exist on Element but does exist on button/input
                 if (['button', 'input'].some((x) => x === tabbableElement.tagName) && tabbableElement.disabled === true) {
@@ -46,7 +44,7 @@ class BaseDialog extends BaseComponent {
                 }
 
                 return true;
-            });
+            }));
 
         if (tabbableElements.length === 0) {
             return;
@@ -84,13 +82,12 @@ class BaseDialog extends BaseComponent {
      * @returns {HTMLElement} HTML element with the required data attributes.
      */
     findTarget(event) {
-        let { target } = event;
-        // @ts-ignore target will be an HTMLElement so dataset will exist
+        // eslint-disable-next-line prefer-destructuring
+        let target = /** @type {HTMLElement} */ (event.target);
+
         while (!target.dataset.dialogContent && target !== this) {
-            // @ts-ignore parentNode will be an HTMLElement
-            target = target.parentNode;
+            target = /** @type {HTMLElement} */ (target.parentNode);
         }
-        // @ts-ignore target will be an HTMLElement
         return target;
     }
 
@@ -100,7 +97,6 @@ class BaseDialog extends BaseComponent {
      * @param {string} ok Label for the ok button.
      * @param {string|undefined} cancel Label for the cancel button.
      * @param {Function|undefined} onClose Function to run after dialog closes.
-     * @returns {HTMLDialogElement} Dialog element.
      */
     showDialog(content, ok, cancel = undefined, onClose = undefined) {
         if (this.dialog) {
@@ -109,8 +105,7 @@ class BaseDialog extends BaseComponent {
 
         const div = document.createElement('div');
         div.innerHTML = this.makeDialogHtml(content, ok, cancel);
-        // @ts-ignore HTMLDialogElement is the correct type but VS can't infer that
-        this.dialog = div.firstChild;
+        this.dialog = /** @type {HTMLDialogElement} */ (div.firstChild);
         document.body.appendChild(this.dialog);
 
         this.registerTabTrap();

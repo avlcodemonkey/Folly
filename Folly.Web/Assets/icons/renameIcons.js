@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 // Bulk rename svg files from Mono Icon, ke-bab case to Pascal case.
 // `optimized/arrow-left.svg` => `optimized/_ArrowLeft.cshtml`
 
@@ -6,10 +8,20 @@ const path = require('path');
 
 const folderPath = './optimized';
 
+/**
+ * Capitalizes the first letter of a string.
+ * @param {string} string String to capitalize.
+ * @returns {string} Capitalized string.
+ */
 function capitalizeFirstLetter(string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
+/**
+ * Convert string to pascal case from snake case.
+ * @param {string} input String to convert.
+ * @returns {string} Converted string.
+ */
 function getPascalFromSnake(input) {
     return input.split('-').map(capitalizeFirstLetter).join('');
 }

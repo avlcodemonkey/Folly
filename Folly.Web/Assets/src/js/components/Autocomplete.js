@@ -1,7 +1,8 @@
 import autocomplete from 'autocompleter';
 // @ts-ignore doesn't like this import but it builds fine
-import ky from 'ky';
+import ky, { Options } from 'ky';
 import FetchError from './FetchError';
+import HttpHeaders from '../constants/HttpHeaders';
 
 /**
  * @typedef AutocompleteItem
@@ -50,10 +51,13 @@ class Autocomplete extends HTMLElement {
             async fetch(query, update) {
                 let suggestions = [];
                 try {
-                    const options = {
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    const headers = {};
+                    headers[HttpHeaders.RequestedWith] = 'XMLHttpRequest';
+
+                    const options = /** @type {Options} */ ({
+                        headers,
                         searchParams: new URLSearchParams([['query', query]]),
-                    };
+                    });
 
                     const json = await ky.get(srcUrl, options).json();
                     if (!(json && Array.isArray(json))) {

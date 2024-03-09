@@ -1,8 +1,9 @@
 // @ts-ignore VS doesn't like this import but it builds fine
-import ky from 'ky';
+import ky, { Options } from 'ky';
 import mustache from 'mustache';
 import BaseComponent from './BaseComponent';
 import FetchError from './FetchError';
+import HttpHeaders from '../constants/HttpHeaders';
 
 /**
  * Enum for table setting keys.
@@ -307,9 +308,12 @@ class Table extends BaseComponent {
         // now request new data
         try {
             let url = this.srcUrl;
-            const options = {
-                headers: { 'X-Requested-With': 'XMLHttpRequest' },
-            };
+            const headers = {};
+            headers[HttpHeaders.RequestedWith] = 'XMLHttpRequest';
+
+            const options = /** @type {Options} */ ({
+                headers,
+            });
 
             if (this.srcForm) {
                 const formElement = /** @type {HTMLFormElement} */ (document.getElementById(this.srcForm));

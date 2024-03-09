@@ -3,6 +3,7 @@ import ky, { HTTPError } from 'ky';
 import BaseComponent from './BaseComponent';
 import { getResponseBody, isJson } from '../utils/response';
 import HttpMethods from '../constants/HttpMethods';
+import HttpHeaders from '../constants/HttpHeaders';
 import NillaInfo from './InfoDialog';
 
 /**
@@ -14,20 +15,6 @@ const Elements = Object.freeze({
     Target: 'target',
     LoadingIndicator: 'loading-indicator',
     InfoDialog: 'info-dialog',
-});
-
-/**
- * Enum for special headers.
- * @readonly
- * @enum {string}
- */
-const Headers = Object.freeze({
-    Title: 'x-pjax-title',
-    PushUrl: 'x-pjax-push-url',
-    Refresh: 'x-pjax-refresh',
-    PJax: 'x-pjax',
-    PJaxVersion: 'x-pjax-version',
-    RequestedWith: 'X-Requested-With',
 });
 
 /**
@@ -307,9 +294,9 @@ class PJax extends BaseComponent {
      */
     buildRequestHeaders() {
         const headers = {};
-        headers[Headers.RequestedWith] = 'XMLHttpRequest';
-        headers[Headers.PJax] = true;
-        headers[Headers.PJaxVersion] = this.version;
+        headers[HttpHeaders.RequestedWith] = 'XMLHttpRequest';
+        headers[HttpHeaders.PJax] = true;
+        headers[HttpHeaders.PJaxVersion] = this.version;
         return headers;
     }
 
@@ -323,7 +310,7 @@ class PJax extends BaseComponent {
         const body = await getResponseBody(response);
 
         // reload the page if the refresh header was included
-        if (response.headers.has(Headers.Refresh)) {
+        if (response.headers.has(HttpHeaders.PJaxRefresh)) {
             document.location.href = requestUrl.href;
             return;
         }
@@ -331,7 +318,7 @@ class PJax extends BaseComponent {
         // make sure request is successful and response is HTML
         if (response.ok && !isJson(response)) {
             if (updateHistory) {
-                const newUrl = response.headers.has(Headers.PushUrl) ? response.headers.get(Headers.PushUrl) : requestUrl.pathname;
+                const newUrl = response.headers.has(HttpHeaders.PJaxPushUrl) ? response.headers.get(HttpHeaders.PJaxPushUrl) : requestUrl.pathname;
 
                 if (this.currentUrlForHistory !== newUrl) {
                     // don't add page to history unless the url changed
@@ -349,8 +336,8 @@ class PJax extends BaseComponent {
             }
 
             // set the document title if title header exists
-            if (response.headers.has(Headers.Title)) {
-                document.title = response.headers.get(Headers.Title);
+            if (response.headers.has(HttpHeaders.PJaxTitle)) {
+                document.title = response.headers.get(HttpHeaders.PJaxTitle);
             }
 
             window.scrollTo(0, 0);

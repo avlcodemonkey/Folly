@@ -6,7 +6,7 @@ import {
     beforeEach, describe, expect, it,
 } from 'vitest';
 import { tick, isRendered } from '../utils';
-import '../../src/js/components/alert';
+import '../../src/js/components/Alert';
 
 const textContent = 'Alert test';
 

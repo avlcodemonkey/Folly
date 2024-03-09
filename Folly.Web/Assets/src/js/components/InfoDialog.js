@@ -1,4 +1,4 @@
-import BaseDialog from './baseDialog';
+import BaseDialog from './BaseDialog';
 
 /**
  * Extend the custom dialog class to create the alert web component.

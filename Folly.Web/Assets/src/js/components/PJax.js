@@ -1,9 +1,9 @@
 // @ts-ignore doesn't like this import but it builds fine
 import ky, { HTTPError } from 'ky';
-import BaseComponent from './baseComponent';
+import BaseComponent from './BaseComponent';
 import { getResponseBody, isJson } from '../utils/response';
-import HttpMethods from '../constants/httpMethods';
-import NillaInfo from './infoDialog';
+import HttpMethods from '../constants/HttpMethods';
+import NillaInfo from './InfoDialog';
 
 /**
  * Enum for identifiers to query DOM elements.

@@ -7,7 +7,7 @@ import {
     beforeEach, describe, expect, it,
 } from 'vitest';
 import { isRendered } from '../utils';
-import '../../src/js/components/jsonFormatter';
+import '../../src/js/components/JsonFormatter';
 
 const testString = 'find this test string';
 const testObj = {

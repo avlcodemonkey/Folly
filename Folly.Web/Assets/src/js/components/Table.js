@@ -1,8 +1,8 @@
 // @ts-ignore VS doesn't like this import but it builds fine
 import ky from 'ky';
 import mustache from 'mustache';
-import BaseComponent from './baseComponent';
-import FetchError from './fetchError';
+import BaseComponent from './BaseComponent';
+import FetchError from './FetchError';
 
 /**
  * Enum for table setting keys.

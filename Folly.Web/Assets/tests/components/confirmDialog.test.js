@@ -7,7 +7,7 @@ import {
     beforeEach, beforeAll, describe, expect, it, vi, afterEach,
 } from 'vitest';
 import { tick, isRendered } from '../utils';
-import '../../src/js/components/confirmDialog';
+import '../../src/js/components/ConfirmDialog';
 
 const textContent = 'Dialog test';
 const textOkay = 'okay';

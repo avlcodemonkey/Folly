@@ -1,5 +1,5 @@
 import mustache from 'mustache';
-import BaseComponent from './baseComponent';
+import BaseComponent from './BaseComponent';
 
 /**
  * Extend the base component to provide common functionality for custom dialogs.

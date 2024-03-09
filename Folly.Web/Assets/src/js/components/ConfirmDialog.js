@@ -1,5 +1,5 @@
-import BaseDialog from './baseDialog';
-import ConfirmClickEvent from '../events/confirmClickEvent';
+import BaseDialog from './BaseDialog';
+import ConfirmClickEvent from '../events/ConfirmClickEvent';
 
 /**
  * Web component that wraps confirm logic around any links or buttons it contains.

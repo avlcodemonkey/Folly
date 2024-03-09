@@ -8,7 +8,7 @@ import {
 } from 'vitest';
 import { format } from 'fecha';
 import { isRendered } from '../utils';
-import '../../src/js/components/dateFormatter';
+import '../../src/js/components/DateFormatter';
 
 const dateString = '2024-02-27 01:23:45';
 const testDate = new Date(dateString);

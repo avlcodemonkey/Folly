@@ -7,7 +7,7 @@ import {
     beforeEach, describe, expect, it,
 } from 'vitest';
 import { isRendered } from '../utils';
-import '../../src/js/components/autocomplete';
+import '../../src/js/components/Autocomplete';
 
 const autocompleteHtml = `
     <nilla-autocomplete data-empty-message="No matching results." data-src-url="/AuditLog/UserList">

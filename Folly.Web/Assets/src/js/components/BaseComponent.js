@@ -35,7 +35,7 @@ class BaseComponent extends HTMLElement {
      * Gets the specified DOM element from cache, or finds using querySelector and add to cache.
      * Will match element with attribute `data-{elementPrefix}-{elementKey}` or `data-{elementKey}` if prefix is empty.
      * @param {string} elementKey Key for the element to find.
-     * @returns {HTMLElement} Element to find.
+     * @returns {HTMLElement|null} Element to find, or null if not found.
      */
     getElement(elementKey) {
         const key = this.elementPrefix ? `${this.elementPrefix}-${elementKey}` : elementKey;

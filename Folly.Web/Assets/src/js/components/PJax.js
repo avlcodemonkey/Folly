@@ -64,7 +64,7 @@ class PJax extends BaseComponent {
     currentUrlForHistory;
 
     /**
-     * Url origin
+     * Url origin.
      * @type {string}
      */
     origin;
@@ -217,9 +217,9 @@ class PJax extends BaseComponent {
             return;
         }
 
-        // Ignore submit if the protocol or host don't match
+        // Ignore submit if the origin doesn't match
         const url = new URL(target.action);
-        if (url.protocol !== document.location.protocol || url.host !== document.location.host) {
+        if (url.origin !== this.origin) {
             return;
         }
 
@@ -343,9 +343,7 @@ class PJax extends BaseComponent {
             window.scrollTo(0, 0);
 
             const elementToFocus = /** @type {HTMLElement} */ (targetElement.querySelector('[autofocus]'));
-            if (elementToFocus) {
-                elementToFocus.focus();
-            }
+            elementToFocus?.focus();
         } else {
             this.showErrorDialog();
         }
@@ -355,20 +353,14 @@ class PJax extends BaseComponent {
      * Shows the loading indicator.
      */
     showLoadingIndicator() {
-        const element = this.getElement(Elements.LoadingIndicator);
-        if (element) {
-            element.classList.add('pjax-request');
-        }
+        this.getElement(Elements.LoadingIndicator)?.classList.add('pjax-request');
     }
 
     /**
      * Hides the loading indicator.
      */
     hideLoadingIndicator() {
-        const element = this.getElement(Elements.LoadingIndicator);
-        if (element) {
-            element.classList.remove('pjax-request');
-        }
+        this.getElement(Elements.LoadingIndicator)?.classList.remove('pjax-request');
     }
 
     /**
@@ -388,9 +380,7 @@ class PJax extends BaseComponent {
      */
     showErrorDialog() {
         const element = /** @type {NillaInfo} */ (this.getElement(Elements.InfoDialog));
-        if (element) {
-            element.show();
-        }
+        element?.show();
     }
 }
 

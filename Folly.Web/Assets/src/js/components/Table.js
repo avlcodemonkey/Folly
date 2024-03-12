@@ -265,10 +265,12 @@ class Table extends BaseComponent {
         this.loading = true;
         this.error = false;
 
+        // save the current page for later so we can try to navigate to it after reloading data
+        const originalPage = this.currentPage;
+
         // first clear out the existing data and update the table
         this.rows = [];
         this.filterData();
-        this.update();
 
         // now request new data
         try {
@@ -302,6 +304,12 @@ class Table extends BaseComponent {
             this.error = true;
         } finally {
             this.loading = false;
+        }
+
+        // try to navigate to the original page after reloading data
+        if (originalPage) {
+            this.currentPage = originalPage;
+            this.saveSetting(TableSettings.CurrentPage, this.currentPage);
         }
 
         this.filterData();

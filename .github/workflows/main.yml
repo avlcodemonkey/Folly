@@ -19,6 +19,25 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install Node Packages
+      working-directory: ./Folly.Web
+      run: npm ci
+
+    - name: Build Assets
+      working-directory: ./Folly.Web
+      run: npm run build
+
+    - name: Test Javascript
+      working-directory: ./Folly.Web
+      run: npm run test
 
     - name: Setup DotNet
       uses: actions/setup-dotnet@v4
@@ -42,23 +61,6 @@ jobs:
         path: "**/test-results.trx"                            
         reporter: dotnet-trx
         fail-on-error: true
-
-    - name: Setup Node
-      uses: actions/setup-node@v4
-      with:
-        node-version: 20
-
-    - name: Install Node Packages
-      working-directory: ./Folly.Web
-      run: npm ci
-
-    - name: Build Assets
-      working-directory: ./Folly.Web
-      run: npm run build
-
-    - name: Test Javascript
-      working-directory: ./Folly.Web
-      run: npm run test
 
     - name: Increment Version
       if: ${{ github.event_name == 'push' && success() }}

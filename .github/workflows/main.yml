@@ -49,9 +49,11 @@ jobs:
         node-version: 20
 
     - name: Install Node Packages
+      working-directory: ./Folly.Web
       run: npm ci
 
     - name: Test Node
+      working-directory: ./Folly.Web
       run: npm test
 
     - name: Increment Version

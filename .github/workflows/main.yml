@@ -20,21 +20,21 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup .NET
+    - name: Setup DotNet
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 6.0.x
 
-    - name: Restore dependencies
+    - name: Restore DotNet dependencies
       run: dotnet restore
 
-    - name: Build
+    - name: Build DotNet
       run: dotnet build --no-restore
 
-    - name: Test
+    - name: Test DotNet
       run: dotnet test --no-build --verbosity normal --logger "trx;LogFileName=test-results.trx" || true
 
-    - name: Publish Test Results
+    - name: Publish DotNet Test Results
       uses: dorny/test-reporter@v1
       if: always()
       with:
@@ -42,6 +42,17 @@ jobs:
         path: "**/test-results.trx"                            
         reporter: dotnet-trx
         fail-on-error: true
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install Node Packages
+      run: npm ci
+
+    - name: Test Node
+      run: npm test
 
     - name: Increment Version
       if: ${{ github.event_name == 'push' && success() }}

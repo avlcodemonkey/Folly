@@ -4,29 +4,10 @@ import mustache from 'mustache';
 import BaseComponent from './BaseComponent';
 import FetchError from './FetchError';
 import HttpHeaders from '../constants/HttpHeaders';
-
-/**
- * Enum for table setting keys.
- * @readonly
- * @enum {string}
- */
-const TableSetting = Object.freeze({
-    CurrentPage: 'currentPage',
-    PerPage: 'perPage',
-    Search: 'search',
-    Sort: 'sort',
-    FormData: 'formData',
-});
-
-/**
- * Enum for sorting order.
- * @readonly
- * @enum {string}
- */
-const SortOrder = Object.freeze({
-    Asc: 'asc',
-    Desc: 'desc',
-});
+import TableSort from './TableSort';
+import TableSortDirection from '../constants/TableSortDirection';
+import TableSettings from '../constants/TableSettings';
+import { formToObject, objectToForm } from '../utils/formData';
 
 /**
  * Enum for identifiers to query DOM elements.
@@ -59,13 +40,6 @@ const Elements = Object.freeze({
  * @typedef IndexedRow
  * @type {object}
  * @property {number} _index Unique identifier for the row.
- */
-
-/**
- * @typedef SortColumn
- * @type {object}
- * @property {string} property Name of property to sort on.
- * @property {SortOrder} sortOrder Order to sort this property.
  */
 
 /**
@@ -110,9 +84,9 @@ class Table extends BaseComponent {
 
     /**
      * Sort settings for the table.
-     * @type {Array<SortColumn>}
+     * @type {Array<TableSort>}
      */
-    sortColumns = [];
+    tableSorts = [];
 
     /**
      * Total number of rows based on current table filters.
@@ -181,10 +155,10 @@ class Table extends BaseComponent {
         }
 
         // check sessionStorage for saved settings
-        this.perPage = Number(this.loadSetting(TableSetting.PerPage) ?? '10');
-        this.currentPage = Number(this.loadSetting(TableSetting.CurrentPage) ?? '0');
-        this.search = this.loadSetting(TableSetting.Search) ?? '';
-        this.sortColumns = JSON.parse(this.loadSetting(TableSetting.Sort) ?? '[]');
+        this.perPage = Number(this.loadSetting(TableSettings.PerPage) ?? '10');
+        this.currentPage = Number(this.loadSetting(TableSettings.CurrentPage) ?? '0');
+        this.search = this.loadSetting(TableSettings.Search) ?? '';
+        this.tableSorts = JSON.parse(this.loadSetting(TableSettings.Sort) ?? '[]');
 
         this.setupHeader();
         this.setupFooter();
@@ -218,25 +192,10 @@ class Table extends BaseComponent {
      * Add event handlers for the buttons for moving between pages.
      */
     setupFooter() {
-        const firstPageButton = this.getElement(Elements.FirstPage);
-        if (firstPageButton) {
-            firstPageButton.addEventListener('click', () => this.onFirstPageClick());
-        }
-
-        const previousPageButton = this.getElement(Elements.PreviousPage);
-        if (previousPageButton) {
-            previousPageButton.addEventListener('click', () => this.onPreviousPageClick());
-        }
-
-        const nextPageButton = this.getElement(Elements.NextPage);
-        if (nextPageButton) {
-            nextPageButton.addEventListener('click', () => this.onNextPageClick());
-        }
-
-        const lastPageButton = this.getElement(Elements.LastPage);
-        if (lastPageButton) {
-            lastPageButton.addEventListener('click', () => this.onLastPageClick());
-        }
+        this.getElement(Elements.FirstPage)?.addEventListener('click', () => this.setPage(0));
+        this.getElement(Elements.PreviousPage)?.addEventListener('click', () => this.setPage(Math.max(this.currentPage - 1, 0)));
+        this.getElement(Elements.NextPage)?.addEventListener('click', () => this.setPage(Math.min(this.currentPage + 1, this.maxPage)));
+        this.getElement(Elements.LastPage)?.addEventListener('click', () => this.setPage(this.maxPage));
 
         const tablePerPageSelect = /** @type {HTMLSelectElement} */ (this.getElement(Elements.PerPage));
         if (tablePerPageSelect) {
@@ -249,10 +208,7 @@ class Table extends BaseComponent {
      * Add event handlers for table status functionality.
      */
     setupStatus() {
-        const tableRetryButton = this.getElement(Elements.Retry);
-        if (tableRetryButton) {
-            tableRetryButton.addEventListener('click', () => this.onRetryClick());
-        }
+        this.getElement(Elements.Retry)?.addEventListener('click', () => this.onRetryClick());
     }
 
     /**
@@ -268,25 +224,34 @@ class Table extends BaseComponent {
      * Add event handlers for form submission.
      */
     setupForm() {
-        if (this.srcForm) {
-            const formElement = /** @type {HTMLFormElement} */ (document.getElementById(this.srcForm));
-            if (formElement) {
-                this.loadFormData();
-
-                formElement.addEventListener('submit', (/** @type {SubmitEvent} */ e) => {
-                    // make sure the form doesn't actually submit
-                    e.preventDefault();
-                    e.stopImmediatePropagation();
-
-                    if (this.loading) {
-                        return;
-                    }
-
-                    // @todo may want to debounce later
-                    this.fetchData();
-                });
-            }
+        if (!this.srcForm) {
+            return;
         }
+
+        const formElement = /** @type {HTMLFormElement} */ (document.getElementById(this.srcForm));
+        if (!formElement) {
+            return;
+        }
+
+        const json = this.loadSetting(TableSettings.FormData);
+        if (json) {
+            try {
+                const data = JSON.parse(json);
+                if (data) {
+                    objectToForm(data, formElement);
+                }
+            } catch { /* empty */ }
+        }
+
+        formElement.addEventListener('submit', (/** @type {SubmitEvent} */ e) => {
+            // make sure the form doesn't actually submit
+            e.preventDefault();
+            e.stopImmediatePropagation();
+
+            if (!this.loading) {
+                this.fetchData();
+            }
+        });
     }
 
     /**
@@ -322,7 +287,7 @@ class Table extends BaseComponent {
                     options.body = new FormData(formElement);
                     options.method = formElement.method;
 
-                    this.saveFormData();
+                    this.saveSetting(TableSettings.FormData, JSON.stringify(formToObject(formElement)));
                 }
             }
 
@@ -369,12 +334,14 @@ class Table extends BaseComponent {
     updateRowNumbers() {
         const startRowSpan = this.getElement(Elements.StartRow);
         if (startRowSpan) {
-            startRowSpan.textContent = `${this.loading || this.error ? 0 : this.startRowNumber}`;
+            const startRowNum = this.filteredRowTotal ? (this.currentPage * this.perPage) + 1 : 0;
+            startRowSpan.textContent = `${this.loading || this.error ? 0 : startRowNum}`;
         }
 
         const endRowSpan = this.getElement(Elements.EndRow);
         if (endRowSpan) {
-            endRowSpan.textContent = `${this.loading || this.error ? 0 : this.endRowNumber}`;
+            const endRowNum = this.filteredRowTotal ? Math.min((this.currentPage + 1) * this.perPage, this.filteredRowTotal) : 0;
+            endRowSpan.textContent = `${this.loading || this.error ? 0 : endRowNum}`;
         }
 
         const filteredRowsSpan = this.getElement(Elements.FilteredRows);
@@ -396,22 +363,22 @@ class Table extends BaseComponent {
 
         const firstPageButton = /** @type {HTMLButtonElement} */ (this.getElement(Elements.FirstPage));
         if (firstPageButton) {
-            firstPageButton.disabled = shouldDisable || this.isFirstPage;
+            firstPageButton.disabled = shouldDisable || this.currentPage === 0;
         }
 
         const previousPageButton = /** @type {HTMLButtonElement} */ (this.getElement(Elements.PreviousPage));
         if (previousPageButton) {
-            previousPageButton.disabled = shouldDisable || this.isFirstPage;
+            previousPageButton.disabled = shouldDisable || this.currentPage === 0;
         }
 
         const nextPageButton = /** @type {HTMLButtonElement} */ (this.getElement(Elements.NextPage));
         if (nextPageButton) {
-            nextPageButton.disabled = shouldDisable || this.isLastPage;
+            nextPageButton.disabled = shouldDisable || this.currentPage === this.maxPage;
         }
 
         const lastPageButton = /** @type {HTMLButtonElement} */ (this.getElement(Elements.LastPage));
         if (lastPageButton) {
-            lastPageButton.disabled = shouldDisable || this.isLastPage;
+            lastPageButton.disabled = shouldDisable || this.currentPage === this.maxPage;
         }
 
         const tablePerPageSelect = /** @type {HTMLSelectElement} */ (this.getElement(Elements.PerPage));
@@ -424,20 +391,9 @@ class Table extends BaseComponent {
      * Shows/hides the table loading and error indicators.
      */
     updateStatus() {
-        const isLoading = this.getElement(Elements.Loading);
-        if (isLoading) {
-            isLoading.classList.toggle('is-hidden', !this.loading);
-        }
-
-        const hasError = this.getElement(Elements.Error);
-        if (hasError) {
-            hasError.classList.toggle('is-hidden', !this.error);
-        }
-
-        const hasNoData = this.getElement(Elements.Empty);
-        if (hasNoData) {
-            hasNoData.classList.toggle('is-hidden', this.loading || this.error || this.filteredRowTotal !== 0);
-        }
+        this.getElement(Elements.Loading)?.classList.toggle('is-hidden', !this.loading);
+        this.getElement(Elements.Error)?.classList.toggle('is-hidden', !this.error);
+        this.getElement(Elements.Empty)?.classList.toggle('is-hidden', this.loading || this.error || this.filteredRowTotal !== 0);
     }
 
     /**
@@ -446,6 +402,9 @@ class Table extends BaseComponent {
     updateSortHeaders() {
         const sortAscTemplate = this.getElement(Elements.SortAscTemplate);
         const sortDescTemplate = this.getElement(Elements.SortDescTemplate);
+        if (!(sortAscTemplate && sortDescTemplate)) {
+            return;
+        }
 
         this.querySelectorAll('th[data-property]').forEach((/** @type {HTMLElement} */ th) => {
             const { property } = th.dataset;
@@ -454,29 +413,21 @@ class Table extends BaseComponent {
             const sortDesc = th.querySelector(`[data-table-${Elements.SortDesc}]`);
 
             // make sure the TH has the correct sort icon
-            if (sortOrder === SortOrder.Asc) {
-                if (sortDesc) {
-                    sortDesc.remove();
-                }
+            if (sortOrder === TableSortDirection.Asc) {
+                sortDesc?.remove();
                 if (!sortAsc) {
                     th.insertAdjacentHTML('beforeend', sortAscTemplate.innerHTML);
                 }
                 th.setAttribute('aria-sort', 'ascending');
-            } else if (sortOrder === SortOrder.Desc) {
-                if (sortAsc) {
-                    sortAsc.remove();
-                }
+            } else if (sortOrder === TableSortDirection.Desc) {
+                sortAsc?.remove();
                 if (!sortDesc) {
                     th.insertAdjacentHTML('beforeend', sortDescTemplate.innerHTML);
                 }
                 th.setAttribute('aria-sort', 'descending');
             } else {
-                if (sortAsc) {
-                    sortAsc.remove();
-                }
-                if (sortDesc) {
-                    sortDesc.remove();
-                }
+                sortAsc?.remove();
+                sortDesc?.remove();
                 th.removeAttribute('aria-sort');
             }
         });
@@ -485,22 +436,18 @@ class Table extends BaseComponent {
     /**
      * Determines which type of sorting to use to display sort icon.
      * @param {string} property Property to find sort icon for.
-     * @returns {SortOrder|undefined} Order of sorting for this property.
+     * @returns {TableSortDirection|undefined} Order of sorting for this property.
      */
     sortOrder(property) {
-        const index = property ? this.sortColumns.findIndex((x) => x.property === property) : -1;
-        if (index === -1) {
-            return undefined;
-        }
-        return this.sortColumns[index].sortOrder;
+        const index = property ? this.tableSorts.findIndex((x) => x.property === property) : -1;
+        return index === -1 ? undefined : this.tableSorts[index].direction;
     }
 
     /**
      * Removes existing table rows and renders new rows using the filtered data.
      */
     updateRows() {
-        const existingRows = this.querySelectorAll(`tbody tr:not([data-table-${Elements.Status}])`);
-        existingRows.forEach((x) => x.remove());
+        this.querySelectorAll(`tbody tr:not([data-table-${Elements.Status}])`).forEach((x) => x.remove());
 
         const tbody = this.querySelector('tbody');
         if (!tbody) {
@@ -534,68 +481,6 @@ class Table extends BaseComponent {
     }
 
     /**
-     * Loads form data from storage and populates the form.
-     */
-    loadFormData() {
-        const formElement = /** @type {HTMLFormElement} */ (document.getElementById(this.srcForm));
-        if (!formElement) {
-            return;
-        }
-
-        const json = this.loadSetting(TableSetting.FormData);
-        if (!json) {
-            return;
-        }
-
-        try {
-            const data = JSON.parse(json);
-            if (!data) {
-                return;
-            }
-            Object.entries(data).forEach(([key, value]) => {
-                const input = formElement.elements.namedItem(key);
-                if (input) {
-                    if (Array.isArray(value)) {
-                        // @todo are there other types that need special logic?
-
-                        // @ts-ignore input will be a HTMLSelectElement
-                        input.options.forEach((opt) => {
-                            // eslint-disable-next-line no-param-reassign
-                            opt.selected = value.includes(opt.value);
-                        });
-                    } else {
-                        // @ts-ignore input will be a HTMLInputElement
-                        input.value = value;
-                    }
-                }
-            });
-        } catch { /* empty */ }
-    }
-
-    /**
-     * Saves form data to session storage.
-     */
-    saveFormData() {
-        const formElement = /** @type {HTMLFormElement} */ (document.getElementById(this.srcForm));
-        if (!formElement) {
-            return;
-        }
-
-        const data = {};
-        new FormData(formElement).forEach((value, key) => {
-            if (!Object.prototype.hasOwnProperty.call(data, key)) {
-                data[key] = value;
-                return;
-            }
-            if (!Array.isArray(data[key])) {
-                data[key] = [data[key]];
-            }
-            data[key].push(value);
-        });
-        this.saveSetting(TableSetting.FormData, JSON.stringify(data));
-    }
-
-    /**
      * Sorts rows by their original index.
      * @param {IndexedRow} a First row.
      * @param {IndexedRow} b Row to compare first row to.
@@ -609,8 +494,8 @@ class Table extends BaseComponent {
     }
 
     /**
-     * Sorts rows based on SortColumns property.
-     * @this {Array<SortColumn>}
+     * Sorts rows based on TableSort property.
+     * @this {Array<TableSort>}
      * @param {object} a First element for comparison.
      * @param {object} b Second element for comparison.
      * @returns {number} Negative if a is less than b, positive if a is greater than b, and zero if they are equal
@@ -630,10 +515,10 @@ class Table extends BaseComponent {
                 return -1;
             }
             if (aa < bb) {
-                return sort.sortOrder === SortOrder.Asc ? -1 : 1;
+                return sort.direction === TableSortDirection.Asc ? -1 : 1;
             }
             if (aa > bb) {
-                return sort.sortOrder === SortOrder.Asc ? 1 : -1;
+                return sort.direction === TableSortDirection.Asc ? 1 : -1;
             }
         }
         return 0;
@@ -667,7 +552,7 @@ class Table extends BaseComponent {
 
         // sort the new array
         if (filteredData.length) {
-            filteredData.sort(this.sortColumns?.length ? this.compare.bind(this.sortColumns) : Table.defaultCompare);
+            filteredData.sort(this.tableSorts?.length ? this.compare.bind(this.tableSorts) : Table.defaultCompare);
         }
 
         // cache the total number of filtered records and max number of pages for paging
@@ -675,7 +560,7 @@ class Table extends BaseComponent {
         this.maxPage = Math.max(Math.ceil(this.filteredRowTotal / this.perPage) - 1, 0);
         if (this.currentPage > this.maxPage) {
             this.currentPage = 0;
-            this.saveSetting(TableSetting.CurrentPage, 0);
+            this.saveSetting(TableSettings.CurrentPage, 0);
         }
 
         // determine the correct slice of data for the current page, and reassign our array to trigger the update
@@ -701,11 +586,11 @@ class Table extends BaseComponent {
         this.debounceTimer = window.setTimeout(() => {
             if (this.search !== newValue) {
                 this.currentPage = 0;
-                this.saveSetting(TableSetting.CurrentPage, 0);
+                this.saveSetting(TableSettings.CurrentPage, 0);
             }
 
             this.search = newValue;
-            this.saveSetting(TableSetting.Search, newValue);
+            this.saveSetting(TableSettings.Search, newValue);
 
             this.filterData();
         }, 250);
@@ -724,41 +609,13 @@ class Table extends BaseComponent {
         const newVal = Number(target?.value ?? '10');
         if (this.perPage !== newVal) {
             this.currentPage = 0;
-            this.saveSetting(TableSetting.CurrentPage, 0);
+            this.saveSetting(TableSettings.CurrentPage, 0);
         }
 
         this.perPage = newVal;
-        this.saveSetting(TableSetting.PerPage, newVal);
+        this.saveSetting(TableSettings.PerPage, newVal);
 
         this.filterData();
-    }
-
-    /**
-     * Move to first page of table.
-     */
-    onFirstPageClick() {
-        this.setPage(0);
-    }
-
-    /**
-     * Move to last page of table.
-     */
-    onLastPageClick() {
-        this.setPage(this.maxPage);
-    }
-
-    /**
-     * Move to previous page of table.
-     */
-    onPreviousPageClick() {
-        this.setPage(Math.max(this.currentPage - 1, 0));
-    }
-
-    /**
-     * Move to next page of table.
-     */
-    onNextPageClick() {
-        this.setPage(Math.min(this.currentPage + 1, this.maxPage));
     }
 
     /**
@@ -770,8 +627,8 @@ class Table extends BaseComponent {
             return;
         }
 
-        this.currentPage = page;
-        this.saveSetting(TableSetting.CurrentPage, this.currentPage);
+        this.currentPage = page < 0 || page > this.maxPage ? 0 : page;
+        this.saveSetting(TableSettings.CurrentPage, this.currentPage);
         this.filterData();
     }
 
@@ -789,16 +646,16 @@ class Table extends BaseComponent {
             return;
         }
 
-        const index = this.sortColumns.findIndex((x) => x.property === property);
+        const index = this.tableSorts.findIndex((x) => x.property === property);
         if (index === -1) {
-            this.sortColumns.push({ property, sortOrder: SortOrder.Asc });
-        } else if (this.sortColumns[index].sortOrder === SortOrder.Asc) {
-            this.sortColumns[index].sortOrder = SortOrder.Desc;
+            this.tableSorts.push({ property, direction: TableSortDirection.Asc });
+        } else if (this.tableSorts[index].direction === TableSortDirection.Asc) {
+            this.tableSorts[index].direction = TableSortDirection.Desc;
         } else {
-            this.sortColumns = this.sortColumns.filter((x) => x.property !== property);
+            this.tableSorts = this.tableSorts.filter((x) => x.property !== property);
         }
 
-        this.saveSetting(TableSetting.Sort, JSON.stringify(this.sortColumns));
+        this.saveSetting(TableSettings.Sort, JSON.stringify(this.tableSorts));
 
         this.filterData();
     }
@@ -810,38 +667,6 @@ class Table extends BaseComponent {
         if (!this.loading) {
             await this.fetchData();
         }
-    }
-
-    /**
-     * Find the number of the first row displayed for the current page.
-     * @returns {number} Row number.
-     */
-    get startRowNumber() {
-        return this.filteredRowTotal ? (this.currentPage * this.perPage) + 1 : 0;
-    }
-
-    /**
-     * Find the number of the last row displayed for the current page.
-     * @returns {number} Row number.
-     */
-    get endRowNumber() {
-        return this.filteredRowTotal ? Math.min((this.currentPage + 1) * this.perPage, this.filteredRowTotal) : 0;
-    }
-
-    /**
-     * Check if the first page is currently displayed.
-     * @returns {boolean} True if current page is the first, else false.
-     */
-    get isFirstPage() {
-        return this.currentPage === 0;
-    }
-
-    /**
-     * Check if the last page is currently displayed.
-     * @returns {boolean} True if current page is the last, else false.
-     */
-    get isLastPage() {
-        return this.currentPage === this.maxPage;
     }
 }
 

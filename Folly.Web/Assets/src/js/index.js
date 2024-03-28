@@ -7,5 +7,6 @@ import './components/Table';
 import './components/DateFormatter';
 import './components/JsonFormatter';
 import './components/Autocomplete';
+import setupLuxbarToggle from './luxbar';
 
-import './luxbar';
+setupLuxbarToggle();

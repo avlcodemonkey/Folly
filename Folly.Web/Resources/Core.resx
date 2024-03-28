@@ -312,4 +312,7 @@
   <data name="ErrorTryRefreshing" xml:space="preserve">
     <value>An unhandled error occurred.  Try refreshing the page.</value>
   </data>
+  <data name="ErrorConcurrency" xml:space="preserve">
+    <value>Another user updated this record.  Refresh and try your changes again.</value>
+  </data>
 </root>

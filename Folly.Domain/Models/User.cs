@@ -31,4 +31,7 @@ public class User : AuditableEntity {
 
     [ForeignKey(nameof(UserRole.UserId))]
     public IEnumerable<UserRole> UserRoles { get; set; }
+
+    [Timestamp]
+    public int RowVersion { get; set; }
 }

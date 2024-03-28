@@ -250,6 +250,15 @@ namespace Folly.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Another user updated this record.  Refresh and try your changes again..
+        /// </summary>
+        public static string ErrorConcurrency {
+            get {
+                return ResourceManager.GetString("ErrorConcurrency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to {0} is not a valid email address..
         /// </summary>
         public static string ErrorEmailAddress {

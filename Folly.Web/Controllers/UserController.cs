@@ -1,4 +1,5 @@
 using Folly.Attributes;
+using Folly.Constants;
 using Folly.Extensions;
 using Folly.Models;
 using Folly.Resources;
@@ -28,8 +29,9 @@ public class UserController(IUserService userService, ILogger<UserController> lo
             return View("CreateEdit", model);
         }
 
-        if (!await _UserService.SaveUserAsync(model)) {
-            ViewData.AddError(Users.ErrorSavingUser);
+        var result = await _UserService.SaveUserAsync(model);
+        if (result != ServiceResult.Success) {
+            ViewData.AddError(result == ServiceResult.ConcurrencyError ? Core.ErrorConcurrency : Roles.ErrorSavingRole);
             return View("CreateEdit", model);
         }
 

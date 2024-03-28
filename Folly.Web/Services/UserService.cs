@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using Folly.Constants;
 using Folly.Domain;
 using Folly.Domain.Models;
 using Folly.Extensions.Services;
@@ -43,14 +44,19 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
     public async Task<DTO.User?> GetUserByUserNameAsync(string userName)
         => await _DbContext.Users.Where(x => x.UserName == userName && x.Status == true).SelectAsDTO().FirstOrDefaultAsync();
 
-    public async Task<bool> SaveUserAsync(DTO.User userDTO) {
+    public async Task<ServiceResult> SaveUserAsync(DTO.User userDTO) {
         if (userDTO.Id > 0) {
             var user = await _DbContext.Users.Include(x => x.UserRoles).Where(x => x.Id == userDTO.Id).FirstOrDefaultAsync();
             if (user == null) {
-                return false;
+                return ServiceResult.InvalidId;
             }
 
             await MapToEntity(userDTO, user);
+
+            // set the original rowVersion value so concurrency check works correctly
+            // https://stackoverflow.com/questions/44609991/ef-not-throwing-dbupdateconcurrencyexception-despite-conflicting-updates
+            _DbContext.Entry(user).OriginalValues[nameof(user.RowVersion)] = userDTO.RowVersion;
+
             _DbContext.Users.Update(user);
         } else {
             var user = new User();
@@ -58,7 +64,11 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
             _DbContext.Users.Add(user);
         }
 
-        return await _DbContext.SaveChangesAsync() > 0;
+        try {
+            return await _DbContext.SaveChangesAsync() > 0 ? ServiceResult.Success : ServiceResult.GenericError;
+        } catch (DbUpdateConcurrencyException ex) {
+            return ServiceResult.ConcurrencyError;
+        }
     }
 
     private async Task MapToEntity(DTO.User userDTO, User user) {

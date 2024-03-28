@@ -21,4 +21,7 @@ public class Role : AuditableEntity {
 
     [ForeignKey(nameof(UserRole.RoleId))]
     public List<UserRole> UserRoles { get; set; }
+
+    [Timestamp]
+    public int RowVersion { get; set; }
 }

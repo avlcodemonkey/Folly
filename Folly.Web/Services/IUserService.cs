@@ -1,3 +1,4 @@
+using Folly.Constants;
 using Folly.Models;
 
 namespace Folly.Services;
@@ -13,7 +14,7 @@ public interface IUserService {
 
     Task<User?> GetUserByUserNameAsync(string userName);
 
-    Task<bool> SaveUserAsync(User userDTO);
+    Task<ServiceResult> SaveUserAsync(User userDTO);
 
     Task<string> UpdateAccountAsync(UpdateAccount account);
 

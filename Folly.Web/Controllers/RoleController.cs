@@ -1,4 +1,5 @@
 using Folly.Attributes;
+using Folly.Constants;
 using Folly.Extensions;
 using Folly.Models;
 using Folly.Resources;
@@ -30,8 +31,9 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
             return View("CreateEdit", model);
         }
 
-        if (!await _RoleService.SaveRoleAsync(model)) {
-            ViewData.AddError(Roles.ErrorSavingRole);
+        var result = await _RoleService.SaveRoleAsync(model);
+        if (result != ServiceResult.Success) {
+            ViewData.AddError(result == ServiceResult.ConcurrencyError ? Core.ErrorConcurrency : Roles.ErrorSavingRole);
             return View("CreateEdit", model);
         }
 

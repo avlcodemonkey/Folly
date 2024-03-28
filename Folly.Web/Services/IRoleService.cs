@@ -1,3 +1,4 @@
+using Folly.Constants;
 using Folly.Models;
 
 namespace Folly.Services;
@@ -13,7 +14,7 @@ public interface IRoleService {
 
     Task<Role?> GetRoleByIdAsync(int id);
 
-    Task<bool> SaveRoleAsync(Role roleDTO);
+    Task<ServiceResult> SaveRoleAsync(Role roleDTO);
 
     Task<bool> AddPermissionsToDefaultRoleAsync(IEnumerable<int> permissionIds);
 }

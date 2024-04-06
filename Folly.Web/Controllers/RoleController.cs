@@ -33,7 +33,7 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
 
         var result = await _RoleService.SaveRoleAsync(model);
         if (result != ServiceResult.Success) {
-            ViewData.AddError(result == ServiceResult.ConcurrencyError ? Core.ErrorConcurrency : Roles.ErrorSavingRole);
+            ViewData.AddServiceError(result);
             return View("CreateEdit", model);
         }
 

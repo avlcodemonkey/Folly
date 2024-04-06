@@ -8,7 +8,7 @@ public class RoleServiceExtensionsTests {
     public void SelectSingleAsDTO_ReturnsProjectedDTO() {
         // arrange
         var rolePermission = new RolePermission { Id = 1, RoleId = 2, PermissionId = 3 };
-        var role = new Role { Id = 4, Name = "test role", IsDefault = true, RolePermissions = [rolePermission] };
+        var role = new Role { Id = 4, Name = "test role", IsDefault = true, RolePermissions = [rolePermission], RowVersion = 999 };
         var roles = new List<Role> { role }.AsQueryable();
 
         // act
@@ -21,6 +21,7 @@ public class RoleServiceExtensionsTests {
         Assert.All(dtos, x => Assert.Equal(role.Id, x.Id));
         Assert.All(dtos, x => Assert.Equal(role.Name, x.Name));
         Assert.All(dtos, x => Assert.Equal(role.IsDefault, x.IsDefault));
+        Assert.All(dtos, x => Assert.Equal(role.RowVersion, x.RowVersion));
         Assert.All(dtos, x => Assert.NotNull(x.PermissionIds));
         Assert.All(dtos, x => Assert.Single(x.PermissionIds!));
         Assert.All(dtos, x => Assert.Contains(rolePermission.PermissionId, x.PermissionIds!));
@@ -30,9 +31,9 @@ public class RoleServiceExtensionsTests {
     public void SelectMultipleAsDTO_ReturnsProjectedDTOs() {
         // arrange
         var rolePermission1 = new RolePermission { Id = 1, RoleId = 2, PermissionId = 3 };
-        var role1 = new Role { Id = 4, Name = "test role 1", IsDefault = true, RolePermissions = [rolePermission1] };
+        var role1 = new Role { Id = 4, Name = "test role 1", IsDefault = true, RolePermissions = [rolePermission1], RowVersion = 123 };
         var rolePermission2 = new RolePermission { Id = 5, RoleId = 6, PermissionId = 7 };
-        var role2 = new Role { Id = 6, Name = "test role 2", IsDefault = false, RolePermissions = [rolePermission2] };
+        var role2 = new Role { Id = 6, Name = "test role 2", IsDefault = false, RolePermissions = [rolePermission2], RowVersion = 456 };
         var roles = new List<Role> { role1, role2 }.AsQueryable();
 
         // act
@@ -53,6 +54,10 @@ public class RoleServiceExtensionsTests {
         Assert.Collection(dtos,
             x => Assert.Equal(role1.IsDefault, x.IsDefault),
             x => Assert.Equal(role2.IsDefault, x.IsDefault)
+        );
+        Assert.Collection(dtos,
+            x => Assert.Equal(role1.RowVersion, x.RowVersion),
+            x => Assert.Equal(role2.RowVersion, x.RowVersion)
         );
         Assert.All(dtos, x => Assert.NotNull(x.PermissionIds));
         Assert.All(dtos, x => Assert.Single(x.PermissionIds!));

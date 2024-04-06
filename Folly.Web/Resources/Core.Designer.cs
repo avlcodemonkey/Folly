@@ -250,7 +250,7 @@ namespace Folly.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Another user updated this record.  Refresh and try your changes again..
+        ///   Looks up a localized string similar to There was a conflict during update.  Refresh and try again..
         /// </summary>
         public static string ErrorConcurrency {
             get {

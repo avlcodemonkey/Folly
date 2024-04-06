@@ -122,6 +122,8 @@ csharp_prefer_simple_default_expression = true:warning
 dotnet_style_prefer_compound_assignment = true:warning
 dotnet_style_prefer_simplified_interpolation = true:warning
 dotnet_style_prefer_simplified_boolean_expressions = true:warning
+# disable this to avoid `Collection was of a fixed size` errors with EF Core 1-many props
+dotnet_style_prefer_collection_expression = false
 
 # Undocumented
 dotnet_style_operator_placement_when_wrapping = end_of_line:warning

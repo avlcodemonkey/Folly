@@ -47,14 +47,12 @@ public sealed class RoleService(FollyDbContext dbContext) : IRoleService {
         if (roleDTO.Id > 0) {
             var role = await _DbContext.Roles.Include(x => x.RolePermissions).Where(x => x.Id == roleDTO.Id).FirstOrDefaultAsync();
             if (role == null) {
-                return ServiceResult.InvalidId;
+                return ServiceResult.InvalidIdError;
             }
 
             await MapToEntity(roleDTO, role);
-
             // set the original rowVersion value so concurrency check works correctly
-            // https://stackoverflow.com/questions/44609991/ef-not-throwing-dbupdateconcurrencyexception-despite-conflicting-updates
-            _DbContext.Entry(role).OriginalValues[nameof(role.RowVersion)] = roleDTO.RowVersion;
+            _DbContext.SetOriginalRowVersion(role, roleDTO.RowVersion);
 
             _DbContext.Roles.Update(role);
         } else {
@@ -65,7 +63,7 @@ public sealed class RoleService(FollyDbContext dbContext) : IRoleService {
 
         try {
             return await _DbContext.SaveChangesAsync() > 0 ? ServiceResult.Success : ServiceResult.GenericError;
-        } catch (DbUpdateConcurrencyException ex) {
+        } catch (DbUpdateConcurrencyException) {
             return ServiceResult.ConcurrencyError;
         }
     }

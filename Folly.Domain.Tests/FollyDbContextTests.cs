@@ -254,4 +254,21 @@ public class FollyDbContextTests(DatabaseFixture fixture) : IClassFixture<Databa
         Assert.All(rolePermissionAuditLogs, x => Assert.Equal(rolePermissionForDeleteAudit.Id, x.PrimaryKey));
         Assert.All(rolePermissionAuditLogs, x => Assert.True(deleteStartTime <= x.Date));
     }
+
+    [Fact]
+    public void SetOriginalRowVersion_SetsVersion() {
+        // arrange
+        var userForRowVersion = _Fixture.UserForUpdate;
+        var newRowVersion = 99;
+        var actualRowVersion = 0;
+
+        // act
+        using (var dbContext = _Fixture.CreateContextForUpdate()) {
+            dbContext.SetOriginalRowVersion(userForRowVersion, newRowVersion);
+            actualRowVersion = int.Parse(dbContext.Entry(userForRowVersion).OriginalValues[nameof(IVersionedEntity.RowVersion)]!.ToString()!);
+        }
+
+        // assert
+        Assert.Equal(newRowVersion, actualRowVersion);
+    }
 }

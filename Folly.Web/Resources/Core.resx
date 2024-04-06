@@ -313,6 +313,6 @@
     <value>An unhandled error occurred.  Try refreshing the page.</value>
   </data>
   <data name="ErrorConcurrency" xml:space="preserve">
-    <value>Another user updated this record.  Refresh and try your changes again.</value>
+    <value>There was a conflict during update.  Refresh and try again.</value>
   </data>
 </root>

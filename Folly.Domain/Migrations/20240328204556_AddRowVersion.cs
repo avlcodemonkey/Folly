@@ -23,7 +23,7 @@ namespace Folly.Domain.Migrations {
                 nullable: false,
                 defaultValue: 0);
 
-            // if migrating to a db other than sqlite, this syntax may need to change.
+            // sqlite specific, may need to change if backing database is changed
             migrationBuilder.Sql(@"
 CREATE TRIGGER UserUpdate
 AFTER UPDATE ON User

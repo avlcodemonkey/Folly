@@ -11,7 +11,7 @@ public class UserServiceExtensionsTests {
         var userRole = new UserRole { Id = 1, RoleId = 2, UserId = 3 };
         var user = new User {
             Id = 3, Email = "fake@email.com", FirstName = "first name", LastName = "last name", LanguageId = 1,
-            UserName = "username", UserRoles = new List<UserRole> { userRole }
+            UserName = "username", UserRoles = new List<UserRole> { userRole }, RowVersion = 999
         };
         var users = new List<User> { user }.AsQueryable();
 
@@ -27,6 +27,7 @@ public class UserServiceExtensionsTests {
         Assert.Equal(user.LastName, resultUser.LastName);
         Assert.Equal(user.LanguageId, resultUser.LanguageId);
         Assert.Equal(user.UserName, resultUser.UserName);
+        Assert.Equal(user.RowVersion, resultUser.RowVersion);
 
         Assert.NotNull(resultUser.RoleIds);
         Assert.Single(resultUser.RoleIds!);
@@ -39,12 +40,12 @@ public class UserServiceExtensionsTests {
         var userRole1 = new UserRole { Id = 1, RoleId = 2, UserId = 3 };
         var user1 = new User {
             Id = 3, Email = "fake@email.com", FirstName = "first name", LastName = "last name", LanguageId = 1,
-            UserName = "username", UserRoles = new List<UserRole> { userRole1 }
+            UserName = "username", UserRoles = new List<UserRole> { userRole1 }, RowVersion = 123
         };
         var userRole2 = new UserRole { Id = 4, RoleId = 5, UserId = 6 };
         var user2 = new User {
             Id = 6, Email = "fake2@email.com", FirstName = "first name 2", LastName = "last name 2", LanguageId = 2,
-            UserName = "username2", UserRoles = new List<UserRole> { userRole2 }
+            UserName = "username2", UserRoles = new List<UserRole> { userRole2 }, RowVersion = 456
         };
         var users = new List<User> { user1, user2 }.AsQueryable();
 
@@ -80,6 +81,10 @@ public class UserServiceExtensionsTests {
             x => Assert.Equal(user1.UserName, x.UserName),
             x => Assert.Equal(user2.UserName, x.UserName)
         );
+        Assert.Collection(dtos,
+            x => Assert.Equal(user1.RowVersion, x.RowVersion),
+            x => Assert.Equal(user2.RowVersion, x.RowVersion)
+        );
 
         Assert.All(dtos, x => Assert.NotNull(x.RoleIds));
         Assert.All(dtos, x => Assert.Single(x.RoleIds!));
@@ -88,7 +93,6 @@ public class UserServiceExtensionsTests {
             x => Assert.Contains(userRole2.RoleId, x.RoleIds!)
         );
     }
-
 
     [Fact]
     public void SelectSingleAsAuditLogUserDTO_ReturnsProjectedDTO() {

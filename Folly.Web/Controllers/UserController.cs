@@ -31,7 +31,7 @@ public class UserController(IUserService userService, ILogger<UserController> lo
 
         var result = await _UserService.SaveUserAsync(model);
         if (result != ServiceResult.Success) {
-            ViewData.AddError(result == ServiceResult.ConcurrencyError ? Core.ErrorConcurrency : Roles.ErrorSavingRole);
+            ViewData.AddServiceError(result);
             return View("CreateEdit", model);
         }
 

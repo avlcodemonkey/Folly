@@ -1,5 +1,6 @@
 using System.Data;
 using Folly.Constants;
+using Folly.Resources;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
@@ -77,6 +78,25 @@ public static class ControllerExtensions {
     public static void AddMessage(this ViewDataDictionary viewData, string message) {
         if (!string.IsNullOrWhiteSpace(message)) {
             viewData[ViewProperties.Message] = message;
+        }
+    }
+
+    /// <summary>
+    /// Adds an error message based on the service result to the ViewData dictionary.
+    /// </summary>
+    /// <param name="viewData">ViewData to update.</param>
+    /// <param name="result">Result from service to map to error msg.</param>
+    public static void AddServiceError(this ViewDataDictionary viewData, ServiceResult result) {
+        switch (result) {
+            case ServiceResult.GenericError:
+                viewData[ViewProperties.Error] = Core.ErrorGeneric;
+                break;
+            case ServiceResult.ConcurrencyError:
+                viewData[ViewProperties.Error] = Core.ErrorConcurrency;
+                break;
+            case ServiceResult.InvalidIdError:
+                viewData[ViewProperties.Error] = Core.ErrorInvalidId;
+                break;
         }
     }
 }

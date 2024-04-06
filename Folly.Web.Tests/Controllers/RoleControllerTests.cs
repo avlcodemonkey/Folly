@@ -19,20 +19,30 @@ public class RoleControllerTests() {
     private readonly Mock<IUrlHelper> _MockUrlHelper = new();
 
     private readonly string _Url = "/test";
+
     private readonly Role _RoleForSuccess = new() { Id = -100, Name = "success role" };
     private readonly Role _RoleForFailure = new() { Id = -101, Name = "failure role" };
+    private readonly Role _RoleForConcurrencyError = new() { Id = -102, Name = "concurrency role" };
+    private readonly Role _RoleForInvalidIdError = new() { Id = -103, Name = "invalid id role" };
+
     private readonly CopyRole _CopyRoleForSuccess = new() { Id = -100, Prompt = "success prompt" };
     private readonly CopyRole _CopyRoleForFailure = new() { Id = -101, Prompt = "failure prompt" };
 
     private RoleController CreateController() {
         _MockRoleService.Setup(x => x.GetRoleByIdAsync(_RoleForSuccess.Id)).ReturnsAsync(_RoleForSuccess);
         _MockRoleService.Setup(x => x.GetAllRolesAsync()).ReturnsAsync(new List<Role> { _RoleForSuccess, _RoleForFailure });
-        _MockRoleService.Setup(x => x.SaveRoleAsync(_RoleForSuccess)).ReturnsAsync(true);
-        _MockRoleService.Setup(x => x.SaveRoleAsync(_RoleForFailure)).ReturnsAsync(false);
+
+        _MockRoleService.Setup(x => x.SaveRoleAsync(_RoleForSuccess)).ReturnsAsync(ServiceResult.Success);
+        _MockRoleService.Setup(x => x.SaveRoleAsync(_RoleForFailure)).ReturnsAsync(ServiceResult.GenericError);
+        _MockRoleService.Setup(x => x.SaveRoleAsync(_RoleForConcurrencyError)).ReturnsAsync(ServiceResult.ConcurrencyError);
+        _MockRoleService.Setup(x => x.SaveRoleAsync(_RoleForInvalidIdError)).ReturnsAsync(ServiceResult.InvalidIdError);
+
         _MockRoleService.Setup(x => x.CopyRoleAsync(_CopyRoleForSuccess)).ReturnsAsync(true);
         _MockRoleService.Setup(x => x.CopyRoleAsync(_CopyRoleForFailure)).ReturnsAsync(false);
+
         _MockRoleService.Setup(x => x.DeleteRoleAsync(_RoleForSuccess.Id)).ReturnsAsync(true);
         _MockRoleService.Setup(x => x.DeleteRoleAsync(_RoleForFailure.Id)).ReturnsAsync(false);
+
         _MockRoleService.Setup(x => x.AddPermissionsToDefaultRoleAsync(It.IsAny<IEnumerable<int>>())).ReturnsAsync(true);
 
         _MockAssemblyService.Setup(x => x.GetActionList()).Returns([]);
@@ -155,7 +165,7 @@ public class RoleControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("CreateEdit", viewResult.ViewName);
-        Assert.Contains(Roles.ErrorSavingRole, viewResult.ViewData[ViewProperties.Error]?.ToString());
+        Assert.Contains(Core.ErrorGeneric, viewResult.ViewData[ViewProperties.Error]?.ToString());
 
         Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
 
@@ -239,7 +249,7 @@ public class RoleControllerTests() {
     }
 
     [Fact]
-    public async Task Post_Edit_WithServiceError_ReturnsCreateEditViewWithError() {
+    public async Task Post_Edit_WithGenericServiceError_ReturnsCreateEditViewWithError() {
         // Arrange
         var controller = CreateController();
 
@@ -249,12 +259,54 @@ public class RoleControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("CreateEdit", viewResult.ViewName);
-        Assert.Contains(Roles.ErrorSavingRole, viewResult.ViewData[ViewProperties.Error]?.ToString());
+        Assert.Contains(Core.ErrorGeneric, viewResult.ViewData[ViewProperties.Error]?.ToString());
 
         Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
 
         var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
         Assert.Equal(_RoleForFailure.Id, model.Id);
+
+        _MockRoleService.Verify(x => x.SaveRoleAsync(It.IsAny<Role>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Post_Edit_WithConcurrencyServiceError_ReturnsCreateEditViewWithError() {
+        // Arrange
+        var controller = CreateController();
+
+        // Act
+        var result = await controller.Edit(_RoleForConcurrencyError);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("CreateEdit", viewResult.ViewName);
+        Assert.Contains(Core.ErrorConcurrency, viewResult.ViewData[ViewProperties.Error]?.ToString());
+
+        Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
+
+        var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
+        Assert.Equal(_RoleForConcurrencyError.Id, model.Id);
+
+        _MockRoleService.Verify(x => x.SaveRoleAsync(It.IsAny<Role>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Post_Edit_WithInvalidIdServiceError_ReturnsCreateEditViewWithError() {
+        // Arrange
+        var controller = CreateController();
+
+        // Act
+        var result = await controller.Edit(_RoleForInvalidIdError);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("CreateEdit", viewResult.ViewName);
+        Assert.Contains(Core.ErrorInvalidId, viewResult.ViewData[ViewProperties.Error]?.ToString());
+
+        Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
+
+        var model = Assert.IsAssignableFrom<Role>(viewResult.ViewData.Model);
+        Assert.Equal(_RoleForInvalidIdError.Id, model.Id);
 
         _MockRoleService.Verify(x => x.SaveRoleAsync(It.IsAny<Role>()), Times.Once);
     }

@@ -17,14 +17,21 @@ public class UserControllerTests() {
     private readonly Mock<IUrlHelper> _MockUrlHelper = new();
 
     private readonly string _Url = "/test";
+
     private readonly User _UserForSuccess = new() { Id = -100, UserName = "successUser", FirstName = "first1", LastName = "last1", Email = "a@b.com" };
     private readonly User _UserForFailure = new() { Id = -101, UserName = "failureUser", FirstName = "first2", LastName = null, Email = "b@c.com" };
+    private readonly User _UserForConcurrencyError = new() { Id = -102, UserName = "concurrencyUser", FirstName = "first3", LastName = null, Email = "c@d.com" };
+    private readonly User _UserForInvalidIdError = new() { Id = -103, UserName = "invalidIdUser", FirstName = "first4", LastName = null, Email = "d@e.com" };
 
     private UserController CreateController() {
         _MockUserService.Setup(x => x.GetUserByIdAsync(_UserForSuccess.Id)).ReturnsAsync(_UserForSuccess);
         _MockUserService.Setup(x => x.GetAllUsersAsync()).ReturnsAsync(new List<User> { _UserForSuccess, _UserForFailure });
-        _MockUserService.Setup(x => x.SaveUserAsync(_UserForSuccess)).ReturnsAsync(true);
-        _MockUserService.Setup(x => x.SaveUserAsync(_UserForFailure)).ReturnsAsync(false);
+
+        _MockUserService.Setup(x => x.SaveUserAsync(_UserForSuccess)).ReturnsAsync(ServiceResult.Success);
+        _MockUserService.Setup(x => x.SaveUserAsync(_UserForFailure)).ReturnsAsync(ServiceResult.GenericError);
+        _MockUserService.Setup(x => x.SaveUserAsync(_UserForConcurrencyError)).ReturnsAsync(ServiceResult.ConcurrencyError);
+        _MockUserService.Setup(x => x.SaveUserAsync(_UserForInvalidIdError)).ReturnsAsync(ServiceResult.InvalidIdError);
+
         _MockUserService.Setup(x => x.DeleteUserAsync(_UserForSuccess.Id)).ReturnsAsync(true);
         _MockUserService.Setup(x => x.DeleteUserAsync(_UserForFailure.Id)).ReturnsAsync(false);
 
@@ -155,7 +162,7 @@ public class UserControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("CreateEdit", viewResult.ViewName);
-        Assert.Contains(Users.ErrorSavingUser, viewResult.ViewData[ViewProperties.Error]?.ToString());
+        Assert.Contains(Core.ErrorGeneric, viewResult.ViewData[ViewProperties.Error]?.ToString());
 
         Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
 
@@ -240,7 +247,7 @@ public class UserControllerTests() {
     }
 
     [Fact]
-    public async Task Post_Edit_WithServiceError_ReturnsCreateEditViewWithError() {
+    public async Task Post_Edit_WithGenericServiceError_ReturnsCreateEditViewWithError() {
         // Arrange
         var controller = CreateController();
 
@@ -250,12 +257,54 @@ public class UserControllerTests() {
         // Assert
         var viewResult = Assert.IsType<ViewResult>(result);
         Assert.Equal("CreateEdit", viewResult.ViewName);
-        Assert.Contains(Users.ErrorSavingUser, viewResult.ViewData[ViewProperties.Error]?.ToString());
+        Assert.Contains(Core.ErrorGeneric, viewResult.ViewData[ViewProperties.Error]?.ToString());
 
         Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
 
         var model = Assert.IsAssignableFrom<User>(viewResult.ViewData.Model);
         Assert.Equal(_UserForFailure.Id, model.Id);
+
+        _MockUserService.Verify(x => x.SaveUserAsync(It.IsAny<User>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Post_Edit_WithConcurrencyServiceError_ReturnsCreateEditViewWithError() {
+        // Arrange
+        var controller = CreateController();
+
+        // Act
+        var result = await controller.Edit(_UserForConcurrencyError);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("CreateEdit", viewResult.ViewName);
+        Assert.Contains(Core.ErrorConcurrency, viewResult.ViewData[ViewProperties.Error]?.ToString());
+
+        Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
+
+        var model = Assert.IsAssignableFrom<User>(viewResult.ViewData.Model);
+        Assert.Equal(_UserForConcurrencyError.Id, model.Id);
+
+        _MockUserService.Verify(x => x.SaveUserAsync(It.IsAny<User>()), Times.Once);
+    }
+
+    [Fact]
+    public async Task Post_Edit_WithInvalidIdServiceError_ReturnsCreateEditViewWithError() {
+        // Arrange
+        var controller = CreateController();
+
+        // Act
+        var result = await controller.Edit(_UserForInvalidIdError);
+
+        // Assert
+        var viewResult = Assert.IsType<ViewResult>(result);
+        Assert.Equal("CreateEdit", viewResult.ViewName);
+        Assert.Contains(Core.ErrorInvalidId, viewResult.ViewData[ViewProperties.Error]?.ToString());
+
+        Assert.False(controller.Response.Headers.TryGetValue(PJax.PushUrl, out var headerUrl));
+
+        var model = Assert.IsAssignableFrom<User>(viewResult.ViewData.Model);
+        Assert.Equal(_UserForInvalidIdError.Id, model.Id);
 
         _MockUserService.Verify(x => x.SaveUserAsync(It.IsAny<User>()), Times.Once);
     }

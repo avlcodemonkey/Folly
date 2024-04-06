@@ -1,4 +1,5 @@
 using System.Security.Principal;
+using Folly.Constants;
 using Folly.Domain.Models;
 using Folly.Services;
 using Folly.Web.Tests.Fixtures;
@@ -11,15 +12,29 @@ namespace Folly.Web.Tests.Services;
 [Collection(nameof(DatabaseCollection))]
 public class UserServiceTests {
     private readonly DatabaseFixture _Fixture;
+    private readonly Mock<IHttpContextAccessor> _MockHttpContextAccessor;
     private readonly UserService _UserService;
+
+    private UserService GetNewUserService() => new(_Fixture.CreateContext(), _MockHttpContextAccessor.Object);
+
+    /// <summary>
+    /// Delete a user so it doesn't interfere with other tests.
+    /// </summary>
+    private async Task DeleteUserIfExistsAsync(int userId) {
+        var user = (await GetNewUserService().GetAllUsersAsync()).FirstOrDefault(x => x.Id == userId);
+        if (user != null) {
+            // need a new context for this to avoid concurrency error
+            await GetNewUserService().DeleteUserAsync(user.Id);
+        }
+    }
 
     public UserServiceTests(DatabaseFixture fixture) {
         _Fixture = fixture;
 
-        var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
-        mockHttpContextAccessor.Setup(x => x.HttpContext!.User.Identity).Returns(new GenericIdentity(fixture.TestUser.UserName, "test"));
+        _MockHttpContextAccessor = new Mock<IHttpContextAccessor>();
+        _MockHttpContextAccessor.Setup(x => x.HttpContext!.User.Identity).Returns(new GenericIdentity(fixture.TestUser.UserName, "test"));
 
-        _UserService = new UserService(fixture.CreateContext(), mockHttpContextAccessor.Object);
+        _UserService = GetNewUserService();
     }
 
     [Fact]
@@ -116,7 +131,7 @@ public class UserServiceTests {
         var testRole = _Fixture.TestRole;
         var createUser = new DTO.User {
             UserName = "createTest", FirstName = "create first", LastName = "create last", Email = "create@email.com",
-            LanguageId = 1, RoleIds = new[] { testRole.Id }
+            LanguageId = 1, RoleIds = [testRole.Id]
         };
 
         // act
@@ -124,11 +139,11 @@ public class UserServiceTests {
         var newUser = (await _UserService.GetAllUsersAsync()).FirstOrDefault(x => x.UserName == createUser.UserName);
         if (newUser != null) {
             // delete the newly created user so it doesn't interfere with other tests
-            await _UserService.DeleteUserAsync(newUser.Id);
+            await GetNewUserService().DeleteUserAsync(newUser.Id);
         }
 
         // assert
-        Assert.True(result);
+        Assert.Equal(ServiceResult.Success, result);
         Assert.NotNull(newUser);
         Assert.NotNull(newUser.RoleIds);
         Assert.Equal(createUser.RoleIds.Count(), newUser.RoleIds.Count());
@@ -141,14 +156,14 @@ public class UserServiceTests {
         var originalUserName = "originalUserName";
         var createUser = new DTO.User {
             UserName = originalUserName, FirstName = "original first", LastName = "original last", Email = "update@email.com",
-            LanguageId = 1, RoleIds = new[] { testRole.Id }
+            LanguageId = 1, RoleIds = [testRole.Id]
         };
         await _UserService.SaveUserAsync(createUser);
         var userId = (await _UserService.GetAllUsersAsync()).FirstOrDefault(x => x.UserName == originalUserName)!.Id;
         var newUserName = "newUserName";
         var updateUser = new DTO.User {
             Id = userId, UserName = newUserName, FirstName = "new first", LastName = "new last", Email = "update@email.com",
-            LanguageId = 1, RoleIds = Array.Empty<int>()
+            LanguageId = 1, RoleIds = []
         };
 
         // act
@@ -156,11 +171,11 @@ public class UserServiceTests {
         var updatedUser = (await _UserService.GetAllUsersAsync()).FirstOrDefault(x => x.Id == userId);
         if (updatedUser != null) {
             // delete the newly created user so it doesn't interfere with other tests
-            await _UserService.DeleteUserAsync(updatedUser.Id);
+            await GetNewUserService().DeleteUserAsync(updatedUser.Id);
         }
 
         // assert
-        Assert.True(result);
+        Assert.Equal(ServiceResult.Success, result);
         Assert.NotNull(updatedUser);
         Assert.Equal(newUserName, updatedUser.UserName);
         Assert.NotEqual(createUser.FirstName, updatedUser.FirstName);
@@ -176,14 +191,92 @@ public class UserServiceTests {
         // arrange
         var updateUser = new DTO.User {
             Id = 999, UserName = "updateUserName", FirstName = "update first", LastName = "update last", Email = "update@email.com",
-            LanguageId = 1, RoleIds = Array.Empty<int>()
+            LanguageId = 1, RoleIds = []
         };
 
         // act
         var result = await _UserService.SaveUserAsync(updateUser);
 
         // assert
-        Assert.False(result);
+        Assert.Equal(ServiceResult.InvalidIdError, result);
+    }
+
+    [Fact]
+    public async Task SaveUserAsync_WithConcurrentChanges_ReturnsConcurrencyError() {
+        // arrange
+        var testRole = _Fixture.TestRole;
+        var originalUserName = "concurrency1 userName";
+        var createUser = new DTO.User {
+            UserName = originalUserName, FirstName = "concurrency1 first", LastName = "concurrency1 last", Email = "concurrency1@email.com",
+            LanguageId = 1, RoleIds = [testRole.Id]
+        };
+        await _UserService.SaveUserAsync(createUser);
+
+        var userCopy = (await _UserService.GetAllUsersAsync()).FirstOrDefault(x => x.UserName == originalUserName);
+        var updateUser = userCopy! with { UserName = "concurrency1 new userName" };
+        var finalUser = userCopy with { UserName = "concurrency1 final userName" };
+
+        // act
+        var result = await _UserService.SaveUserAsync(updateUser);
+        var result2 = await _UserService.SaveUserAsync(finalUser);
+
+        await DeleteUserIfExistsAsync(userCopy.Id);
+
+        // assert
+        Assert.Equal(ServiceResult.Success, result);
+        Assert.Equal(ServiceResult.ConcurrencyError, result2);
+    }
+
+    [Fact]
+    public async Task SaveUserAsync_WithSameRowVersionAndConcurrentChanges_ReturnsConcurrencyError() {
+        // arrange
+        var testRole = _Fixture.TestRole;
+        var originalUserName = "concurrency2 userName";
+        var createUser = new DTO.User {
+            UserName = originalUserName, FirstName = "concurrency2 first", LastName = "concurrency2 last", Email = "concurrency2@email.com",
+            LanguageId = 1, RoleIds = [testRole.Id]
+        };
+        await _UserService.SaveUserAsync(createUser);
+
+        var userCopy = (await _UserService.GetAllUsersAsync()).First(x => x.UserName == originalUserName);
+        var updateUser = userCopy with { UserName = "concurrency2 new userName", RowVersion = 0 };
+        var finalUser = userCopy with { UserName = "concurrency2 final userName", RowVersion = 0 };
+
+        // act
+        var result = await GetNewUserService().SaveUserAsync(updateUser);
+        var result2 = await GetNewUserService().SaveUserAsync(finalUser);
+
+        await DeleteUserIfExistsAsync(userCopy.Id);
+
+        // assert
+        Assert.Equal(ServiceResult.Success, result);
+        Assert.Equal(ServiceResult.ConcurrencyError, result2);
+    }
+
+    [Fact]
+    public async Task SaveUserAsync_WithIncrementedRowVersionAndConcurrentChanges_ReturnsSuccess() {
+        // arrange
+        var testRole = _Fixture.TestRole;
+        var originalUserName = "concurrency3 userName";
+        var createUser = new DTO.User {
+            UserName = originalUserName, FirstName = "concurrency3 first", LastName = "concurrency3 last", Email = "concurrency3@email.com",
+            LanguageId = 1, RoleIds = [testRole.Id]
+        };
+        await _UserService.SaveUserAsync(createUser);
+
+        var userCopy = (await _UserService.GetAllUsersAsync()).FirstOrDefault(x => x.UserName == originalUserName);
+        var updateUser = userCopy! with { UserName = "concurrency3 new userName", RowVersion = 0 };
+        var finalUser = userCopy with { UserName = "concurrency3 final userName", RowVersion = 1 };
+
+        // act
+        var result = await _UserService.SaveUserAsync(updateUser);
+        var result2 = await _UserService.SaveUserAsync(finalUser);
+
+        await DeleteUserIfExistsAsync(userCopy.Id);
+
+        // assert
+        Assert.Equal(ServiceResult.Success, result);
+        Assert.Equal(ServiceResult.Success, result2);
     }
 
     [Fact]
@@ -254,15 +347,18 @@ public class UserServiceTests {
     public async Task UpdateAccountAsync_WithInvalidUserId_ThrowsException() {
         // arrange
         var testRole = _Fixture.TestRole;
+
         // first create a new user in the db
         var originalUserName = "updateAccountUserName";
         var updateAccountUser = new DTO.User {
             UserName = originalUserName, FirstName = "update account first", LastName = "update account last", Email = "updateAccount@email.com",
-            LanguageId = 1, RoleIds = new[] { testRole.Id }
+            LanguageId = 1, RoleIds = [testRole.Id]
         };
         await _UserService.SaveUserAsync(updateAccountUser);
+
         // now load the new user from the db so we have their userId
         var user = _Fixture.CreateContext().Users.FirstOrDefault(x => x.UserName == originalUserName)!;
+
         // now create the UpdateAccount record
         var newEmail = "new@email.com";
         var newFirstName = "new first";
@@ -271,6 +367,7 @@ public class UserServiceTests {
         var updateAccount = new DTO.UpdateAccount {
             Email = newEmail, FirstName = newFirstName, LastName = newLastName, LanguageId = newLanguageId
         };
+
         // create a new userService that will act like the newly created user
         var mockHttpContextAccessor = new Mock<IHttpContextAccessor>();
         mockHttpContextAccessor.Setup(x => x.HttpContext!.User.Identity).Returns(new GenericIdentity(originalUserName, "test"));
@@ -281,7 +378,8 @@ public class UserServiceTests {
         var updatedUser = (await _UserService.GetAllUsersAsync()).FirstOrDefault(x => x.Id == user.Id);
         if (updatedUser != null) {
             // delete the newly created user so it doesn't interfere with other tests
-            await _UserService.DeleteUserAsync(updatedUser.Id);
+            // need a new context for this to avoid concurrency error
+            await GetNewUserService().DeleteUserAsync(updatedUser.Id);
         }
 
         // assert

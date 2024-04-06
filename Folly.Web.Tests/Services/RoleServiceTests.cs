@@ -1,3 +1,4 @@
+using Folly.Constants;
 using Folly.Domain.Models;
 using Folly.Services;
 using Folly.Web.Tests.Fixtures;
@@ -9,6 +10,19 @@ namespace Folly.Web.Tests.Services;
 public class RoleServiceTests(DatabaseFixture fixture) {
     private readonly DatabaseFixture _Fixture = fixture;
     private readonly RoleService _RoleService = new(fixture.CreateContext());
+
+    private RoleService GetNewRoleService() => new(_Fixture.CreateContext());
+
+    /// <summary>
+    /// Delete a role so it doesn't interfere with other tests.
+    /// </summary>
+    private async Task DeleteRoleIfExistsAsync(int roleId) {
+        var role = (await GetNewRoleService().GetAllRolesAsync()).FirstOrDefault(x => x.Id == roleId);
+        if (role != null) {
+            // need a new context for this to avoid concurrency error
+            await GetNewRoleService().DeleteRoleAsync(role.Id);
+        }
+    }
 
     [Fact]
     public async Task GetDefaultRoleAsync_ReturnsAdminRoleDTO() {
@@ -78,7 +92,7 @@ public class RoleServiceTests(DatabaseFixture fixture) {
         var testPermission = _Fixture.TestPermission;
         var createRole = new DTO.Role {
             Name = "Create test", IsDefault = false,
-            PermissionIds = new[] { testPermission.Id }
+            PermissionIds = [testPermission.Id]
         };
 
         // act
@@ -90,7 +104,7 @@ public class RoleServiceTests(DatabaseFixture fixture) {
         }
 
         // assert
-        Assert.True(result);
+        Assert.Equal(ServiceResult.Success, result);
         Assert.NotNull(newRole);
         Assert.NotNull(newRole.PermissionIds);
         Assert.Equal(createRole.PermissionIds.Count(), newRole.PermissionIds.Count());
@@ -103,26 +117,25 @@ public class RoleServiceTests(DatabaseFixture fixture) {
         var originalName = "original name";
         var createRole = new DTO.Role {
             Name = originalName, IsDefault = false,
-            PermissionIds = new[] { testPermission.Id }
+            PermissionIds = [testPermission.Id]
         };
         await _RoleService.SaveRoleAsync(createRole);
-        var roleId = (await _RoleService.GetAllRolesAsync()).FirstOrDefault(x => x.Name == originalName)!.Id;
+
+        var roleCopy = (await _RoleService.GetAllRolesAsync()).FirstOrDefault(x => x.Name == originalName);
         var newRoleName = "new name";
-        var updateRole = new DTO.Role {
-            Id = roleId, Name = newRoleName, IsDefault = false,
-            PermissionIds = Array.Empty<int>()
-        };
+        var updateRole = roleCopy! with { Name = newRoleName, PermissionIds = [] };
 
         // act
         var result = await _RoleService.SaveRoleAsync(updateRole);
-        var updatedRole = (await _RoleService.GetAllRolesAsync()).FirstOrDefault(x => x.Id == roleId);
+        var updatedRole = (await _RoleService.GetAllRolesAsync()).FirstOrDefault(x => x.Id == roleCopy.Id);
         if (updatedRole != null) {
             // delete the newly created role so it doesn't interfere with other tests
-            await _RoleService.DeleteRoleAsync(updatedRole.Id);
+            // need a new context for this to avoid concurrency error
+            await GetNewRoleService().DeleteRoleAsync(updatedRole.Id);
         }
 
         // assert
-        Assert.True(result);
+        Assert.Equal(ServiceResult.Success, result);
         Assert.NotNull(updatedRole);
         Assert.Equal(newRoleName, updatedRole.Name);
         Assert.NotNull(updatedRole.PermissionIds);
@@ -130,18 +143,96 @@ public class RoleServiceTests(DatabaseFixture fixture) {
     }
 
     [Fact]
-    public async Task SaveRoleAsync_UpdateInvalidRoleId_ReturnsFalse() {
+    public async Task SaveRoleAsync_UpdateInvalidRoleId_ReturnsInvalidIdError() {
         // arrange
         var updateRole = new DTO.Role {
             Id = 999, Name = "Update role", IsDefault = false,
-            PermissionIds = Array.Empty<int>()
+            PermissionIds = []
         };
 
         // act
         var result = await _RoleService.SaveRoleAsync(updateRole);
 
         // assert
-        Assert.False(result);
+        Assert.Equal(ServiceResult.InvalidIdError, result);
+    }
+
+    [Fact]
+    public async Task SaveRoleAsync_WithConcurrentChanges_ReturnsConcurrencyError() {
+        // arrange
+        var testPermission = _Fixture.TestPermission;
+        var originalName = "concurrency1 original name";
+        var createRole = new DTO.Role {
+            Name = originalName, IsDefault = false,
+            PermissionIds = [testPermission.Id]
+        };
+        await _RoleService.SaveRoleAsync(createRole);
+
+        var roleCopy = (await _RoleService.GetAllRolesAsync()).FirstOrDefault(x => x.Name == originalName);
+        var updateRole = roleCopy! with { Name = "concurrency1 new name" };
+        var finalRole = roleCopy with { Name = "concurrency1 final name" };
+
+        // act
+        var result = await _RoleService.SaveRoleAsync(updateRole);
+        var result2 = await _RoleService.SaveRoleAsync(finalRole);
+
+        await DeleteRoleIfExistsAsync(roleCopy.Id);
+
+        // assert
+        Assert.Equal(ServiceResult.Success, result);
+        Assert.Equal(ServiceResult.ConcurrencyError, result2);
+    }
+
+    [Fact]
+    public async Task SaveRoleAsync_WithSameRowVersionAndConcurrentChanges_ReturnsConcurrencyError() {
+        // arrange
+        var testPermission = _Fixture.TestPermission;
+        var originalName = "concurrency2 original name";
+        var createRole = new DTO.Role {
+            Name = originalName, IsDefault = false,
+            PermissionIds = [testPermission.Id]
+        };
+        await _RoleService.SaveRoleAsync(createRole);
+
+        var roleCopy = (await _RoleService.GetAllRolesAsync()).First(x => x.Name == originalName);
+        var updateRole = roleCopy with { Name = "concurrency2 new name", RowVersion = 0 };
+        var finalRole = roleCopy with { Name = "concurrency2 final name", RowVersion = 0 };
+
+        // act
+        var result = await GetNewRoleService().SaveRoleAsync(updateRole);
+        var result2 = await GetNewRoleService().SaveRoleAsync(finalRole);
+
+        await DeleteRoleIfExistsAsync(roleCopy.Id);
+
+        // assert
+        Assert.Equal(ServiceResult.Success, result);
+        Assert.Equal(ServiceResult.ConcurrencyError, result2);
+    }
+
+    [Fact]
+    public async Task SaveRoleAsync_WithIncrementedRowVersionAndConcurrentChanges_ReturnsSuccess() {
+        // arrange
+        var testPermission = _Fixture.TestPermission;
+        var originalName = "concurrency3 original name";
+        var createRole = new DTO.Role {
+            Name = originalName, IsDefault = false,
+            PermissionIds = [testPermission.Id]
+        };
+        await _RoleService.SaveRoleAsync(createRole);
+
+        var roleCopy = (await _RoleService.GetAllRolesAsync()).FirstOrDefault(x => x.Name == originalName);
+        var updateRole = roleCopy! with { Name = "concurrency3 new name", RowVersion = 0 };
+        var finalRole = roleCopy with { Name = "concurrency3 final name", RowVersion = 1 };
+
+        // act
+        var result = await _RoleService.SaveRoleAsync(updateRole);
+        var result2 = await _RoleService.SaveRoleAsync(finalRole);
+
+        await DeleteRoleIfExistsAsync(roleCopy.Id);
+
+        // assert
+        Assert.Equal(ServiceResult.Success, result);
+        Assert.Equal(ServiceResult.Success, result2);
     }
 
     [Fact]

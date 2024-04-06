@@ -1,3 +1,4 @@
+using System.Data;
 using Folly.Domain.Extensions;
 using Folly.Domain.Models;
 using Microsoft.AspNetCore.Http;
@@ -50,7 +51,7 @@ public sealed class FollyDbContext : DbContext {
     /// </summary>
     /// <remarks>App code should always use SaveChangesAsync instead of SaveChanges. SaveChanges is not overridden for use in tests.</remarks>
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default) {
-        var changedEntities = ChangeTracker.Entries().Where(x => x.Entity is AuditableEntity &&
+        var changedEntities = ChangeTracker.Entries().Where(x => x.Entity is IAuditedEntity &&
             (x.State == EntityState.Added || x.State == EntityState.Modified || x.State == EntityState.Deleted)).ToList();
 
         // create audit log records based on the current changed entities
@@ -59,14 +60,14 @@ public sealed class FollyDbContext : DbContext {
 
         // set the created/updated date fields on these entities for easy access
         changedEntities.ForEach(x => {
-            var model = (AuditableEntity)x.Entity;
+            var model = (IAuditedEntity)x.Entity;
             model.UpdatedDate = DateTime.UtcNow;
 
             if (x.State == EntityState.Added) {
                 model.CreatedDate = DateTime.UtcNow;
             } else {
                 // don't overwrite existing createdDate values
-                x.Property(nameof(AuditableEntity.CreatedDate)).IsModified = false;
+                x.Property(nameof(IAuditedEntity.CreatedDate)).IsModified = false;
             }
         });
 
@@ -87,6 +88,15 @@ public sealed class FollyDbContext : DbContext {
         }
     }
 
+    /// <summary>
+    /// Set the original rowVersion value so concurrency check works correctly.
+    // https://stackoverflow.com/questions/44609991/ef-not-throwing-dbupdateconcurrencyexception-despite-conflicting-updates
+    /// </summary>
+    /// <typeparam name="T">IVersionedEntity</typeparam>
+    /// <param name="entity">Entity to set rowVersion for.</param>
+    public void SetOriginalRowVersion<T>(T entity, int rowVersion) where T : IVersionedEntity
+        => Entry(entity).OriginalValues[nameof(IVersionedEntity.RowVersion)] = rowVersion;
+
     private async Task<List<AuditLog>> CreateAuditLogsAsync(List<EntityEntry> changedEntries, CancellationToken cancellationToken) {
         var auditLogs = new List<AuditLog>();
 
@@ -106,7 +116,7 @@ public sealed class FollyDbContext : DbContext {
             }
 
             // track the temporaryId that EF assigns so we can update our auditLogs with the database assigned ID after saving to the db
-            ((AuditableEntity)entry.Entity).TemporaryId = primaryKey.Value;
+            ((IAuditedEntity)entry.Entity).TemporaryId = primaryKey.Value;
 
             var entityName = entry.Entity.GetType().Name;
             var auditLog = new AuditLog {
@@ -158,7 +168,7 @@ public sealed class FollyDbContext : DbContext {
         await base.SaveChangesAsync(cancellationToken);
     }
 
-    private string GetEntryIdentifier(EntityEntry entry) => $"{entry.Entity.GetType().Name}_{((AuditableEntity)entry.Entity).TemporaryId}";
+    private string GetEntryIdentifier(EntityEntry entry) => $"{entry.Entity.GetType().Name}_{((IAuditedEntity)entry.Entity).TemporaryId}";
 
     private int GetEntryPrimaryKey(EntityEntry entry) => entry.GetPrimaryKey() ?? -1;
 }

@@ -1,5 +1,6 @@
 using Folly.Constants;
 using Folly.Extensions;
+using Folly.Resources;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -269,6 +270,69 @@ public class ControllerExtensionsTests {
 #pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
 
         // assert
+        Assert.False(viewData.ContainsKey(ViewProperties.Message));
+    }
+
+    [Fact]
+    public void AddServiceError_WithSuccess_DoesNothing() {
+        // arrange
+        var modelState = new ModelStateDictionary();
+        var modelMetadataProvider = new EmptyModelMetadataProvider();
+        var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
+
+        // act
+        viewData.AddServiceError(ServiceResult.Success);
+
+        // assert
+        Assert.False(viewData.ContainsKey(ViewProperties.Error));
+        Assert.False(viewData.ContainsKey(ViewProperties.Message));
+    }
+
+    [Fact]
+    public void AddServiceError_WithGenericError_AddsExpectedError() {
+        // arrange
+        var modelState = new ModelStateDictionary();
+        var modelMetadataProvider = new EmptyModelMetadataProvider();
+        var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
+
+        // act
+        viewData.AddServiceError(ServiceResult.GenericError);
+
+        // assert
+        Assert.True(viewData.ContainsKey(ViewProperties.Error));
+        Assert.Equal(Core.ErrorGeneric, viewData[ViewProperties.Error]);
+        Assert.False(viewData.ContainsKey(ViewProperties.Message));
+    }
+
+    [Fact]
+    public void AddServiceError_WithConcurrencyError_AddsExpectedError() {
+        // arrange
+        var modelState = new ModelStateDictionary();
+        var modelMetadataProvider = new EmptyModelMetadataProvider();
+        var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
+
+        // act
+        viewData.AddServiceError(ServiceResult.ConcurrencyError);
+
+        // assert
+        Assert.True(viewData.ContainsKey(ViewProperties.Error));
+        Assert.Equal(Core.ErrorConcurrency, viewData[ViewProperties.Error]);
+        Assert.False(viewData.ContainsKey(ViewProperties.Message));
+    }
+
+    [Fact]
+    public void AddServiceError_WithInvalidIdError_AddsExpectedError() {
+        // arrange
+        var modelState = new ModelStateDictionary();
+        var modelMetadataProvider = new EmptyModelMetadataProvider();
+        var viewData = new ViewDataDictionary(modelMetadataProvider, modelState);
+
+        // act
+        viewData.AddServiceError(ServiceResult.InvalidIdError);
+
+        // assert
+        Assert.True(viewData.ContainsKey(ViewProperties.Error));
+        Assert.Equal(Core.ErrorInvalidId, viewData[ViewProperties.Error]);
         Assert.False(viewData.ContainsKey(ViewProperties.Message));
     }
 }

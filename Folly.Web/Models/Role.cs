@@ -4,7 +4,7 @@ using Folly.Validators;
 
 namespace Folly.Models;
 
-public sealed record Role : VersionedModel {
+public sealed record Role : BaseModel, IVersionedModel {
     [Display(ResourceType = typeof(Roles), Name = nameof(Roles.Name))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
@@ -17,4 +17,6 @@ public sealed record Role : VersionedModel {
 
     [Display(ResourceType = typeof(Roles), Name = nameof(Roles.Permissions))]
     public IEnumerable<int>? PermissionIds { get; init; }
+
+    public int RowVersion { get; init; }
 }

@@ -4,7 +4,7 @@ using Folly.Validators;
 
 namespace Folly.Models;
 
-public sealed record User : VersionedModel {
+public sealed record User : BaseModel, IVersionedModel {
     [Display(ResourceType = typeof(Users), Name = nameof(Users.Email))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
@@ -33,4 +33,6 @@ public sealed record User : VersionedModel {
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]
     [IsUniqueUserName]
     public string UserName { get; init; } = "";
+
+    public int RowVersion { get; init; }
 }

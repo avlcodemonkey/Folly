@@ -10,20 +10,19 @@
 <content>
     <breadcrumb>
         <breadcrumb-item label="@Users.ViewAll" controller="User" action="Index" />
-        <breadcrumb-item label="@(Model.IsCreate ? Users.CreateUser : Users.EditUser)" controller="User" action="@(Model.IsCreate ? "Create" : "Edit")"
-            route-values="@(Model.IsCreate ? null : new { Id = Model.Id })" active="true"
+        <breadcrumb-item label="@(Model.Id == 0 ? Users.CreateUser : Users.EditUser)" controller="User" action="@(Model.Id == 0 ? "Create" : "Edit")"
+            route-values="@(Model.Id == 0 ? null : new { Id = Model.Id })" active="true"
         />
     </breadcrumb>
 
-    @if (Model.IsCreate) {
+    @if (Model.Id == 0)
+    {
         <partial name="_Alert" model="new Alert { Content = @Users.ExplainCreate }" />
     }
 
     <partial name="_Alerts" />
 
-    <form-content for="Model" action="@(Model.IsCreate ? "Create" : "Edit")">
-        <input asp-for="Id" type="hidden" />
-
+    <form-content for="Model" action="@(Model.Id == 0 ? "Create" : "Edit")">
         <input-group for="FirstName" autofocus />
         <input-group for="LastName" />
         <input-group for="UserName" />

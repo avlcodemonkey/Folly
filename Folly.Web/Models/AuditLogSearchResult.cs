@@ -3,8 +3,8 @@ namespace Folly.Models;
 /// <summary>
 /// Subset of AuditLog used only for showing search results.
 /// </summary>
-public sealed record AuditLogSearchResult : BaseModel {
-    public new long Id { get; init; }
+public sealed record AuditLogSearchResult {
+    public long Id { get; init; }
 
     public Guid BatchId { get; init; }
 

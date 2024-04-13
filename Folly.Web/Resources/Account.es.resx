@@ -139,7 +139,7 @@
     <value>Logout</value>
   </data>
   <data name="UpdateAccount" xml:space="preserve">
-    <value>Actualizar cuenta</value>
+    <value>Cuenta</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Configuración</value>

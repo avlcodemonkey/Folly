@@ -6,8 +6,8 @@ namespace Folly.Models;
 /// Represents an audit log entry for tracking change history. Only used for display purposes, so no model validation needed.
 /// </summary>
 /// <remarks>No need for for validation or display attributes for this model.</remarks>
-public sealed record AuditLog : BaseModel {
-    public new long Id { get; init; }
+public sealed record AuditLog {
+    public long Id { get; init; }
 
     // @todo add Display attributes to use when showing these
     public Guid BatchId { get; init; }

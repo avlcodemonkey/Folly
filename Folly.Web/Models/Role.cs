@@ -4,7 +4,10 @@ using Folly.Validators;
 
 namespace Folly.Models;
 
-public sealed record Role : BaseModel, IVersionedModel {
+public sealed record Role : IAuditedModel, IVersionedModel {
+    [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
+    public int Id { get; init; }
+
     [Display(ResourceType = typeof(Roles), Name = nameof(Roles.Name))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
     [StringLength(100, ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorMaxLength))]

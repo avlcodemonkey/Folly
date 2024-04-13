@@ -34,14 +34,14 @@ public sealed class FormContentTagHelper(IHtmlHelper htmlHelper, IUrlHelperFacto
                 hiddenInputs.Add(rowVersionInput);
             }
 
-            // if the model is a base model, create the hidden input for the id field
-            if (For is BaseModel baseModel) {
-                Method = baseModel.Id == 0 ? HttpMethod.Post : HttpMethod.Put;
+            // if the model is an audited model, create the hidden input for the id field
+            if (For is IAuditedModel auditedModel) {
+                Method = auditedModel.Id == 0 ? HttpMethod.Post : HttpMethod.Put;
 
                 var idInput = new TagBuilder("input");
                 idInput.MergeAttribute("type", "hidden");
-                idInput.MergeAttribute("name", nameof(BaseModel.Id));
-                idInput.MergeAttribute("value", baseModel.Id.ToString());
+                idInput.MergeAttribute("name", nameof(IAuditedModel.Id));
+                idInput.MergeAttribute("value", auditedModel.Id.ToString());
                 hiddenInputs.Add(idInput);
             }
         }

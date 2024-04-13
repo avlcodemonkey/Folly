@@ -3,7 +3,7 @@ using Folly.Resources;
 
 namespace Folly.Models;
 
-public sealed record UpdateAccount : BaseModel {
+public sealed record UpdateAccount : IAuditedModel {
     public UpdateAccount() { }
 
     public UpdateAccount(User user) {
@@ -12,6 +12,9 @@ public sealed record UpdateAccount : BaseModel {
         LastName = user.LastName ?? "";
         LanguageId = user.LanguageId;
     }
+
+    [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]
+    public int Id { get; init; }
 
     [Display(ResourceType = typeof(Users), Name = nameof(Users.Email))]
     [Required(ErrorMessageResourceType = typeof(Core), ErrorMessageResourceName = nameof(Core.ErrorRequired))]

@@ -13,8 +13,8 @@ public class ClaimsTransformerTests {
     private readonly User _User = new() { Id = 1, UserName = "testUser" };
 
     private readonly List<UserClaim> _UserClaims = [
-        new() { Id = 1, ControllerName = "controller1", ActionName = "action1" },
-        new() { Id = 2, ControllerName = "controller2", ActionName = "action2" },
+        new(1, 0, "controller1", "action1"),
+        new(2, 0, "controller2", "action2"),
     ];
 
     public ClaimsTransformerTests() {

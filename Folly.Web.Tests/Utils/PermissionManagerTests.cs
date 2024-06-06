@@ -13,9 +13,9 @@ public class PermissionManagerTests {
     };
 
     private readonly List<Permission> _PermissionList = [
-        new Permission { ControllerName = "controller1", ActionName = "action1" },
-        new Permission { ControllerName = "controller1", ActionName = "action2" },
-        new Permission { ControllerName = "controller2", ActionName = "action1" },
+        new Permission(0, "controller1", "action1"),
+        new Permission(0, "controller1", "action2"),
+        new Permission(0, "controller2", "action1"),
     ];
 
     private readonly Role _Role = new() { Name = "test role" };

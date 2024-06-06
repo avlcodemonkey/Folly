@@ -23,7 +23,7 @@ public class RoleController(IRoleService roleService, IPermissionService permiss
 
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
     public async Task<IActionResult> List()
-        => Ok((await _RoleService.GetAllRolesAsync()).Select(x => new RoleListResult { Id = x.Id, Name = x.Name }));
+        => Ok((await _RoleService.GetAllRolesAsync()).Select(x => new RoleListResult(x.Id, x.Name)));
 
     private async Task<IActionResult> Save(Role model) {
         if (!ModelState.IsValid) {

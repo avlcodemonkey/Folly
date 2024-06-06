@@ -7,28 +7,29 @@ namespace Folly.Models;
 /// <summary>
 /// Used to group search params and pass them around.
 /// </summary>
-public sealed record AuditLogSearch {
-    [Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.Batch))]
-    public Guid? BatchId { get; set; }
+public sealed record AuditLogSearch(
+    [property: Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.Batch))]
+    Guid? BatchId,
 
-    [Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.Entity))]
-    public string? Entity { get; set; }
+    [property: Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.Entity))]
+    string? Entity,
 
-    [Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.PrimaryKey))]
-    public long? PrimaryKey { get; set; }
+    [property: Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.PrimaryKey))]
+    long? PrimaryKey,
 
-    /// <summary>
-    /// Should only be one of: Deleted = 2, Modified = 3, Added = 4
-    /// </summary>
-    [Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.State))]
-    public EntityState? State { get; set; }
+    [property: Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.State))]
+    EntityState? State,
 
+    [property: Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.User))]
+    int? UserId,
+
+    DateOnly? StartDate,
+
+    DateOnly? EndDate
+) {
     [Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.StartDate))]
-    public DateOnly? StartDate { get; set; } = DateOnly.FromDateTime(DateTime.Now.AddDays(-30));
+    public DateOnly? StartDate { get; set; } = StartDate ?? DateOnly.FromDateTime(DateTime.Now.AddDays(-30));
 
     [Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.EndDate))]
-    public DateOnly? EndDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
-
-    [Display(ResourceType = typeof(AuditLogs), Name = nameof(AuditLogs.User))]
-    public int? UserId { get; set; }
+    public DateOnly? EndDate { get; set; } = EndDate ?? DateOnly.FromDateTime(DateTime.Now);
 }

@@ -15,8 +15,8 @@ public class AuditLogControllerTests() {
     private readonly Mock<IAuditLogService> _MockAuditLogService = new();
     private readonly Mock<ILogger<AuditLogController>> _MockLogger = new();
 
-    private readonly AuditLog _AuditLogForSuccess = new() { Id = -100L, BatchId = Guid.NewGuid() };
-    private readonly AuditLog _AuditLogForFailure = new() { Id = -101L, BatchId = Guid.NewGuid() };
+    private readonly AuditLog _AuditLogForSuccess = new(-100L, Guid.NewGuid(), -100, Microsoft.EntityFrameworkCore.EntityState.Modified, DateTime.Now);
+    private readonly AuditLog _AuditLogForFailure = new(-101L, Guid.NewGuid(), -101, Microsoft.EntityFrameworkCore.EntityState.Modified, DateTime.Now);
 
     private AuditLogController CreateController() {
         _MockAuditLogService.Setup(x => x.GetLogByIdAsync(_AuditLogForSuccess.Id)).ReturnsAsync(_AuditLogForSuccess);
@@ -77,8 +77,8 @@ public class AuditLogControllerTests() {
     [Fact]
     public async Task Get_UserList_WithNoQuery_ReturnsFullUserList() {
         // Arrange
-        var user1 = new AutocompleteUser { Value = -1, Label = NameHelper.DisplayName("first", "last") };
-        var user2 = new AutocompleteUser { Value = -2, Label = NameHelper.DisplayName("gib", "berish") };
+        var user1 = new AutocompleteUser(-1, NameHelper.DisplayName("first", "last"));
+        var user2 = new AutocompleteUser(-2, NameHelper.DisplayName("gib", "berish"));
 
         _MockUserService.Setup(x => x.FindAutocompleteUsersByNameAsync(It.IsAny<string>())).ReturnsAsync(new List<AutocompleteUser> { user1, user2 });
         var controller = CreateController();
@@ -103,7 +103,7 @@ public class AuditLogControllerTests() {
     [Fact]
     public async Task Get_UserList_WithQuery_ReturnsMatchingUserList() {
         // Arrange
-        var user = new AutocompleteUser { Value = -2, Label = NameHelper.DisplayName("gib", "berish") };
+        var user = new AutocompleteUser(-2, NameHelper.DisplayName("gib", "berish"));
 
         _MockUserService.Setup(x => x.FindAutocompleteUsersByNameAsync(It.IsAny<string>())).ReturnsAsync(new List<AutocompleteUser> { user });
         var controller = CreateController();
@@ -122,7 +122,7 @@ public class AuditLogControllerTests() {
     [Fact]
     public async Task Post_Search_WithMatches_ReturnsResultList() {
         // Arrange
-        var auditLogSearchResult = new AuditLogSearchResult { Id = 1L, BatchId = Guid.NewGuid() };
+        var auditLogSearchResult = new AuditLogSearchResult(1L, Guid.NewGuid());
         var auditLogSearchModel = new AuditLogSearch { BatchId = auditLogSearchResult.BatchId, StartDate = null, EndDate = null };
 
         _MockAuditLogService.Setup(x => x.SearchLogsAsync(It.IsAny<AuditLogSearch>())).ReturnsAsync(new List<AuditLogSearchResult> { auditLogSearchResult });

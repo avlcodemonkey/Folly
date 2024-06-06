@@ -21,7 +21,7 @@ public class AccountControllerTests() {
     private readonly User _UserForFailure = new() { UserName = "failure", Email = "b@c.com" };
     private readonly UpdateAccount _UpdateAccountForSucccess = new() { FirstName = "success", LastName = "last", Email = "a@b.com" };
     private readonly UpdateAccount _UpdateAccountForFailure = new() { FirstName = "failure", LastName = "last", Email = "b@c.com" };
-    private readonly Language _Language = new() { Id = 1, Name = "test lang", LanguageCode = "en" };
+    private readonly Language _Language = new(1, "test lang", "en");
 
     private AccountController CreateController(string? userName = null) {
         var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity([new Claim(ClaimTypes.Name, userName ?? _UserForSuccess.UserName)]));

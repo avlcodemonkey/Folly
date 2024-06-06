@@ -19,9 +19,7 @@ public class UserController(IUserService userService, ILogger<UserController> lo
 
     [HttpGet, ParentAction(nameof(Index)), AjaxRequestOnly]
     public async Task<IActionResult> List()
-        => Ok((await _UserService.GetAllUsersAsync()).Select(x =>
-            new UserListResult { Id = x.Id, UserName = x.UserName, FirstName = x.FirstName, LastName = x.LastName ?? "", Email = x.Email }
-        ));
+        => Ok((await _UserService.GetAllUsersAsync()).Select(x => new UserListResult(x.Id, x.UserName, x.FirstName, x.LastName ?? "", x.Email)));
 
     private async Task<IActionResult> Save(User model) {
         if (!ModelState.IsValid) {

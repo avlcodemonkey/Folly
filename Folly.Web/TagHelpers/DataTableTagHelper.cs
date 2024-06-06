@@ -55,7 +55,7 @@ public sealed class DataTableTagHelper(IHtmlHelper htmlHelper) : BaseTagHelper(h
 
         var containerDiv = new TagBuilder("div");
         containerDiv.AddCssClass("container");
-        containerDiv.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("_DataTableHeader", new DataTable { HideSearch = !string.IsNullOrEmpty(SrcForm) }));
+        containerDiv.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("_DataTableHeader", new DataTable(!string.IsNullOrEmpty(SrcForm))));
         containerDiv.InnerHtml.AppendHtml(rowDiv);
         containerDiv.InnerHtml.AppendHtml(await HtmlHelper!.PartialAsync("_DataTableFooter"));
 

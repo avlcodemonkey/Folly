@@ -34,7 +34,7 @@ public class PermissionServiceTests(DatabaseFixture fixture) {
     [Fact]
     public async Task SavePermissionAsync_CreatePermission_SavesNewPermission() {
         // arrange
-        var createPermission = new DTO.Permission { ControllerName = "save permission controller", ActionName = "save permission action" };
+        var createPermission = new DTO.Permission(0, "save permission controller", "save permission action");
 
         // act
         var result = await _PermissionService.SavePermissionAsync(createPermission);
@@ -56,12 +56,12 @@ public class PermissionServiceTests(DatabaseFixture fixture) {
         // arrange
         var originalController = "original permission controller";
         var originalAction = "original permission action";
-        var createPermission = new DTO.Permission { ControllerName = originalController, ActionName = originalAction };
+        var createPermission = new DTO.Permission(0, originalController, originalAction);
         await _PermissionService.SavePermissionAsync(createPermission);
         var permissionId = (await _PermissionService.GetAllPermissionsAsync()).FirstOrDefault(x => x.ControllerName == originalController && x.ActionName == originalAction)!.Id;
         var newController = "new permission controller";
         var newAction = "new permission action";
-        var updatePermission = new DTO.Permission { Id = permissionId, ControllerName = newController, ActionName = newAction };
+        var updatePermission = new DTO.Permission(permissionId, newController, newAction);
 
         // act
         var result = await _PermissionService.SavePermissionAsync(updatePermission);
@@ -81,9 +81,7 @@ public class PermissionServiceTests(DatabaseFixture fixture) {
     [Fact]
     public async Task SavePermissionAsync_UpdateInvalidPermissionId_ReturnsFalse() {
         // arrange
-        var updatePermission = new DTO.Permission {
-            Id = 999, ControllerName = "update permission controller", ActionName = "update permission action"
-        };
+        var updatePermission = new DTO.Permission(999, "update permission controller", "update permission action");
 
         // act
         var result = await _PermissionService.SavePermissionAsync(updatePermission);

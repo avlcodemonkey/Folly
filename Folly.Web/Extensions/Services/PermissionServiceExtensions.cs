@@ -5,5 +5,5 @@ namespace Folly.Extensions.Services;
 
 public static class PermissionServiceExtensions {
     public static IQueryable<DTO.Permission> SelectAsDTO(this IQueryable<Permission> query)
-        => query.Select(x => new DTO.Permission { Id = x.Id, ControllerName = x.ControllerName, ActionName = x.ActionName });
+        => query.Select(x => new DTO.Permission(x.Id, x.ControllerName, x.ActionName));
 }

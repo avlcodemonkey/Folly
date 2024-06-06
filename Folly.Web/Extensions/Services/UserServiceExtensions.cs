@@ -13,5 +13,5 @@ public static class UserServiceExtensions {
 
     // @todo see if there are other userService methods that should use this instead
     public static IQueryable<DTO.AutocompleteUser> SelectAsAuditLogUserDTO(this IQueryable<User> query)
-        => query.Select(x => new DTO.AutocompleteUser { Value = x.Id, Label = NameHelper.DisplayName(x.FirstName, x.LastName) });
+        => query.Select(x => new DTO.AutocompleteUser(x.Id, NameHelper.DisplayName(x.FirstName, x.LastName)));
 }

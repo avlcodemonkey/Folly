@@ -406,8 +406,8 @@ public class UserServiceTests {
         Assert.IsAssignableFrom<IEnumerable<DTO.AutocompleteUser>>(users);
         Assert.Equal(totalUsers, users.Count());
         Assert.Collection(users,
-            x => Assert.Equal(testUser.Id, x.Value),   // testUser from fixture
             x => Assert.Equal(user.Id, x.Value),       // user from fixture
+            x => Assert.Equal(testUser.Id, x.Value),   // testUser from fixture
             x => Assert.Equal(1, x.Value)              // admin user from original db migration
         );
     }

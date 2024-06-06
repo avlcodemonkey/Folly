@@ -10,5 +10,5 @@
 
     <partial name="_Alerts" />
 
-    <partial name="_Alert" model="new Alert { Content = _HttpContextAccessor.HttpContext?.Session.IsEnabled(SessionProperties.Help) == true ? Core.HelpEnabled : Core.HelpDisabled, CanDismiss = false }" />
+    <partial name="_Alert" model="new Alert(_HttpContextAccessor.HttpContext?.Session.IsEnabled(SessionProperties.Help) == true ? Core.HelpEnabled : Core.HelpDisabled, AlertType.Success, false)" />
 </content>

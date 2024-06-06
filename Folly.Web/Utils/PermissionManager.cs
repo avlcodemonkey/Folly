@@ -24,7 +24,7 @@ public sealed class PermissionManager(IAssemblyService assemblyService, IPermiss
         var missingActionList = actionList.Where(x => !permissions.ContainsKey(x.Key));
         foreach (var permission in missingActionList) {
             var parts = permission.Value.Split('.');
-            if (!await _PermissionService.SavePermissionAsync(new Permission { ControllerName = parts[0], ActionName = parts[1] })) {
+            if (!await _PermissionService.SavePermissionAsync(new Permission(0, parts[0], parts[1]))) {
                 return false;
             }
         }

@@ -21,9 +21,9 @@
 
 @if (!string.IsNullOrWhiteSpace(GetData(ViewProperties.Message)))
 {
-    <partial name="_Alert" model="new Alert { Content = GetData(ViewProperties.Message) }" />
+    <partial name="_Alert" model="new Alert(GetData(ViewProperties.Message))" />
 }
 @if (!string.IsNullOrWhiteSpace(GetData(ViewProperties.Error)))
 {
-    <partial name="_Alert" model="new Alert { Content = GetData(ViewProperties.Error), AlertType = AlertType.Error }" />
+    <partial name="_Alert" model="new Alert( GetData(ViewProperties.Error), AlertType.Error)" />
 }

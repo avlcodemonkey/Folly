@@ -17,7 +17,7 @@
 
     @if (Model.Id == 0)
     {
-        <partial name="_Alert" model="new Alert { Content = @Users.ExplainCreate }" />
+        <partial name="_Alert" model="new Alert(Users.ExplainCreate)" />
     }
 
     <partial name="_Alerts" />

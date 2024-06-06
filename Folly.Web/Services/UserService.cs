@@ -35,7 +35,7 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
                     .ThenInclude(x => x.Permission)
             .Where(x => x.UserId == id)
             .SelectMany(x => x.Role.RolePermissions.Select(y => y.Permission))
-            .Select(x => new DTO.UserClaim { Id = x.Id, ActionName = x.ActionName, ControllerName = x.ControllerName })
+            .Select(x => new DTO.UserClaim(x.Id, 0, x.ControllerName, x.ActionName))
             .ToListAsync();
 
     public async Task<DTO.User?> GetUserByIdAsync(int id)
@@ -117,6 +117,7 @@ public sealed class UserService(FollyDbContext dbContext, IHttpContextAccessor h
         var lowerName = (name ?? "").ToLower();
         return await _DbContext.Users
             .Where(x => x.Status == true && (x.FirstName.ToLower().Contains(lowerName) || (x.LastName ?? "").ToLower().Contains(lowerName)))
-            .SelectAsAuditLogUserDTO().OrderBy(x => x.Value).ToListAsync();
+            .OrderBy(x => x.LastName).ThenBy(x => x.FirstName)
+            .SelectAsAuditLogUserDTO().ToListAsync();
     }
 }
